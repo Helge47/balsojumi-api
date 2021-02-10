@@ -1,0 +1,1197 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Darba k&#257;rt&#299;ba </title><meta name = "format-detection" content = "telephone=no" /> 
+<link rel="shortcut icon" href="/LIVS13/SaeimaLIVS2_DK.nsf/mainicon.ico" type="image/x-icon" />
+<script language="JavaScript" type="text/javascript" src="WEB_viewFunctions.js"></script>
+<script language="JavaScript" type="text/javascript" src="./commonFunctions.js"></script>
+<script language="JavaScript" type="text/javascript" src="calendar.js?OpenJavascriptLibrary"></script>
+<link rel="stylesheet" href="WEB_viewDocStyles.css?ReadForm" />
+<script type="text/javascript">
+	var dbPath="/LIVS13/SaeimaLIVS2_DK.nsf/";
+	var dateFMT='dd.mm.yyyy';
+// necessary for calendar
+var calendar = null;
+function selected(cal, date) {
+  cal.sel.value = date; 
+  if (cal.sel.id == "id_startDate" || cal.sel.id == "id_endDate" || cal.sel.id == "pid_startDate" || cal.sel.id == "pid_endDate")
+       cal.callCloseHandler();
+}
+// end calendar
+</script>
+<script language="JavaScript" type="text/javascript">
+<!-- 
+document._domino_target = "_self";
+function _doClick(v, o, t) {
+  var returnValue = false;
+  var url="/LIVS13/SaeimaLIVS2_DK.nsf/DK?ReadForm&calendar=1&Click=" + v;
+  if (o.href != null) {
+    o.href = url;
+    returnValue = true;
+  } else {
+    if (t == null)
+      t = document._domino_target;
+    window.open(url, t);
+  }
+  return returnValue;
+}
+// -->
+</script>
+<link rel="stylesheet" type="text/css" href="/LIVS13/SaeimaLIVS2_DK.nsf/calendar-exigen.css?OpenCssResource">
+</head>
+<body text="#000000" bgcolor="#FFFFFF" rightmargin="0"  leftmargin="0" marginheight="0" marginwidth="0" topmargin="0" >
+
+<form onsubmit="return submitFlag;return true;" action=""> 
+<div style="display:none">
+	<!-- CACHE FLAG -->
+	readedFromCache=false
+</div>
+<script language="javascript">
+isActualDay="";
+stageLabels["1"]="Sagatave";
+stageLabels["2"]="Projekts";
+stageLabels["3"]="Apstiprin&#257;ta";
+stageLabels["4"]="Public&#275;ta";
+stageLabels["5"]="S&#257;kta s&#275;de";
+stageLabels["6"]="Izskat&#299;ta";
+stageLabels["7"]="P&#257;rtraukta s&#275;de";
+stageLabels["8"]="Atcelta";
+stageLabels["9"]="Dz&#275;sta";
+stageLabels["10"]="S&#275;de nav notikusi";
+stageLabels["11"]="Nav kvoruma - s&#275;de sl&#275;gta";
+stageLabels["12"]="P&#257;rcelta";
+stageLabels["15"]="Sagatave_fiks&#275;ta";	//stageLabels
+var drAl=[];
+drAl["1"]="Nodo&#353;ana komisij&#257;m";
+drAl["2"]="1. las&#299;jums";
+drAl["3"]="2. las&#299;jums";
+drAl["4"]="3. las&#299;jums";
+drAl["5"]="Nodo&#353;ana komisij&#257;m";
+drAl["6"]="Otrreiz&#275;ja caurl&#363;ko&#353;ana";
+drAl["7"]="";
+drAl["8"]="";
+drAl["9"]="";
+drAl["10"]="1. las&#299;jums";
+drAl["11"]="2. las&#299;jums";	//drAl
+var dkpStatusViewed="3";
+var dkpStatusIsBeingViewed="2";
+var nullStatusLst=[];
+nullStatusLst["1"]=true;
+nullStatusLst["5"]=true;	//nullStatusLst
+var pants39HideLst="";
+pants39HideLst='2';	// 39pants 1. reading aliases List
+var dkpSecondReadingLst=[];
+dkpSecondReadingLst["5"]="Valsts%20prezidents";	//dkpSecondReadingLst
+var setupDocTypes=[];
+setupDocTypes['1']="Likumprojekts";
+setupDocTypes['2']="L%C4%93muma%20projekts";
+setupDocTypes['3']="Piepras%C4%ABjums";
+setupDocTypes['4']="Jaut%C4%81jums";
+setupDocTypes['5']="";
+setupDocTypes['6']="";
+setupDocTypes['7']="";
+setupDocTypes['8']="";
+setupDocTypes['9']="Likums";	//setupDocTypes
+var hideSend2Com=[];
+hideSend2Com['Noraid&#299;ts']=true;
+hideSend2Com['Atsaukts']=true;	//hideSend2Com
+var qTypesTexts=[];
+qTypesTexts["Jaut%C4%81jums"]='q';	//qTypesTexts question
+qTypesTexts["Atbilde%20uz%20deput%C4%81tu%20jaut%C4%81jumu"]='a';
+qTypesTexts["V%C4%93stule%20par%20jaut%C4%81juma%20p%C4%81radres%C4%81ciju"]='a';
+qTypesTexts["V%C4%93stule%20par%20neiera%C5%A1anos%20uz%20atbildes%20snieg%C5%A1anu"]='a';	//qTypesTexts answer
+var lastViewedID="";
+	//page reload for XML
+var calendarSesTpAliases=[];
+calendarSesTpAliases["1"]="";
+calendarSesTpAliases["2"]="A";
+calendarSesTpAliases["3"]="S";
+calendarSesTpAliases["4"]="Sl";
+calendarSesTpAliases["5"]="J";
+calendarSesTpAliases["6"]="As";
+calendarSesTpAliases["7"]="";
+calendarSesTpAliases["8"]="As";
+calendarSesTpAliases["9"]="As";	//sedes tipa aliases
+var sesTpTitles=[];
+sesTpTitles["1"]="k&#257;rt&#275;j&#257;s";
+sesTpTitles["2"]="&#257;rk&#257;rtas";
+sesTpTitles["3"]="svin&#299;g&#257;s";
+sesTpTitles["4"]="sl&#275;gt&#257;s";
+sesTpTitles["5"]="jaut&#257;jumu";
+sesTpTitles["6"]="&#257;rk&#257;rtas sesijas";
+sesTpTitles["7"]="k&#257;rt&#275;j&#257;s s&#275;des pusstundu p&#275;c &#257;rk&#257;rtas";
+sesTpTitles["8"]="otr&#257;s &#257;rk&#257;rtas sesijas";
+sesTpTitles["9"]="tre&#353;&#257;s &#257;rk&#257;rtas sesijas";	//sedes tipa nosaukumi
+var showAttachSections=false; //sedes tips
+var actualXML_DkId="";
+</script>
+<span style="display:none;" id="additionalStylesHolder"></span>
+ <table class="mainTable" width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width=7 class="scrOnly"><img src="/icons/ecblank.gif" width=7></td>
+<td style="width:100%" >
+<input type=hidden name="ViewTitle" id="ViewTitle" value="web_DkpByDkUnid">
+<input type=hidden name="FullWebPath" id="FullWebPath" value="http://titania.saeima.lv/LIVS13/SaeimaLIVS2_DK.nsf/">
+<div class="pageHeader">
+<div style="margin-top:5px;width:100%;background-image:URL('./web_logo_bg.gif');background-repeat:repeat-x">
+<a href="https://www.saeima.lv" style="position:absolute;z-index:99"><img src="./ecblank.gif" style="width:230px; height:58px;"></a>
+<img src="./ecblank.gif" height="58" width="1">
+</div>
+<div style="position:absolute;top:7px;left:14px;color:#F5F5F5;font-family:Arial,Trebuchet MS; font-size:11px;">
+<b>LATVIJAS REPUBLIKAS</b>
+</div>
+<div style="position:absolute;top:17px;left:13px;color:#900000;font-family:Arial,Trebuchet MS; font-size:29px;">
+13<font style="font-size:20px">.</font>SAEIMA
+</div>
+<div style="position:absolute;top:22px;width:100%;">
+<table width=100% class="DBswitch" cellspacing=0 cellpadding=0><tr><td width=263>&nbsp;</td><td width=142 background="top_tab_neact.gif""><a href="https://titania.saeima.lv/LIVS13/saeimalivs13.nsf/webAll?OpenView">LIKUMPROJEKTI</a></td> <td width=142 background="top_tab_neact.gif""><a href="https://titania.saeima.lv/LIVS13/saeimalivs_lmp.nsf/webAll?OpenView">L&#274;MUMU PROJEKTI</a></td> <td width=142 background="top_tab_neact.gif""><a href="https://titania.saeima.lv/LIVS13/saeimalivs_lmp.nsf/WEB_requests?OpenView">PIEPRAS&#298;JUMI</a></td> <td width=142 background="top_tab_neact.gif""><a href="https://titania.saeima.lv/LIVS13/saeimalivs_lmp.nsf/WEB_questions?OpenView">JAUT&#256;JUMI</a></td> <td width=142 class="Act" background="top_tab_act.gif""><a href="https://titania.saeima.lv/LIVS13/saeimalivs2_dk.nsf">DARBA K&#256;RT&#298;BAS</a></td> <td width=4><img src="top_tab_sturis.gif" border=0></td><td style="background-repeat:repeat-x" background="top_tab_bg.gif">&nbsp;</td></tr></table>
+<script type="text/javascript">
+dbPathLp="https://titania.saeima.lv/LIVS13/saeimalivs13.nsf";
+dbPathLm="https://titania.saeima.lv/LIVS13/saeimalivs_lmp.nsf";
+dbPathPub="https://titania.saeima.lv/ELDIS/webpublic.nsf";
+</script>
+
+</div>
+<div class="printButton"  style="position:absolute;top:46px;">
+<span style="margin:0px 20px 0px 0px;font-family:Arial;font-size:12px;vertical-align:middle;" >
+<img src="./ecblank.gif" mark="1" onclick="shSD(this)" style="height:9px;width:9px;border:1px solid gray;" class=""> R&#257;d&#299;t saist&#299;tos dokumentus
+<!-- Atslegt lapas automatisko parladi -->
+
+</span>
+<span style="margin:0px 5px 0px 0px;font-family:Default Sans Serif, Arial;font-size:12px;">
+Teksta izm&#275;rs: &nbsp; 
+<b>
+<a id="switchFSSM" style="font-size:8pt;cursor:pointer;color:#303030;text-decoration:underline;" onclick="javascript:chFS(this,'SM');return void(0)" sz="SM">A</a>
+ | 
+<a id="switchFSNR" style="font-size:10pt;cursor:pointer;color:#404040;" onclick="javascript:chFS(this, 'NR');return void(0)" sz="NR">A</a>
+</b>
+</span>
+<br>
+<span style="vertical-align:middle;margin-top:3px;" ><a  onclick="window.print()" ><span>Druk&#257;t&nbsp;</span><img src="web_bigPrint.jpg"  alt="Druk&#257;t"></a></span>
+</div>
+</div>
+<table class="mainTable" border="0" cellspacing="0" cellpadding="0">
+<tr><td colspan="3" class="scrOnly"><img src="/icons/ecblank.gif" height=5></td></tr>
+<tr>
+<td class="outlines" valign="top" ><div class="OutlineTitle">Darba k&#257;rt&#299;bas</div>
+<div style="width:250px;background-image:url(WEB_bg_m2.jpg);background-repeat:repeat-y;margin-bottom:0px">
+<div style="background-image:url(WEB_bg_m1.jpg);background-repeat:no-repeat;">
+<div style="background-image:url(WEB_bg_m3.jpg);background-repeat:no-repeat;background-position:bottom left">
+<div class="menuBlock">
+<div class="mainOutline" style="margin-top:6px;">
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a href="./DK?ReadForm&nr=2823f5c6-9c4e-4203-b410-7e47f6bada56">19.11.2020 Saeimas att&#257;lin&#257;t&#257;s &#257;rk&#257;rtas s&#275;des darba k&#257;rt&#299;ba</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a href="./DK?ReadForm&nr=2efcc4da-63b1-49ee-9608-7caba1dbdd2a">05.11.2020 / 12.11.2020 / 19.11.2020 Saeimas &#257;rk&#257;rtas s&#275;des darba k&#257;rt&#299;bas</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a href="./DK?ReadForm&nr=76bdee8a-92dd-48f8-8e71-77f8df6e2397">19.11.2020 Saeimas pirm&#257;s att&#257;lin&#257;t&#257;s &#257;rk&#257;rtas s&#275;des darba k&#257;rt&#299;ba</a></b></div>	<!-- Saeimas s&#275;des aktu&#257;l&#257; darba k&#257;rt&#299;ba -->
+<div  class="selected"  style="background-image:URL('./Calendar_view.gif');"><b><a href="./DK?ReadForm&calendar=1">Visas Saeimas s&#275;&#382;u darba k&#257;rt&#299;bas</a></b></div> 	<!-- Visas Saeimas s&#275;d&#382;u darba k&#257;rt&#299;bas -->
+</div>
+</div>
+</div>
+</div>
+</div>
+<div style="background-image:url(WEB_bg_m2.jpg);background-repeat:repeat-y;background-position:bottom left;margin-bottom:10px">
+<div style="background-image:url(WEB_bg_m3F.jpg);background-repeat:no-repeat;background-position:top left">
+<div style="background-image:url(WEB_bg_m3.jpg);background-repeat:no-repeat;background-position:bottom left">
+<div class="menuBlock" style="">
+<div><img src="WEB_search.gif"><b>&nbsp;&nbsp;Detaliz&#275;ta mekl&#275;&#353;ana</b></div>
+<div style="border:1px solid #E0E0E0;margin:2px 0px;padding:2px 4px;background-color:#F0F0D0;">
+<div align=right>
+<input align=left name="sFilter" id="sFilter" type=text onkeypress="if (event.keyCode==13 && (this.value!='')) submitSearch()" style="margin:2px 0px 0px 0px; width: 225px;"><br>
+<div style="text-align:center;margin:0px 5px 7px 3px;padding:0px;font-size:8pt">mekl&#275;t p&#275;c nosaukuma (ar&#299; nepilna)</div>
+<div style="display:none;margin:0px 5px 7px 3px;padding:0px;cursor:pointer;font-size:8pt" onclick="srchFullW(this)" id="srchFull" ><img src="WEB_CB_white.gif" style="width:7px; height:7px; border:1px solid #909090;"> mekl&#275;t p&#275;c piln&#257; v&#257;rda</div>
+</div>
+</div>
+<div style="border:1px solid #E0E0E0;margin:2px 0px;padding:2px 4px;background-color:#F0F0D0;">
+<div style="margin-top:5px">S&#275;des datums</div>
+<div style="font-size:8pt; padding-left:10px">no&nbsp;<input name="startDatePi" value="" id="pid_startDate" style="width: 70px;"> <img src="/LIVS13/SaeimaLIVS2_DK.nsf/WEB_DateSelector.gif?OpenImageResource" style="cursor: pointer;" onClick="showCalendar('pid_startDate',dateFMT);" alt="" />
+&nbsp;l&#299;dz&nbsp;<input name="endDatePi" value="" id="pid_endDate" style="width: 70px;"> <img src="/LIVS13/SaeimaLIVS2_DK.nsf/WEB_DateSelector.gif?OpenImageResource" style="cursor: pointer;" onClick="showCalendar('pid_endDate',dateFMT);" alt="" /></div>
+<div style="font-size:9px;text-align:right;">(form&#257;t&#257; - dd.mm.gggg) &nbsp; </div>
+</div>
+<div class="srchButtons" style="background-color:#FCFDF7;">
+<input type=button value="Mekl&#275;t" onclick="submitSearch()" style="font-weight:bold;font-size:10pt;height:24;width:105px;">&nbsp;
+<input type=button id="searchBackButt" value="Atcelt mekl&#275;&#353;anu" onclick="window.location.reload()"  style="display:none;font-size:10pt;height:24;width:115px;">
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div style="margin-top:10px;">
+<!-- Active documents -->
+<div class="OutlineTitle">Dokumenti</div>
+<div style="width:250px;background-image:url(WEB_bg_m2.jpg);background-repeat:repeat-y;margin-bottom:0px">
+<div style="background-image:url(WEB_bg_m1.jpg);background-repeat:no-repeat;">
+<div style="background-image:url(WEB_bg_m3.jpg);background-repeat:no-repeat;background-position:bottom left">
+<div class="menuBlock">
+<div class="mainOutline" style="margin-top:6px;">
+<div style="background-image:URL('./WEB_activeDocuments.png');"><b><a href="https://titania.saeima.lv/LIVS13/saeimalivs13.nsf/activeDocuments.xsp" target="_blank"">Aktu&#257;lo Saeimas s&#275;&#382;u dokumenti</a></b></div> 	<!-- Saeimas s&#275;&#382;u aktu&#257;lie dokumenti-->
+</div>
+</div>
+</div>
+</div>
+</div></div><div style="margin-top:10px;">
+<!-- Statistic -->
+<div class="OutlineTitle">Statistika</div>
+<div style="width:250px;background-image:url(WEB_bg_m2.jpg);background-repeat:repeat-y;margin-bottom:0px">
+<div style="background-image:url(WEB_bg_m1.jpg);background-repeat:no-repeat;">
+<div style="background-image:url(WEB_bg_m3.jpg);background-repeat:no-repeat;background-position:bottom left">
+<div class="menuBlock">
+<div class="mainOutline" style="margin-top:6px;">
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a href="./Statistics?ReadForm&key=1&stat=1&rt=L">S&#275;des statistika</a></b></div> 	<!-- Sedes -->
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a href="./Statistics?ReadForm&key=1&stat=1&rt=S">Likumdo&#353;anas statistika</a></b></div> 	<!-- Likumdo&#353;anas statistika-->
+</div>
+</div>
+</div>
+</div>
+</div></div>
+<div style="margin-top:10px;">
+<!-- Archive-->
+<div class="OutlineTitle">Arh&#299;vs</div>
+<div style="width:250px;background-image:url(WEB_bg_m2.jpg);background-repeat:repeat-y;margin-bottom:0px">
+<div style="background-image:url(WEB_bg_m1.jpg);background-repeat:no-repeat;">
+<div style="background-image:url(WEB_bg_m3.jpg);background-repeat:no-repeat;background-position:bottom left">
+<div class="menuBlock">
+<div class="mainOutline" style="margin-top:6px;">
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a target="_blank" href="https://titania.saeima.lv/LIVS12/SaeimaLIVS2_DK.nsf/DK?ReadForm&calendar=1">12.Saeimas s&#275;&#382;u darba k&#257;rt&#299;bas</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a target="_blank" href="https://titania.saeima.lv/LIVS11/SaeimaLIVS2_DK.nsf/DK?ReadForm&calendar=1">11.Saeimas s&#275;&#382;u darba k&#257;rt&#299;bas</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a target="_blank" href="https://titania.saeima.lv/LIVS10/SaeimaLIVS2_DK.nsf/DK?ReadForm&calendar=1">10.Saeimas s&#275;&#382;u darba k&#257;rt&#299;bas</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a target="_blank" href="https://titania.saeima.lv/LIVS/SaeimaLIVS2_DK.nsf/DK?ReadForm&calendar=1">9.Saeimas s&#275;&#382;u darba k&#257;rt&#299;bas</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a target="_blank" href="https://saeima.lv/lv/par-saeimu/arhivs/8-saeima/8-saeimas-sezu-darba-kartibas/">8.Saeimas s&#275;&#382;u darba k&#257;rt&#299;bas</a></b></div> 	<!-- Archive-->
+</div>
+</div>
+</div>
+</div>
+</div></div>
+</td>
+<td style="width:14px"><img src="/icons/ecblank.gif" height=5 width=14></td>
+<td class="views">
+<div class="viewHolderFSSM" id="viewHolderFS">
+<script>var sfs=readCookie("selectedFontSize"); if(sfs) chFS(document.getElementById("switchFS"+sfs), sfs);</script>
+<div class="scrOnly" id="stageNavigationBlock" style="display:block;">
+ <div class="StageDate" style="width:550px;padding-left:12px;">Saeimas s&#275;&#382;u darba k&#257;rt&#299;bas<div style="font-size:10pt;font-weight:normal;"> Kalend&#257;rais skats</div></div> 
+	<!-- Stage Navigation -->
+</div>
+<div class="viewHolderText" id="viewHolderText" style="display:none">
+ dCC("1980010909000002","2020","1","9","1","2","dd05f96a-3dfb-4fce-b84e-229255f1302d");
+dCC("1980010909000003","2020","1","9","1","3","dd05f96a-3dfb-4fce-b84e-229255f1302d");
+dCC("1980010909000006","2020","1","9","1","6","dd05f96a-3dfb-4fce-b84e-229255f1302d");
+dCC("1980010912140006","2020","1","9","1","6","dd05f96a-3dfb-4fce-b84e-229255f1302d");
+dCC("1980011609000002","2020","1","16","1","2","59ebe4d8-2c9d-4a9a-8e10-cb8f3b68f6d9");
+dCC("1980011609000003","2020","1","16","1","3","59ebe4d8-2c9d-4a9a-8e10-cb8f3b68f6d9");
+dCC("1980011609000006","2020","1","16","1","6","59ebe4d8-2c9d-4a9a-8e10-cb8f3b68f6d9");
+dCC("1980011612140006","2020","1","16","1","6","59ebe4d8-2c9d-4a9a-8e10-cb8f3b68f6d9");
+dCC("1980011617000002","2020","1","16","5","2","f51b75e2-a658-48fd-8090-04d9679394e2");
+dCC("1980011617000003","2020","1","16","5","3","f51b75e2-a658-48fd-8090-04d9679394e2");
+dCC("1980011617000008","2020","1","16","5","8","f51b75e2-a658-48fd-8090-04d9679394e2");
+dCC("1980012309000002","2020","1","23","1","2","5c406990-4302-4204-b889-fe5b3971d0a5");
+dCC("1980012309000003","2020","1","23","1","3","5c406990-4302-4204-b889-fe5b3971d0a5");
+dCC("1980012309000005","2020","1","23","1","5","5c406990-4302-4204-b889-fe5b3971d0a5");
+dCC("1980012309000006","2020","1","23","1","6","5c406990-4302-4204-b889-fe5b3971d0a5");
+dCC("1980012317000002","2020","1","23","5","2","bcd36cbd-ba65-4e10-9d43-c02d7c17fbb5");
+dCC("1980012317000003","2020","1","23","5","3","bcd36cbd-ba65-4e10-9d43-c02d7c17fbb5");
+dCC("1980012317000008","2020","1","23","5","8","bcd36cbd-ba65-4e10-9d43-c02d7c17fbb5");
+dCC("1980013000000002","2020","1","30","1","2","3f3974a1-9d84-42f7-a64d-9412ba917ba5");
+dCC("1980013000000003","2020","1","30","1","3","3f3974a1-9d84-42f7-a64d-9412ba917ba5");
+dCC("1980013009000005","2020","1","23 / 30","1","5","5c406990-4302-4204-b889-fe5b3971d0a5");
+dCC("1980013009000006","2020","1","23 / 30","1","6","5c406990-4302-4204-b889-fe5b3971d0a5");
+dCC("1980013015300006","2020","1","23 / 30","1","6","5c406990-4302-4204-b889-fe5b3971d0a5");
+dCC("1980013016000005","2020","1","30","1","5","3f3974a1-9d84-42f7-a64d-9412ba917ba5");
+dCC("1980013016000006","2020","1","30","1","6","3f3974a1-9d84-42f7-a64d-9412ba917ba5");
+dCC("1980013017000002","2020","1","30","5","2","0aa4b22a-8813-41df-8dc2-9c27f1979eca");
+dCC("1980013017000003","2020","1","30","5","3","0aa4b22a-8813-41df-8dc2-9c27f1979eca");
+dCC("1980013017000008","2020","1","30","5","8","0aa4b22a-8813-41df-8dc2-9c27f1979eca");
+dCC("1980020600000002","2020","2","6","1","2","c6410ddb-ed46-4b50-a78b-efdf459b2896");
+dCC("1980020600000003","2020","2","6","1","3","c6410ddb-ed46-4b50-a78b-efdf459b2896");
+dCC("1980020609000005","2020","2","30 / 6","1","5","3f3974a1-9d84-42f7-a64d-9412ba917ba5");
+dCC("1980020609000006","2020","2","30 / 6","1","6","3f3974a1-9d84-42f7-a64d-9412ba917ba5");
+dCC("1980020611150006","2020","2","30 / 6","1","6","3f3974a1-9d84-42f7-a64d-9412ba917ba5");
+dCC("1980020611250006","2020","2","6","1","6","c6410ddb-ed46-4b50-a78b-efdf459b2896");
+dCC("1980020612120006","2020","2","6","1","6","c6410ddb-ed46-4b50-a78b-efdf459b2896");
+dCC("1980020617000002","2020","2","6","5","2","682112ce-d81a-439c-b3c6-2131d73c6a2f");
+dCC("1980020617000003","2020","2","6","5","3","682112ce-d81a-439c-b3c6-2131d73c6a2f");
+dCC("1980020617000008","2020","2","6","5","8","682112ce-d81a-439c-b3c6-2131d73c6a2f");
+dCC("1980021309000002","2020","2","13","1","2","9cfbea24-ac84-4286-ae5d-09ffcc7436f6");
+dCC("1980021309000003","2020","2","13","1","3","9cfbea24-ac84-4286-ae5d-09ffcc7436f6");
+dCC("1980021309000005","2020","2","13","1","5","9cfbea24-ac84-4286-ae5d-09ffcc7436f6");
+dCC("1980021309000006","2020","2","13","1","6","9cfbea24-ac84-4286-ae5d-09ffcc7436f6");
+dCC("1980021317000002","2020","2","13","5","2","dad08819-2c9e-4ec6-b27d-34d98ce3b236");
+dCC("1980021317000003","2020","2","13","5","3","dad08819-2c9e-4ec6-b27d-34d98ce3b236");
+dCC("1980021317000008","2020","2","13","5","8","dad08819-2c9e-4ec6-b27d-34d98ce3b236");
+dCC("1980022000000002","2020","2","20","1","2","070c4a29-1acd-4ac4-aca1-568d500c7ada");
+dCC("1980022000000003","2020","2","20","1","3","070c4a29-1acd-4ac4-aca1-568d500c7ada");
+dCC("1980022009000005","2020","2","13 / 20","1","5","9cfbea24-ac84-4286-ae5d-09ffcc7436f6");
+dCC("1980022009000006","2020","2","13 / 20","1","6","9cfbea24-ac84-4286-ae5d-09ffcc7436f6");
+dCC("1980022010390006","2020","2","13 / 20","1","6","9cfbea24-ac84-4286-ae5d-09ffcc7436f6");
+dCC("1980022011100006","2020","2","20","1","6","070c4a29-1acd-4ac4-aca1-568d500c7ada");
+dCC("1980022017220006","2020","2","20","1","6","070c4a29-1acd-4ac4-aca1-568d500c7ada");
+dCC("1980022709000002","2020","2","27","1","2","47fc66e9-3093-4989-bd8d-ebf06b9eec1a");
+dCC("1980022709000003","2020","2","27","1","3","47fc66e9-3093-4989-bd8d-ebf06b9eec1a");
+dCC("1980022709000005","2020","2","27","1","5","47fc66e9-3093-4989-bd8d-ebf06b9eec1a");
+dCC("1980022709000006","2020","2","27","1","6","47fc66e9-3093-4989-bd8d-ebf06b9eec1a");
+dCC("1980022717000002","2020","2","27","5","2","8187202a-c7a0-4fb5-91f0-b47be0e520fe");
+dCC("1980022717000003","2020","2","27","5","3","8187202a-c7a0-4fb5-91f0-b47be0e520fe");
+dCC("1980022717000006","2020","2","27","5","6","8187202a-c7a0-4fb5-91f0-b47be0e520fe");
+dCC("1980022717030006","2020","2","27","5","6","8187202a-c7a0-4fb5-91f0-b47be0e520fe");
+dCC("1980030500000003","2020","3","5","1","3","f83567dd-6fc4-4a76-846a-9f5362aeb414");
+dCC("1980030509000002","2020","3","5","1","2","f83567dd-6fc4-4a76-846a-9f5362aeb414");
+dCC("1980030509000005","2020","3","27 / 5","1","5","47fc66e9-3093-4989-bd8d-ebf06b9eec1a");
+dCC("1980030509000006","2020","3","27 / 5","1","6","47fc66e9-3093-4989-bd8d-ebf06b9eec1a");
+dCC("1980030509470006","2020","3","27 / 5","1","6","47fc66e9-3093-4989-bd8d-ebf06b9eec1a");
+dCC("1980030510000006","2020","3","5","1","6","f83567dd-6fc4-4a76-846a-9f5362aeb414");
+dCC("1980030517000002","2020","3","5","5","2","850df47d-d748-43ca-9f6c-4b5f20c6618e");
+dCC("1980030517000003","2020","3","5","5","3","850df47d-d748-43ca-9f6c-4b5f20c6618e");
+dCC("1980030517000008","2020","3","5","5","8","850df47d-d748-43ca-9f6c-4b5f20c6618e");
+dCC("1980030517000010","2020","3","5","5","10","850df47d-d748-43ca-9f6c-4b5f20c6618e");
+dCC("1980030522000005","2020","3","5","1","5","f83567dd-6fc4-4a76-846a-9f5362aeb414");
+dCC("1980030610000005","2020","3","5 / 6","1","5","f83567dd-6fc4-4a76-846a-9f5362aeb414");
+dCC("1980030610000006","2020","3","5 / 6","1","6","f83567dd-6fc4-4a76-846a-9f5362aeb414");
+dCC("1980031010000005","2020","3","5 / 6 / 10","1","5","f83567dd-6fc4-4a76-846a-9f5362aeb414");
+dCC("1980031010000006","2020","3","5 / 6 / 10","1","6","f83567dd-6fc4-4a76-846a-9f5362aeb414");
+dCC("1980031110000005","2020","3","5 / 6 / 10 / 11","1","5","f83567dd-6fc4-4a76-846a-9f5362aeb414");
+dCC("1980031110000006","2020","3","5 / 6 / 10 / 11","1","6","f83567dd-6fc4-4a76-846a-9f5362aeb414");
+dCC("1980031200000003","2020","3","12","1","3","81a1bad8-121b-406c-ab1c-8e681ec489ee");
+dCC("1980031200000012","2020","3","12","1","12","81a1bad8-121b-406c-ab1c-8e681ec489ee");
+dCC("1980031209000002","2020","3","12","1","2","81a1bad8-121b-406c-ab1c-8e681ec489ee");
+dCC("1980031209000005","2020","3","5 / 6 / 10 / 11 / 12","1","5","f83567dd-6fc4-4a76-846a-9f5362aeb414");
+dCC("1980031209000006","2020","3","5 / 6 / 10 / 11 / 12","1","6","f83567dd-6fc4-4a76-846a-9f5362aeb414");
+dCC("1980031215300002","2020","3","12","2","2","fb6e71e1-a982-482f-bad9-e507f0c8e40d");
+dCC("1980031215300003","2020","3","12","2","3","fb6e71e1-a982-482f-bad9-e507f0c8e40d");
+dCC("1980031215300006","2020","3","12","2","6","fb6e71e1-a982-482f-bad9-e507f0c8e40d");
+dCC("1980031216010006","2020","3","12","2","6","fb6e71e1-a982-482f-bad9-e507f0c8e40d");
+dCC("1980031217000002","2020","3","12","5","2","52213dff-a2b1-48bb-b1d0-ab6886932fcc");
+dCC("1980031217000003","2020","3","12","5","3","52213dff-a2b1-48bb-b1d0-ab6886932fcc");
+dCC("1980031217000008","2020","3","12","5","8","52213dff-a2b1-48bb-b1d0-ab6886932fcc");
+dCC("1980031300000002","2020","3","13","2","2","31a9f1df-1149-46ab-8f4c-668a2fb52061");
+dCC("1980031300000003","2020","3","13","2","3","31a9f1df-1149-46ab-8f4c-668a2fb52061");
+dCC("1980031310000005","2020","3","5 / 6 / 10 / 11 / 12 / 13","1","5","f83567dd-6fc4-4a76-846a-9f5362aeb414");
+dCC("1980031310000006","2020","3","13","2","6","31a9f1df-1149-46ab-8f4c-668a2fb52061");
+dCC("1980031310000006","2020","3","5 / 6 / 10 / 11 / 12 / 13","1","6","f83567dd-6fc4-4a76-846a-9f5362aeb414");
+dCC("1980031311400006","2020","3","13","2","6","31a9f1df-1149-46ab-8f4c-668a2fb52061");
+dCC("1980031609000002","2020","3","16","2","2","ea0424d0-c0bc-49d7-8b7d-bb94155f0010");
+dCC("1980031609000003","2020","3","16","2","3","ea0424d0-c0bc-49d7-8b7d-bb94155f0010");
+dCC("1980031609000006","2020","3","16","2","6","ea0424d0-c0bc-49d7-8b7d-bb94155f0010");
+dCC("1980031610410006","2020","3","16","2","6","ea0424d0-c0bc-49d7-8b7d-bb94155f0010");
+dCC("1980031900000003","2020","3","19","1","3","06b69b21-84d9-4afd-916f-ad41dbc62071");
+dCC("1980031900000012","2020","3","19","1","12","06b69b21-84d9-4afd-916f-ad41dbc62071");
+dCC("1980031909000002","2020","3","19","1","2","06b69b21-84d9-4afd-916f-ad41dbc62071");
+dCC("1980031917000002","2020","3","19","5","2","4fbcb2c9-b3fd-4126-a56c-bf0a55d3900a");
+dCC("1980031917000003","2020","3","19","5","3","4fbcb2c9-b3fd-4126-a56c-bf0a55d3900a");
+dCC("1980031923000008","2020","3","19","5","8","4fbcb2c9-b3fd-4126-a56c-bf0a55d3900a");
+dCC("1980032000000002","2020","3","20","2","2","c196221a-e664-4f48-97ae-bde852a05c29");
+dCC("1980032000000002","2020","3","20","2","2","cad9e2b2-4f0c-4a0d-94a5-fd54ee1a6c71");
+dCC("1980032011000002","2020","3","20","2","2","fd832fd1-1112-4098-9229-ffad30268ddb");
+dCC("1980032011000003","2020","3","20","2","3","fd832fd1-1112-4098-9229-ffad30268ddb");
+dCC("1980032011000006","2020","3","20","2","6","fd832fd1-1112-4098-9229-ffad30268ddb");
+dCC("1980032012230006","2020","3","20","2","6","fd832fd1-1112-4098-9229-ffad30268ddb");
+dCC("1980032014450003","2020","3","20","2","3","c196221a-e664-4f48-97ae-bde852a05c29");
+dCC("1980032014450006","2020","3","20","2","6","c196221a-e664-4f48-97ae-bde852a05c29");
+dCC("1980032016200006","2020","3","20","2","6","c196221a-e664-4f48-97ae-bde852a05c29");
+dCC("1980032019450003","2020","3","20","2","3","cad9e2b2-4f0c-4a0d-94a5-fd54ee1a6c71");
+dCC("1980032019450006","2020","3","20","2","6","cad9e2b2-4f0c-4a0d-94a5-fd54ee1a6c71");
+dCC("1980032023380006","2020","3","20","2","6","cad9e2b2-4f0c-4a0d-94a5-fd54ee1a6c71");
+dCC("1980040200000002","2020","4","2","2","2","88ae6ef2-c5a6-42ce-ab0c-b1a03a3cc440");
+dCC("1980040210000002","2020","4","2","2","2","878404fd-0c15-49a5-92ac-e4294789373f");
+dCC("1980040210000003","2020","4","2","2","3","878404fd-0c15-49a5-92ac-e4294789373f");
+dCC("1980040210000006","2020","4","2","2","6","878404fd-0c15-49a5-92ac-e4294789373f");
+dCC("1980040212350006","2020","4","2","2","6","878404fd-0c15-49a5-92ac-e4294789373f");
+dCC("1980040214400003","2020","4","2","2","3","88ae6ef2-c5a6-42ce-ab0c-b1a03a3cc440");
+dCC("1980040214400006","2020","4","2","2","6","88ae6ef2-c5a6-42ce-ab0c-b1a03a3cc440");
+dCC("1980040216320006","2020","4","2","2","6","88ae6ef2-c5a6-42ce-ab0c-b1a03a3cc440");
+dCC("1980040300000002","2020","4","3","2","2","b5a35078-2fd1-4b28-b0f4-e5e880d91ef0");
+dCC("1980040300000002","2020","4","3","2","2","da6783ff-028a-4919-b28d-5a1c48127ca9");
+dCC("1980040300000003","2020","4","3","2","3","b5a35078-2fd1-4b28-b0f4-e5e880d91ef0");
+dCC("1980040300000003","2020","4","3","2","3","da6783ff-028a-4919-b28d-5a1c48127ca9");
+dCC("1980040300000006","2020","4","3","2","6","da6783ff-028a-4919-b28d-5a1c48127ca9");
+dCC("1980040310000002","2020","4","3","2","2","16e2ee90-0599-44f6-bfac-de406f61ecd1");
+dCC("1980040310000003","2020","4","3","2","3","16e2ee90-0599-44f6-bfac-de406f61ecd1");
+dCC("1980040310000006","2020","4","3","2","6","16e2ee90-0599-44f6-bfac-de406f61ecd1");
+dCC("1980040311390006","2020","4","3","2","6","16e2ee90-0599-44f6-bfac-de406f61ecd1");
+dCC("1980040312450006","2020","4","3","2","6","b5a35078-2fd1-4b28-b0f4-e5e880d91ef0");
+dCC("1980040313340006","2020","4","3","2","6","b5a35078-2fd1-4b28-b0f4-e5e880d91ef0");
+dCC("1980040321040006","2020","4","3","2","6","da6783ff-028a-4919-b28d-5a1c48127ca9");
+dCC("1980041600000002","2020","4","16","2","2","033bf7c4-ef58-4ff5-9c9b-9c7937519a31");
+dCC("1980041600000002","2020","4","16","2","2","eaaf2650-0b75-4cab-b926-b518fadffc2e");
+dCC("1980041610000002","2020","4","16","2","2","be4fd346-725e-4903-abc4-ebe1a1d949a8");
+dCC("1980041610000003","2020","4","16","2","3","be4fd346-725e-4903-abc4-ebe1a1d949a8");
+dCC("1980041610000006","2020","4","16","2","6","be4fd346-725e-4903-abc4-ebe1a1d949a8");
+dCC("1980041612000006","2020","4","16","2","6","be4fd346-725e-4903-abc4-ebe1a1d949a8");
+dCC("1980041614400003","2020","4","16","2","3","033bf7c4-ef58-4ff5-9c9b-9c7937519a31");
+dCC("1980041614400006","2020","4","16","2","6","033bf7c4-ef58-4ff5-9c9b-9c7937519a31");
+dCC("1980041615420006","2020","4","16","2","6","033bf7c4-ef58-4ff5-9c9b-9c7937519a31");
+dCC("1980041619000003","2020","4","16","2","3","eaaf2650-0b75-4cab-b926-b518fadffc2e");
+dCC("1980041619000006","2020","4","16","2","6","eaaf2650-0b75-4cab-b926-b518fadffc2e");
+dCC("1980041619500006","2020","4","16","2","6","eaaf2650-0b75-4cab-b926-b518fadffc2e");
+dCC("1980041622000005","2020","4","5 / 6 / 10 / 11 / 12 / 13 / 16","1","5","f83567dd-6fc4-4a76-846a-9f5362aeb414");
+dCC("1980041622000012","2020","4","12 / 16","1","12","81a1bad8-121b-406c-ab1c-8e681ec489ee");
+dCC("1980041622000012","2020","4","19 / 16","1","12","06b69b21-84d9-4afd-916f-ad41dbc62071");
+dCC("1980041623000008","2020","4","19 / 16","5","8","4fbcb2c9-b3fd-4126-a56c-bf0a55d3900a");
+dCC("1980042310000002","2020","4","23","2","2","2ebf2ed7-255d-43b8-a476-2d996154196d");
+dCC("1980042310000003","2020","4","23","2","3","2ebf2ed7-255d-43b8-a476-2d996154196d");
+dCC("1980042310000005","2020","4","23","2","5","2ebf2ed7-255d-43b8-a476-2d996154196d");
+dCC("1980042310000006","2020","4","23","2","6","2ebf2ed7-255d-43b8-a476-2d996154196d");
+dCC("1980042400000002","2020","4","24","2","2","63b97fbf-b8a0-4116-bc13-0db18971d5b5");
+dCC("1980042400000002","2020","4","24","2","2","91237659-e95e-48f1-96d2-d8fbcbf3ba5d");
+dCC("1980042410000005","2020","4","23 / 24","2","5","2ebf2ed7-255d-43b8-a476-2d996154196d");
+dCC("1980042410000006","2020","4","23 / 24","2","6","2ebf2ed7-255d-43b8-a476-2d996154196d");
+dCC("1980042412020006","2020","4","23 / 24","2","6","2ebf2ed7-255d-43b8-a476-2d996154196d");
+dCC("1980042412450003","2020","4","24","2","3","63b97fbf-b8a0-4116-bc13-0db18971d5b5");
+dCC("1980042412450006","2020","4","24","2","6","63b97fbf-b8a0-4116-bc13-0db18971d5b5");
+dCC("1980042414000006","2020","4","24","2","6","63b97fbf-b8a0-4116-bc13-0db18971d5b5");
+dCC("1980042416150003","2020","4","24","2","3","91237659-e95e-48f1-96d2-d8fbcbf3ba5d");
+dCC("1980042416150006","2020","4","24","2","6","91237659-e95e-48f1-96d2-d8fbcbf3ba5d");
+dCC("1980042416500006","2020","4","24","2","6","91237659-e95e-48f1-96d2-d8fbcbf3ba5d");
+dCC("1980043000000002","2020","4","30","2","2","1b912ef3-0009-4d37-b1cd-b709271514d1");
+dCC("1980043009000002","2020","4","30","2","2","ed801606-ed83-4bf3-863c-33711bb6974d");
+dCC("1980043009000003","2020","4","30","2","3","ed801606-ed83-4bf3-863c-33711bb6974d");
+dCC("1980043009000006","2020","4","30","2","6","ed801606-ed83-4bf3-863c-33711bb6974d");
+dCC("1980043010070006","2020","4","30","2","6","ed801606-ed83-4bf3-863c-33711bb6974d");
+dCC("1980043011400003","2020","4","30","2","3","1b912ef3-0009-4d37-b1cd-b709271514d1");
+dCC("1980043011400006","2020","4","30","2","6","1b912ef3-0009-4d37-b1cd-b709271514d1");
+dCC("1980043012500006","2020","4","30","2","6","1b912ef3-0009-4d37-b1cd-b709271514d1");
+dCC("1980050412000002","2020","5","4","3","2","eee791b5-10fc-4d67-a680-ca379632330b");
+dCC("1980050412000003","2020","5","4","3","3","eee791b5-10fc-4d67-a680-ca379632330b");
+dCC("1980050412000006","2020","5","4","3","6","eee791b5-10fc-4d67-a680-ca379632330b");
+dCC("1980050412290006","2020","5","4","3","6","eee791b5-10fc-4d67-a680-ca379632330b");
+dCC("1980050700000002","2020","5","7","2","2","2c006564-df8c-4207-8a41-d330568c1dcf");
+dCC("1980050700000002","2020","5","7","2","2","937688ee-c13e-4701-84d0-30fe7d072dab");
+dCC("1980050700000002","2020","5","7","2","2","9c34e56a-c739-47de-b4a2-a09bef65d39c");
+dCC("1980050709000003","2020","5","7","2","3","2c006564-df8c-4207-8a41-d330568c1dcf");
+dCC("1980050709000006","2020","5","7","2","6","2c006564-df8c-4207-8a41-d330568c1dcf");
+dCC("1980050716210006","2020","5","7","2","6","2c006564-df8c-4207-8a41-d330568c1dcf");
+dCC("1980050718000003","2020","5","7","2","3","937688ee-c13e-4701-84d0-30fe7d072dab");
+dCC("1980050718000006","2020","5","7","2","6","937688ee-c13e-4701-84d0-30fe7d072dab");
+dCC("1980050718480006","2020","5","7","2","6","937688ee-c13e-4701-84d0-30fe7d072dab");
+dCC("1980050720450003","2020","5","7","2","3","9c34e56a-c739-47de-b4a2-a09bef65d39c");
+dCC("1980050720450006","2020","5","7","2","6","9c34e56a-c739-47de-b4a2-a09bef65d39c");
+dCC("1980050721300006","2020","5","7","2","6","9c34e56a-c739-47de-b4a2-a09bef65d39c");
+dCC("1980051400000002","2020","5","14","2","2","63ec5137-4d19-4d67-b11e-c3c7e954adde");
+dCC("1980051400000002","2020","5","14","2","2","79b0ff3b-30ed-4562-82d7-b12c81595389");
+dCC("1980051409000002","2020","5","14","2","2","dc835e5b-5b7f-436c-86c1-3bde174e5a98");
+dCC("1980051409000003","2020","5","14","2","3","dc835e5b-5b7f-436c-86c1-3bde174e5a98");
+dCC("1980051409000006","2020","5","14","2","6","dc835e5b-5b7f-436c-86c1-3bde174e5a98");
+dCC("1980051418230006","2020","5","14","2","6","dc835e5b-5b7f-436c-86c1-3bde174e5a98");
+dCC("1980051419000003","2020","5","14","2","3","79b0ff3b-30ed-4562-82d7-b12c81595389");
+dCC("1980051419000006","2020","5","14","2","6","79b0ff3b-30ed-4562-82d7-b12c81595389");
+dCC("1980051419520006","2020","5","14","2","6","79b0ff3b-30ed-4562-82d7-b12c81595389");
+dCC("1980051422100003","2020","5","14","2","3","63ec5137-4d19-4d67-b11e-c3c7e954adde");
+dCC("1980051422100005","2020","5","14","2","5","63ec5137-4d19-4d67-b11e-c3c7e954adde");
+dCC("1980051422100006","2020","5","14","2","6","63ec5137-4d19-4d67-b11e-c3c7e954adde");
+dCC("1980051914000005","2020","5","14 / 19","2","5","63ec5137-4d19-4d67-b11e-c3c7e954adde");
+dCC("1980051914000006","2020","5","14 / 19","2","6","63ec5137-4d19-4d67-b11e-c3c7e954adde");
+dCC("1980051918470006","2020","5","14 / 19","2","6","63ec5137-4d19-4d67-b11e-c3c7e954adde");
+dCC("1980052100000002","2020","5","21","2","2","b84b8d0a-a263-4f4c-a9b7-8f29c32cc267");
+dCC("1980052109000002","2020","5","21","2","2","54b5d77c-7296-4956-badc-73df29a48a9e");
+dCC("1980052110000003","2020","5","21","2","3","54b5d77c-7296-4956-badc-73df29a48a9e");
+dCC("1980052110000006","2020","5","21","2","6","54b5d77c-7296-4956-badc-73df29a48a9e");
+dCC("1980052114410006","2020","5","21","2","6","54b5d77c-7296-4956-badc-73df29a48a9e");
+dCC("1980052115200003","2020","5","21","2","3","b84b8d0a-a263-4f4c-a9b7-8f29c32cc267");
+dCC("1980052115200006","2020","5","21","2","6","b84b8d0a-a263-4f4c-a9b7-8f29c32cc267");
+dCC("1980052116540006","2020","5","21","2","6","b84b8d0a-a263-4f4c-a9b7-8f29c32cc267");
+dCC("1980052614000002","2020","5","26","2","2","daee1650-bb08-46da-9d32-46b9f8121de4");
+dCC("1980052614000003","2020","5","26","2","3","daee1650-bb08-46da-9d32-46b9f8121de4");
+dCC("1980052614000005","2020","5","26","2","5","daee1650-bb08-46da-9d32-46b9f8121de4");
+dCC("1980052614000006","2020","5","26","2","6","daee1650-bb08-46da-9d32-46b9f8121de4");
+dCC("1980052809000002","2020","5","28","2","2","3a0ed232-74f1-4087-91c4-1777e9c3eeed");
+dCC("1980052809000003","2020","5","28","2","3","3a0ed232-74f1-4087-91c4-1777e9c3eeed");
+dCC("1980052809000005","2020","5","28","2","5","3a0ed232-74f1-4087-91c4-1777e9c3eeed");
+dCC("1980052809000006","2020","5","28","2","6","3a0ed232-74f1-4087-91c4-1777e9c3eeed");
+dCC("1980052900000002","2020","5","29","2","2","f7b6eb12-b0f6-4193-8d22-f42e5336196d");
+dCC("1980052900000003","2020","5","29","2","3","f7b6eb12-b0f6-4193-8d22-f42e5336196d");
+dCC("1980052900000005","2020","5","26 / 29","2","5","daee1650-bb08-46da-9d32-46b9f8121de4");
+dCC("1980052900000005","2020","5","28 / 29","2","5","3a0ed232-74f1-4087-91c4-1777e9c3eeed");
+dCC("1980052900000006","2020","5","26 / 29","2","6","daee1650-bb08-46da-9d32-46b9f8121de4");
+dCC("1980052900000006","2020","5","28 / 29","2","6","3a0ed232-74f1-4087-91c4-1777e9c3eeed");
+dCC("1980052910000002","2020","5","29","2","2","ea82cf7d-4b8c-47cf-bbcd-67e0a44ff0dc");
+dCC("1980052910000003","2020","5","29","2","3","ea82cf7d-4b8c-47cf-bbcd-67e0a44ff0dc");
+dCC("1980052910000006","2020","5","29","2","6","ea82cf7d-4b8c-47cf-bbcd-67e0a44ff0dc");
+dCC("1980052910120006","2020","5","29","2","6","ea82cf7d-4b8c-47cf-bbcd-67e0a44ff0dc");
+dCC("1980052912020006","2020","5","28 / 29","2","6","3a0ed232-74f1-4087-91c4-1777e9c3eeed");
+dCC("1980052917400006","2020","5","29","2","6","f7b6eb12-b0f6-4193-8d22-f42e5336196d");
+dCC("1980052918100006","2020","5","29","2","6","f7b6eb12-b0f6-4193-8d22-f42e5336196d");
+dCC("1980060214000005","2020","6","26 / 29 / 2","2","5","daee1650-bb08-46da-9d32-46b9f8121de4");
+dCC("1980060214000006","2020","6","26 / 29 / 2","2","6","daee1650-bb08-46da-9d32-46b9f8121de4");
+dCC("1980060313000005","2020","6","26 / 29 / 2 / 3","2","5","daee1650-bb08-46da-9d32-46b9f8121de4");
+dCC("1980060313000006","2020","6","26 / 29 / 2 / 3","2","6","daee1650-bb08-46da-9d32-46b9f8121de4");
+dCC("1980060409000002","2020","6","4","2","2","48db58f8-0eb8-433d-91a2-4e2675749cb2");
+dCC("1980060409000003","2020","6","4","2","3","48db58f8-0eb8-433d-91a2-4e2675749cb2");
+dCC("1980060409000006","2020","6","4","2","6","48db58f8-0eb8-433d-91a2-4e2675749cb2");
+dCC("1980060415590006","2020","6","4","2","6","48db58f8-0eb8-433d-91a2-4e2675749cb2");
+dCC("1980060500000002","2020","6","5","2","2","2f2e8e2a-827f-4ced-9c1b-0decdb465c12");
+dCC("1980060511000003","2020","6","5","2","3","2f2e8e2a-827f-4ced-9c1b-0decdb465c12");
+dCC("1980060511000006","2020","6","5","2","6","2f2e8e2a-827f-4ced-9c1b-0decdb465c12");
+dCC("1980060520120006","2020","6","5","2","6","2f2e8e2a-827f-4ced-9c1b-0decdb465c12");
+dCC("1980060914000005","2020","6","26 / 29 / 2 / 3 / 9","2","5","daee1650-bb08-46da-9d32-46b9f8121de4");
+dCC("1980060914000006","2020","6","26 / 29 / 2 / 3 / 9","2","6","daee1650-bb08-46da-9d32-46b9f8121de4");
+dCC("1980061013000005","2020","6","26 / 29 / 2 / 3 / 9 / 10","2","5","daee1650-bb08-46da-9d32-46b9f8121de4");
+dCC("1980061013000006","2020","6","26 / 29 / 2 / 3 / 9 / 10","2","6","daee1650-bb08-46da-9d32-46b9f8121de4");
+dCC("1980061017200006","2020","6","26 / 29 / 2 / 3 / 9 / 10","2","6","daee1650-bb08-46da-9d32-46b9f8121de4");
+dCC("1980061109000002","2020","6","11","2","2","0099f8ad-9f19-4051-934d-83a393b4bc36");
+dCC("1980061109000002","2020","6","11","2","2","99efe45d-7932-4618-9bcd-68a7c7c7d249");
+dCC("1980061109000003","2020","6","11","2","3","0099f8ad-9f19-4051-934d-83a393b4bc36");
+dCC("1980061109000006","2020","6","11","2","6","0099f8ad-9f19-4051-934d-83a393b4bc36");
+dCC("1980061109110006","2020","6","11","2","6","0099f8ad-9f19-4051-934d-83a393b4bc36");
+dCC("1980061109300003","2020","6","11","2","3","99efe45d-7932-4618-9bcd-68a7c7c7d249");
+dCC("1980061109300005","2020","6","11","2","5","99efe45d-7932-4618-9bcd-68a7c7c7d249");
+dCC("1980061109300006","2020","6","11","2","6","99efe45d-7932-4618-9bcd-68a7c7c7d249");
+dCC("1980061614000005","2020","6","11 / 16","2","5","99efe45d-7932-4618-9bcd-68a7c7c7d249");
+dCC("1980061614000006","2020","6","11 / 16","2","6","99efe45d-7932-4618-9bcd-68a7c7c7d249");
+dCC("1980061620030006","2020","6","11 / 16","2","6","99efe45d-7932-4618-9bcd-68a7c7c7d249");
+dCC("1980061620150003","2020","6","16","2","3","d7c2e71f-26ab-4098-a9d5-9ce8b92ab27f");
+dCC("1980061620150006","2020","6","16","2","6","d7c2e71f-26ab-4098-a9d5-9ce8b92ab27f");
+dCC("1980061620280006","2020","6","16","2","6","d7c2e71f-26ab-4098-a9d5-9ce8b92ab27f");
+dCC("1980061700000002","2020","6","17","2","2","b08186c7-198a-45a5-a842-22e09df22569");
+dCC("1980061714000002","2020","6","17","2","2","4cf3fb4d-cb22-46b7-aa39-6a1689291728");
+dCC("1980061714000003","2020","6","17","2","3","4cf3fb4d-cb22-46b7-aa39-6a1689291728");
+dCC("1980061714000006","2020","6","17","2","6","4cf3fb4d-cb22-46b7-aa39-6a1689291728");
+dCC("1980061718490006","2020","6","17","2","6","4cf3fb4d-cb22-46b7-aa39-6a1689291728");
+dCC("1980061719100003","2020","6","17","2","3","b08186c7-198a-45a5-a842-22e09df22569");
+dCC("1980061719100006","2020","6","17","2","6","b08186c7-198a-45a5-a842-22e09df22569");
+dCC("1980061720100006","2020","6","17","2","6","b08186c7-198a-45a5-a842-22e09df22569");
+dCC("1980061809000002","2020","6","18","2","2","a645f243-265b-406a-beee-d338136b7dd0");
+dCC("1980061809000003","2020","6","18","2","3","a645f243-265b-406a-beee-d338136b7dd0");
+dCC("1980061809000006","2020","6","18","2","6","a645f243-265b-406a-beee-d338136b7dd0");
+dCC("1980061813220006","2020","6","18","2","6","a645f243-265b-406a-beee-d338136b7dd0");
+dCC("1980070209000002","2020","7","2","6","2","7102c9c3-aec5-461d-a0fd-15cc01fbd6da");
+dCC("1980070210000003","2020","7","2","6","3","7102c9c3-aec5-461d-a0fd-15cc01fbd6da");
+dCC("1980070210000005","2020","7","2","6","5","7102c9c3-aec5-461d-a0fd-15cc01fbd6da");
+dCC("1980070210000006","2020","7","2","6","6","7102c9c3-aec5-461d-a0fd-15cc01fbd6da");
+dCC("1980070900000002","2020","7","9","6","2","75fef9dc-149f-47b8-b19d-6e74bb37fc3f");
+dCC("1980070900000002","2020","7","9","6","2","e281c075-ff18-4f97-a9f4-e5a07d382a47");
+dCC("1980070900000003","2020","7","9","6","3","75fef9dc-149f-47b8-b19d-6e74bb37fc3f");
+dCC("1980070910000005","2020","7","2 / 9","6","5","7102c9c3-aec5-461d-a0fd-15cc01fbd6da");
+dCC("1980070910000006","2020","7","2 / 9","6","6","7102c9c3-aec5-461d-a0fd-15cc01fbd6da");
+dCC("1980070911220006","2020","7","2 / 9","6","6","7102c9c3-aec5-461d-a0fd-15cc01fbd6da");
+dCC("1980070911500005","2020","7","9","6","5","75fef9dc-149f-47b8-b19d-6e74bb37fc3f");
+dCC("1980070911500006","2020","7","9","6","6","75fef9dc-149f-47b8-b19d-6e74bb37fc3f");
+dCC("1980070918000003","2020","7","9","6","3","e281c075-ff18-4f97-a9f4-e5a07d382a47");
+dCC("1980070918000006","2020","7","9","6","6","e281c075-ff18-4f97-a9f4-e5a07d382a47");
+dCC("1980070918470006","2020","7","9","6","6","e281c075-ff18-4f97-a9f4-e5a07d382a47");
+dCC("1980072100000002","2020","7","21","6","2","90ef832a-0983-496a-99cc-07d2797052a3");
+dCC("1980072100000002","2020","7","21","6","2","d5d95af7-ac51-4e0a-b328-c4c6ba5be1f9");
+dCC("1980072110000002","2020","7","21","6","2","35fa6e0d-bc3a-4476-ad7d-731694019526");
+dCC("1980072110000003","2020","7","21","6","3","35fa6e0d-bc3a-4476-ad7d-731694019526");
+dCC("1980072110000006","2020","7","21","6","6","35fa6e0d-bc3a-4476-ad7d-731694019526");
+dCC("1980072110310006","2020","7","21","6","6","35fa6e0d-bc3a-4476-ad7d-731694019526");
+dCC("1980072112200003","2020","7","21","6","3","90ef832a-0983-496a-99cc-07d2797052a3");
+dCC("1980072112200006","2020","7","21","6","6","90ef832a-0983-496a-99cc-07d2797052a3");
+dCC("1980072113290006","2020","7","21","6","6","90ef832a-0983-496a-99cc-07d2797052a3");
+dCC("1980072115300003","2020","7","21","6","3","d5d95af7-ac51-4e0a-b328-c4c6ba5be1f9");
+dCC("1980072115300006","2020","7","21","6","6","d5d95af7-ac51-4e0a-b328-c4c6ba5be1f9");
+dCC("1980072116140006","2020","7","21","6","6","d5d95af7-ac51-4e0a-b328-c4c6ba5be1f9");
+dCC("1980081800000002","2020","8","18","2","2","d84d7337-170d-47b3-8af9-ad55b8008810");
+dCC("1980081800000002","2020","8","18","6","2","698c77b9-e7a5-478e-b0da-70fe4475192a");
+dCC("1980081810000003","2020","8","18","6","3","d84d7337-170d-47b3-8af9-ad55b8008810");
+dCC("1980081810000006","2020","8","18","6","6","d84d7337-170d-47b3-8af9-ad55b8008810");
+dCC("1980081811310006","2020","8","18","6","6","d84d7337-170d-47b3-8af9-ad55b8008810");
+dCC("1980081811500003","2020","8","18","6","3","698c77b9-e7a5-478e-b0da-70fe4475192a");
+dCC("1980081811500006","2020","8","18","6","6","698c77b9-e7a5-478e-b0da-70fe4475192a");
+dCC("1980081812150006","2020","8","18","6","6","698c77b9-e7a5-478e-b0da-70fe4475192a");
+dCC("1980090309000002","2020","9","3","2","2","88f39094-b94d-4eff-a693-4e8c7ddabc08");
+dCC("1980090309000003","2020","9","3","2","3","88f39094-b94d-4eff-a693-4e8c7ddabc08");
+dCC("1980090309000006","2020","9","3","2","6","88f39094-b94d-4eff-a693-4e8c7ddabc08");
+dCC("1980090314370006","2020","9","3","2","6","88f39094-b94d-4eff-a693-4e8c7ddabc08");
+dCC("1980091009000002","2020","9","10","2","2","26d73c3f-e5f3-47f8-a363-60f1c1b3a4ca");
+dCC("1980091009000003","2020","9","10","2","3","26d73c3f-e5f3-47f8-a363-60f1c1b3a4ca");
+dCC("1980091009000006","2020","9","10","2","6","26d73c3f-e5f3-47f8-a363-60f1c1b3a4ca");
+dCC("1980091015100006","2020","9","10","2","6","26d73c3f-e5f3-47f8-a363-60f1c1b3a4ca");
+dCC("1980091017000002","2020","9","10","5","2","f52f82a7-36e7-4011-944d-b1597417d197");
+dCC("1980091017000003","2020","9","10","5","3","f52f82a7-36e7-4011-944d-b1597417d197");
+dCC("1980091017000008","2020","9","10","5","8","f52f82a7-36e7-4011-944d-b1597417d197");
+dCC("1980091709000002","2020","9","17","2","2","dfdad939-48e8-4a3d-bfae-ccacd520dec3");
+dCC("1980091709000003","2020","9","17","2","3","dfdad939-48e8-4a3d-bfae-ccacd520dec3");
+dCC("1980091709000005","2020","9","17","2","5","dfdad939-48e8-4a3d-bfae-ccacd520dec3");
+dCC("1980091709000006","2020","9","17","2","6","dfdad939-48e8-4a3d-bfae-ccacd520dec3");
+dCC("1980091715000006","2020","9","5 / 6 / 10 / 11 / 12 / 13 / 17","1","6","f83567dd-6fc4-4a76-846a-9f5362aeb414");
+dCC("1980091717000002","2020","9","17","5","2","8b238eb4-7574-431e-a36b-40696d880e77");
+dCC("1980091717000003","2020","9","17","5","3","8b238eb4-7574-431e-a36b-40696d880e77");
+dCC("1980091717000008","2020","9","17","5","8","8b238eb4-7574-431e-a36b-40696d880e77");
+dCC("1980092400000002","2020","9","24","2","2","ae69c5e1-3457-4ffb-945e-7089b5d11c46");
+dCC("1980092400000002","2020","9","24","2","2","f60279bc-d84f-4c87-98ef-d89ab631a57b");
+dCC("1980092400000003","2020","9","24","2","3","ae69c5e1-3457-4ffb-945e-7089b5d11c46");
+dCC("1980092409000005","2020","9","17 / 24","2","5","dfdad939-48e8-4a3d-bfae-ccacd520dec3");
+dCC("1980092409000006","2020","9","17 / 24","2","6","dfdad939-48e8-4a3d-bfae-ccacd520dec3");
+dCC("1980092411130006","2020","9","17 / 24","2","6","dfdad939-48e8-4a3d-bfae-ccacd520dec3");
+dCC("1980092411130006","2020","9","9 / 24","6","6","75fef9dc-149f-47b8-b19d-6e74bb37fc3f");
+dCC("1980092411450003","2020","9","24","2","3","f60279bc-d84f-4c87-98ef-d89ab631a57b");
+dCC("1980092411450005","2020","9","24","2","5","f60279bc-d84f-4c87-98ef-d89ab631a57b");
+dCC("1980092411450006","2020","9","24","2","6","f60279bc-d84f-4c87-98ef-d89ab631a57b");
+dCC("1980092414270006","2020","9","24","2","6","ae69c5e1-3457-4ffb-945e-7089b5d11c46");
+dCC("1980092414340006","2020","9","24","2","6","ae69c5e1-3457-4ffb-945e-7089b5d11c46");
+dCC("1980092417000002","2020","9","24","5","2","782b5bae-eb63-46b1-8694-d723d4a3cf24");
+dCC("1980092417000003","2020","9","24","5","3","782b5bae-eb63-46b1-8694-d723d4a3cf24");
+dCC("1980092417000008","2020","9","24","5","8","782b5bae-eb63-46b1-8694-d723d4a3cf24");
+dCC("1980100100000002","2020","10","1","2","2","5fc71f28-9f3f-41ae-9506-001b2b410d5e");
+dCC("1980100100000003","2020","10","1","2","3","5fc71f28-9f3f-41ae-9506-001b2b410d5e");
+dCC("1980100100000006","2020","10","1","2","6","5fc71f28-9f3f-41ae-9506-001b2b410d5e");
+dCC("1980100109000005","2020","10","24 / 1","2","5","f60279bc-d84f-4c87-98ef-d89ab631a57b");
+dCC("1980100109000006","2020","10","24 / 1","2","6","f60279bc-d84f-4c87-98ef-d89ab631a57b");
+dCC("1980100112340006","2020","10","1","2","6","5fc71f28-9f3f-41ae-9506-001b2b410d5e");
+dCC("1980100113300002","2020","10","1","2","2","06d60de3-afa0-4876-a9f8-0f9905147286");
+dCC("1980100113300003","2020","10","1","2","3","06d60de3-afa0-4876-a9f8-0f9905147286");
+dCC("1980100113300006","2020","10","1","2","6","06d60de3-afa0-4876-a9f8-0f9905147286");
+dCC("1980100115050006","2020","10","1","2","6","06d60de3-afa0-4876-a9f8-0f9905147286");
+
+
+ 
+ dCC("1980100800000002","2020","10","8","2","2","5a4bc66c-b268-46d1-8c82-9b2624144ba8");
+dCC("1980100800000002","2020","10","8","2","2","cf8f9bf8-4769-48c5-b14f-88376ce57c58");
+dCC("1980100800000003","2020","10","8","2","3","cf8f9bf8-4769-48c5-b14f-88376ce57c58");
+dCC("1980100809000002","2020","10","8","2","2","4a640315-511f-4b45-b246-f0ba6235b072");
+dCC("1980100809000003","2020","10","8","2","3","4a640315-511f-4b45-b246-f0ba6235b072");
+dCC("1980100809000005","2020","10","24 / 1 / 8","2","5","f60279bc-d84f-4c87-98ef-d89ab631a57b");
+dCC("1980100809000006","2020","10","24 / 1 / 8","2","6","f60279bc-d84f-4c87-98ef-d89ab631a57b");
+dCC("1980100809000006","2020","10","8","2","6","4a640315-511f-4b45-b246-f0ba6235b072");
+dCC("1980100809120006","2020","10","8","2","6","4a640315-511f-4b45-b246-f0ba6235b072");
+dCC("1980100809270006","2020","10","8","2","6","cf8f9bf8-4769-48c5-b14f-88376ce57c58");
+dCC("1980100809520006","2020","10","8","2","6","cf8f9bf8-4769-48c5-b14f-88376ce57c58");
+dCC("1980101509000002","2020","10","15","2","2","5fbc617f-c2a0-45cc-87bf-cfd7c963818c");
+dCC("1980101509000003","2020","10","15","2","3","5fbc617f-c2a0-45cc-87bf-cfd7c963818c");
+dCC("1980101509000006","2020","10","15","2","6","5fbc617f-c2a0-45cc-87bf-cfd7c963818c");
+dCC("1980101509300005","2020","10","24 / 1 / 8 / 15","2","5","f60279bc-d84f-4c87-98ef-d89ab631a57b");
+dCC("1980101509300006","2020","10","24 / 1 / 8 / 15","2","6","f60279bc-d84f-4c87-98ef-d89ab631a57b");
+dCC("1980101511370006","2020","10","15","2","6","5fbc617f-c2a0-45cc-87bf-cfd7c963818c");
+dCC("1980101609000002","2020","10","16","2","2","5ee6fb37-c3ae-403f-acd5-750f205cde5a");
+dCC("1980101609000003","2020","10","16","2","3","5ee6fb37-c3ae-403f-acd5-750f205cde5a");
+dCC("1980101609000006","2020","10","16","2","6","5ee6fb37-c3ae-403f-acd5-750f205cde5a");
+dCC("1980101610550006","2020","10","16","2","6","5ee6fb37-c3ae-403f-acd5-750f205cde5a");
+dCC("1980102200000002","2020","10","22","2","2","39ab99ec-986b-467c-bca4-1ce96febb203");
+dCC("1980102200000003","2020","10","22","2","3","83807508-d5d3-40f1-a6dc-c5054114fb70");
+dCC("1980102209000002","2020","10","22","2","2","83807508-d5d3-40f1-a6dc-c5054114fb70");
+dCC("1980102209000003","2020","10","22","2","3","39ab99ec-986b-467c-bca4-1ce96febb203");
+dCC("1980102209000005","2020","10","24 / 1 / 8 / 15 / 22","2","5","f60279bc-d84f-4c87-98ef-d89ab631a57b");
+dCC("1980102209000006","2020","10","22","2","6","39ab99ec-986b-467c-bca4-1ce96febb203");
+dCC("1980102209300006","2020","10","24 / 1 / 8 / 15 / 22","2","6","f60279bc-d84f-4c87-98ef-d89ab631a57b");
+dCC("1980102209320006","2020","10","22","2","6","39ab99ec-986b-467c-bca4-1ce96febb203");
+dCC("1980102209450006","2020","10","22","2","6","83807508-d5d3-40f1-a6dc-c5054114fb70");
+dCC("1980102210010006","2020","10","22","2","6","83807508-d5d3-40f1-a6dc-c5054114fb70");
+dCC("1980102216550006","2020","10","24 / 1 / 8 / 15 / 22","2","6","f60279bc-d84f-4c87-98ef-d89ab631a57b");
+dCC("1980102217050003","2020","10","22","2","3","5a4bc66c-b268-46d1-8c82-9b2624144ba8");
+dCC("1980102217050005","2020","10","22","2","5","5a4bc66c-b268-46d1-8c82-9b2624144ba8");
+dCC("1980102217050006","2020","10","22","2","6","5a4bc66c-b268-46d1-8c82-9b2624144ba8");
+dCC("1980102800000002","2020","10","28","2","2","9efcd553-3280-43f1-b062-d6ba3094d17a");
+dCC("1980102809000003","2020","10","28","2","3","9efcd553-3280-43f1-b062-d6ba3094d17a");
+dCC("1980102809000006","2020","10","28","2","6","9efcd553-3280-43f1-b062-d6ba3094d17a");
+dCC("1980102817540006","2020","10","28","2","6","9efcd553-3280-43f1-b062-d6ba3094d17a");
+dCC("1980102900000002","2020","10","29","2","2","538d5639-25d3-4bf5-adc1-a8db937f171f");
+dCC("1980102900000003","2020","10","29","2","3","538d5639-25d3-4bf5-adc1-a8db937f171f");
+dCC("1980102909000002","2020","10","29","2","2","9ccc140f-6f90-4881-8249-1399bf205412");
+dCC("1980102909000003","2020","10","29","2","3","9ccc140f-6f90-4881-8249-1399bf205412");
+dCC("1980102909000006","2020","10","29","2","6","9ccc140f-6f90-4881-8249-1399bf205412");
+dCC("1980102909300005","2020","10","22 / 29","2","5","5a4bc66c-b268-46d1-8c82-9b2624144ba8");
+dCC("1980102909300006","2020","10","22 / 29","2","6","5a4bc66c-b268-46d1-8c82-9b2624144ba8");
+dCC("1980102911530006","2020","10","29","2","6","9ccc140f-6f90-4881-8249-1399bf205412");
+dCC("1980102918350006","2020","10","29","2","6","538d5639-25d3-4bf5-adc1-a8db937f171f");
+dCC("1980102920230006","2020","10","29","2","6","538d5639-25d3-4bf5-adc1-a8db937f171f");
+dCC("1980110500000002","2020","11","5","2","2","2efcc4da-63b1-49ee-9608-7caba1dbdd2a");
+dCC("1980110500000003","2020","11","5","2","3","2efcc4da-63b1-49ee-9608-7caba1dbdd2a");
+dCC("1980110509000005","2020","11","22 / 29 / 5","2","5","5a4bc66c-b268-46d1-8c82-9b2624144ba8");
+dCC("1980110509000006","2020","11","22 / 29 / 5","2","6","5a4bc66c-b268-46d1-8c82-9b2624144ba8");
+dCC("1980110511300006","2020","11","22 / 29 / 5","2","6","5a4bc66c-b268-46d1-8c82-9b2624144ba8");
+dCC("1980110511450005","2020","11","5","2","5","2efcc4da-63b1-49ee-9608-7caba1dbdd2a");
+dCC("1980111014000002","2020","11","10","2","2","ab38cdaf-de84-4e2d-9f1e-e73efdcfddaf");
+dCC("1980111014000003","2020","11","10","2","3","ab38cdaf-de84-4e2d-9f1e-e73efdcfddaf");
+dCC("1980111014000006","2020","11","10","2","6","ab38cdaf-de84-4e2d-9f1e-e73efdcfddaf");
+dCC("1980111016040006","2020","11","10","2","6","ab38cdaf-de84-4e2d-9f1e-e73efdcfddaf");
+dCC("1980111200000002","2020","11","12","2","2","004a6607-6c7d-499f-98a1-a605c8df93a3");
+dCC("1980111200000002","2020","11","12","2","2","6471946a-8b92-4925-b0d3-039f60d930f1");
+dCC("1980111200000002","2020","11","12","2","2","7c9dad10-dfc5-478e-84a9-90e3eb484326");
+dCC("1980111209000002","2020","11","12","2","2","e0355eea-0bac-4460-998d-5e36c0c3a5f6");
+dCC("1980111209000003","2020","11","12","2","3","6471946a-8b92-4925-b0d3-039f60d930f1");
+dCC("1980111209000006","2020","11","12","2","6","6471946a-8b92-4925-b0d3-039f60d930f1");
+dCC("1980111209070006","2020","11","12","2","6","6471946a-8b92-4925-b0d3-039f60d930f1");
+dCC("1980111209300005","2020","11","5 / 12","2","5","2efcc4da-63b1-49ee-9608-7caba1dbdd2a");
+dCC("1980111210200003","2020","11","12","2","3","7c9dad10-dfc5-478e-84a9-90e3eb484326");
+dCC("1980111210200006","2020","11","12","2","6","7c9dad10-dfc5-478e-84a9-90e3eb484326");
+dCC("1980111210250006","2020","11","12","2","6","7c9dad10-dfc5-478e-84a9-90e3eb484326");
+dCC("1980111210400003","2020","11","12","2","3","e0355eea-0bac-4460-998d-5e36c0c3a5f6");
+dCC("1980111210400005","2020","11","12","2","5","e0355eea-0bac-4460-998d-5e36c0c3a5f6");
+dCC("1980111210400006","2020","11","12","2","6","e0355eea-0bac-4460-998d-5e36c0c3a5f6");
+dCC("1980111213300003","2020","11","12","2","3","004a6607-6c7d-499f-98a1-a605c8df93a3");
+dCC("1980111213300006","2020","11","12","2","6","004a6607-6c7d-499f-98a1-a605c8df93a3");
+dCC("1980111213370006","2020","11","12","2","6","004a6607-6c7d-499f-98a1-a605c8df93a3");
+dCC("1980111218230006","2020","11","12","2","6","e0355eea-0bac-4460-998d-5e36c0c3a5f6");
+dCC("1980111812000002","2020","11","18","3","2","ca13c556-4071-4acf-95b4-a15da6bb9f56");
+dCC("1980111812000003","2020","11","18","3","3","ca13c556-4071-4acf-95b4-a15da6bb9f56");
+dCC("1980111812000006","2020","11","18","3","6","ca13c556-4071-4acf-95b4-a15da6bb9f56");
+dCC("1980111812270006","2020","11","18","3","6","ca13c556-4071-4acf-95b4-a15da6bb9f56");
+dCC("1980111900000002","2020","11","19","2","2","2823f5c6-9c4e-4203-b410-7e47f6bada56");
+dCC("1980111900000003","2020","11","19","2","3","2823f5c6-9c4e-4203-b410-7e47f6bada56");
+dCC("1980111909000002","2020","11","19","2","2","76bdee8a-92dd-48f8-8e71-77f8df6e2397");
+dCC("1980111909000003","2020","11","19","2","3","76bdee8a-92dd-48f8-8e71-77f8df6e2397");
+dCC("1980111909000005","2020","11","5 / 12 / 19","2","5","2efcc4da-63b1-49ee-9608-7caba1dbdd2a");
+dCC("1981011009000002","2019","1","10","1","2","bf4e1b58-827c-4531-83e3-65cefc7c1571");
+dCC("1981011009000003","2019","1","10","1","3","bf4e1b58-827c-4531-83e3-65cefc7c1571");
+dCC("1981011009000006","2019","1","10","1","6","bf4e1b58-827c-4531-83e3-65cefc7c1571");
+dCC("1981011013550006","2019","1","10","1","6","bf4e1b58-827c-4531-83e3-65cefc7c1571");
+dCC("1981011709000002","2019","1","17","1","2","407f6582-2ced-4f87-9fcc-f0d29252f087");
+dCC("1981011709000003","2019","1","17","1","3","407f6582-2ced-4f87-9fcc-f0d29252f087");
+dCC("1981011709000006","2019","1","17","1","6","407f6582-2ced-4f87-9fcc-f0d29252f087");
+dCC("1981011710430006","2019","1","17","1","6","407f6582-2ced-4f87-9fcc-f0d29252f087");
+dCC("1981011717000002","2019","1","17","5","2","1ca98079-2eb4-4e60-a666-8950d3c93713");
+dCC("1981011717000003","2019","1","17","5","3","1ca98079-2eb4-4e60-a666-8950d3c93713");
+dCC("1981011717000008","2019","1","17","5","8","1ca98079-2eb4-4e60-a666-8950d3c93713");
+dCC("1981012312000002","2019","1","23","2","2","432ae053-fcf4-4c92-a1ea-ead7791afb74");
+dCC("1981012312000003","2019","1","23","2","3","432ae053-fcf4-4c92-a1ea-ead7791afb74");
+dCC("1981012312000006","2019","1","23","2","6","432ae053-fcf4-4c92-a1ea-ead7791afb74");
+dCC("1981012315490006","2019","1","23","2","6","432ae053-fcf4-4c92-a1ea-ead7791afb74");
+dCC("1981012409000002","2019","1","24","1","2","eeea1e03-1f40-44cd-bf05-6e555c6ab61e");
+dCC("1981012409000003","2019","1","24","1","3","eeea1e03-1f40-44cd-bf05-6e555c6ab61e");
+dCC("1981012409000005","2019","1","24","1","5","eeea1e03-1f40-44cd-bf05-6e555c6ab61e");
+dCC("1981012409000006","2019","1","24","1","6","eeea1e03-1f40-44cd-bf05-6e555c6ab61e");
+dCC("1981012417000002","2019","1","24","5","2","4ee9c0ae-8d85-48f6-bcfd-b69aa11f8be6");
+dCC("1981012417000003","2019","1","24","5","3","4ee9c0ae-8d85-48f6-bcfd-b69aa11f8be6");
+dCC("1981012417000008","2019","1","24","5","8","4ee9c0ae-8d85-48f6-bcfd-b69aa11f8be6");
+dCC("1981013100000002","2019","1","31","1","2","3c6e4bed-4827-4864-8557-33d7b01f81dd");
+dCC("1981013100000003","2019","1","31","1","3","3c6e4bed-4827-4864-8557-33d7b01f81dd");
+dCC("1981013109000005","2019","1","24 / 31","1","5","eeea1e03-1f40-44cd-bf05-6e555c6ab61e");
+dCC("1981013109000006","2019","1","24 / 31","1","6","eeea1e03-1f40-44cd-bf05-6e555c6ab61e");
+dCC("1981013110020006","2019","1","24 / 31","1","6","eeea1e03-1f40-44cd-bf05-6e555c6ab61e");
+dCC("1981013110150006","2019","1","31","1","6","3c6e4bed-4827-4864-8557-33d7b01f81dd");
+dCC("1981013116350006","2019","1","31","1","6","3c6e4bed-4827-4864-8557-33d7b01f81dd");
+dCC("1981013117000002","2019","1","31","5","2","872d65b8-e0ad-4857-8028-f68ff8ecd47d");
+dCC("1981013117000003","2019","1","31","5","3","872d65b8-e0ad-4857-8028-f68ff8ecd47d");
+dCC("1981013117000008","2019","1","31","5","8","872d65b8-e0ad-4857-8028-f68ff8ecd47d");
+dCC("1981020709000002","2019","2","7","1","2","24be0d14-b8ea-457d-a434-0d1c1c54f0b2");
+dCC("1981020709000003","2019","2","7","1","3","24be0d14-b8ea-457d-a434-0d1c1c54f0b2");
+dCC("1981020709000006","2019","2","7","1","6","24be0d14-b8ea-457d-a434-0d1c1c54f0b2");
+dCC("1981020711060006","2019","2","7","1","6","24be0d14-b8ea-457d-a434-0d1c1c54f0b2");
+dCC("1981020717000002","2019","2","7","5","2","17159fb0-a2d8-41ea-9d52-a3ef81917926");
+dCC("1981020717000003","2019","2","7","5","3","17159fb0-a2d8-41ea-9d52-a3ef81917926");
+dCC("1981020717000008","2019","2","7","5","8","17159fb0-a2d8-41ea-9d52-a3ef81917926");
+dCC("1981021409000002","2019","2","14","1","2","42ea15ce-e9d5-4501-a8e2-56be8af934fb");
+dCC("1981021409000003","2019","2","14","1","3","42ea15ce-e9d5-4501-a8e2-56be8af934fb");
+dCC("1981021409000006","2019","2","14","1","6","42ea15ce-e9d5-4501-a8e2-56be8af934fb");
+dCC("1981021412200006","2019","2","14","1","6","42ea15ce-e9d5-4501-a8e2-56be8af934fb");
+dCC("1981021417000002","2019","2","14","5","2","4c1c4cb0-a934-4e5b-89bd-547e08491d83");
+dCC("1981021417000003","2019","2","14","5","3","4c1c4cb0-a934-4e5b-89bd-547e08491d83");
+dCC("1981021417000008","2019","2","14","5","8","4c1c4cb0-a934-4e5b-89bd-547e08491d83");
+dCC("1981022109000002","2019","2","21","1","2","7fd9349a-754c-45ae-b20e-b2d3e9b5b393");
+dCC("1981022109000003","2019","2","21","1","3","7fd9349a-754c-45ae-b20e-b2d3e9b5b393");
+dCC("1981022109000006","2019","2","21","1","6","7fd9349a-754c-45ae-b20e-b2d3e9b5b393");
+dCC("1981022112060006","2019","2","21","1","6","7fd9349a-754c-45ae-b20e-b2d3e9b5b393");
+dCC("1981022117000002","2019","2","21","5","2","ef561638-428f-4200-b5f8-521312c3848d");
+dCC("1981022117000003","2019","2","21","5","3","ef561638-428f-4200-b5f8-521312c3848d");
+dCC("1981022117000008","2019","2","21","5","8","ef561638-428f-4200-b5f8-521312c3848d");
+dCC("1981022809000002","2019","2","28","1","2","1a4fb69b-1423-44c9-9ab2-eafb624ec041");
+dCC("1981022809000003","2019","2","28","1","3","1a4fb69b-1423-44c9-9ab2-eafb624ec041");
+dCC("1981022809000006","2019","2","28","1","6","1a4fb69b-1423-44c9-9ab2-eafb624ec041");
+dCC("1981022810360006","2019","2","28","1","6","1a4fb69b-1423-44c9-9ab2-eafb624ec041");
+dCC("1981022817000002","2019","2","28","5","2","727fa310-139c-4b7b-8026-72b055586e77");
+dCC("1981022817000003","2019","2","28","5","3","727fa310-139c-4b7b-8026-72b055586e77");
+dCC("1981022817000006","2019","2","28","5","6","727fa310-139c-4b7b-8026-72b055586e77");
+dCC("1981022817160006","2019","2","28","5","6","727fa310-139c-4b7b-8026-72b055586e77");
+dCC("1981030709000002","2019","3","7","1","2","99880824-c6da-4164-8eeb-00894901c005");
+dCC("1981030709000003","2019","3","7","1","3","99880824-c6da-4164-8eeb-00894901c005");
+dCC("1981030709000006","2019","3","7","1","6","99880824-c6da-4164-8eeb-00894901c005");
+dCC("1981030716030006","2019","3","7","1","6","99880824-c6da-4164-8eeb-00894901c005");
+dCC("1981030717000002","2019","3","7","5","2","260621c2-550e-4b4d-99b9-7aa6e1a67330");
+dCC("1981030717000003","2019","3","7","5","3","260621c2-550e-4b4d-99b9-7aa6e1a67330");
+dCC("1981030717000008","2019","3","7","5","8","260621c2-550e-4b4d-99b9-7aa6e1a67330");
+dCC("1981031409000002","2019","3","14","1","2","3b1a0776-04e5-474f-b9f7-250dbd8c7715");
+dCC("1981031409000003","2019","3","14","1","3","3b1a0776-04e5-474f-b9f7-250dbd8c7715");
+dCC("1981031409000006","2019","3","14","1","6","3b1a0776-04e5-474f-b9f7-250dbd8c7715");
+dCC("1981031412330006","2019","3","14","1","6","3b1a0776-04e5-474f-b9f7-250dbd8c7715");
+dCC("1981031417000002","2019","3","14","5","2","b429250f-1c4f-46e2-b6af-24737b97d4d0");
+dCC("1981031417000003","2019","3","14","5","3","b429250f-1c4f-46e2-b6af-24737b97d4d0");
+dCC("1981031417000006","2019","3","14","5","6","b429250f-1c4f-46e2-b6af-24737b97d4d0");
+dCC("1981031417040006","2019","3","14","5","6","b429250f-1c4f-46e2-b6af-24737b97d4d0");
+dCC("1981032010000002","2019","3","20","2","2","c4764223-fb79-4c4d-9787-bc0ecd530d76");
+dCC("1981032010000003","2019","3","20","2","3","c4764223-fb79-4c4d-9787-bc0ecd530d76");
+dCC("1981032010000006","2019","3","20","2","6","c4764223-fb79-4c4d-9787-bc0ecd530d76");
+dCC("1981032015020006","2019","3","20","2","6","c4764223-fb79-4c4d-9787-bc0ecd530d76");
+dCC("1981032109000002","2019","3","21","1","2","9201aa7b-09cd-4eba-bf9d-4e8506728d4a");
+dCC("1981032109000003","2019","3","21","1","3","9201aa7b-09cd-4eba-bf9d-4e8506728d4a");
+dCC("1981032109000006","2019","3","21","1","6","9201aa7b-09cd-4eba-bf9d-4e8506728d4a");
+dCC("1981032112170006","2019","3","21","1","6","9201aa7b-09cd-4eba-bf9d-4e8506728d4a");
+dCC("1981032117000002","2019","3","21","5","2","a7de2096-ae1e-428d-aca3-7bac5f7fb305");
+dCC("1981032117000003","2019","3","21","5","3","a7de2096-ae1e-428d-aca3-7bac5f7fb305");
+dCC("1981032117000008","2019","3","21","5","8","a7de2096-ae1e-428d-aca3-7bac5f7fb305");
+dCC("1981032809000002","2019","3","28","1","2","8033f42b-b580-4c3d-97a5-985f68b630a2");
+dCC("1981032809000003","2019","3","28","1","3","8033f42b-b580-4c3d-97a5-985f68b630a2");
+dCC("1981032809000005","2019","3","28","1","5","8033f42b-b580-4c3d-97a5-985f68b630a2");
+dCC("1981032809000006","2019","3","28","1","6","8033f42b-b580-4c3d-97a5-985f68b630a2");
+dCC("1981032817000002","2019","3","28","5","2","9d6d5203-2f49-481e-8ea9-bafb727d0c17");
+dCC("1981032817000003","2019","3","28","5","3","9d6d5203-2f49-481e-8ea9-bafb727d0c17");
+dCC("1981032817000008","2019","3","28","5","8","9d6d5203-2f49-481e-8ea9-bafb727d0c17");
+dCC("1981040309000002","2019","4","3","2","2","9e35da98-c212-44e6-922b-48e781e0e7a8");
+dCC("1981040309000003","2019","4","3","2","3","9e35da98-c212-44e6-922b-48e781e0e7a8");
+dCC("1981040309000006","2019","4","3","2","6","9e35da98-c212-44e6-922b-48e781e0e7a8");
+dCC("1981040319190006","2019","4","3","2","6","9e35da98-c212-44e6-922b-48e781e0e7a8");
+dCC("1981040400000002","2019","4","4","1","2","5ab9c0f3-6c45-4161-a0be-3e24a9b75575");
+dCC("1981040400000003","2019","4","4","1","3","5ab9c0f3-6c45-4161-a0be-3e24a9b75575");
+dCC("1981040409000005","2019","4","28 / 4","1","5","8033f42b-b580-4c3d-97a5-985f68b630a2");
+dCC("1981040409000006","2019","4","28 / 4","1","6","8033f42b-b580-4c3d-97a5-985f68b630a2");
+dCC("1981040409530006","2019","4","28 / 4","1","6","8033f42b-b580-4c3d-97a5-985f68b630a2");
+dCC("1981040410050006","2019","4","4","1","6","5ab9c0f3-6c45-4161-a0be-3e24a9b75575");
+dCC("1981040411270006","2019","4","4","1","6","5ab9c0f3-6c45-4161-a0be-3e24a9b75575");
+dCC("1981040417000002","2019","4","4","5","2","9f9738dd-e85e-4717-aaef-15a12c9fa11b");
+dCC("1981040417000003","2019","4","4","5","3","9f9738dd-e85e-4717-aaef-15a12c9fa11b");
+dCC("1981040417000008","2019","4","4","5","8","9f9738dd-e85e-4717-aaef-15a12c9fa11b");
+dCC("1981041109000002","2019","4","11","1","2","fab21555-f2dd-40ad-9c9e-9e9c0030bca0");
+dCC("1981041109000003","2019","4","11","1","3","fab21555-f2dd-40ad-9c9e-9e9c0030bca0");
+dCC("1981041109000006","2019","4","11","1","6","fab21555-f2dd-40ad-9c9e-9e9c0030bca0");
+dCC("1981041116520006","2019","4","11","1","6","fab21555-f2dd-40ad-9c9e-9e9c0030bca0");
+dCC("1981041117000002","2019","4","11","5","2","36c90894-a737-443d-a580-1eb508dd4edc");
+dCC("1981041117000003","2019","4","11","5","3","36c90894-a737-443d-a580-1eb508dd4edc");
+dCC("1981041117000008","2019","4","11","5","8","36c90894-a737-443d-a580-1eb508dd4edc");
+dCC("1981042509000002","2019","4","25","1","2","c191af39-a649-41d7-820c-6873f63fc9b6");
+dCC("1981042509000003","2019","4","25","1","3","c191af39-a649-41d7-820c-6873f63fc9b6");
+dCC("1981042509000006","2019","4","25","1","6","c191af39-a649-41d7-820c-6873f63fc9b6");
+dCC("1981042512300006","2019","4","25","1","6","c191af39-a649-41d7-820c-6873f63fc9b6");
+dCC("1981050209000002","2019","5","2","1","2","9e10ed24-c284-496b-a5b3-5c0466fa427c");
+dCC("1981050209000003","2019","5","2","1","3","9e10ed24-c284-496b-a5b3-5c0466fa427c");
+dCC("1981050209000006","2019","5","2","1","6","9e10ed24-c284-496b-a5b3-5c0466fa427c");
+dCC("1981050212300006","2019","5","2","1","6","9e10ed24-c284-496b-a5b3-5c0466fa427c");
+dCC("1981050217000002","2019","5","2","5","2","6b7e80af-02a2-44df-b1eb-4685d5171d2b");
+dCC("1981050217000003","2019","5","2","5","3","6b7e80af-02a2-44df-b1eb-4685d5171d2b");
+dCC("1981050217000008","2019","5","2","5","8","6b7e80af-02a2-44df-b1eb-4685d5171d2b");
+dCC("1981050412000002","2019","5","4","3","2","0ff18e10-195e-4fd7-aabf-4bade172653e");
+dCC("1981050412000003","2019","5","4","3","3","0ff18e10-195e-4fd7-aabf-4bade172653e");
+dCC("1981050412000006","2019","5","4","3","6","0ff18e10-195e-4fd7-aabf-4bade172653e");
+dCC("1981050412240006","2019","5","4","3","6","0ff18e10-195e-4fd7-aabf-4bade172653e");
+dCC("1981050909000002","2019","5","9","1","2","3798c3ab-094a-4137-aa8f-fd78e3164d0f");
+dCC("1981050909000003","2019","5","9","1","3","3798c3ab-094a-4137-aa8f-fd78e3164d0f");
+dCC("1981050909000006","2019","5","9","1","6","3798c3ab-094a-4137-aa8f-fd78e3164d0f");
+dCC("1981050914420006","2019","5","9","1","6","3798c3ab-094a-4137-aa8f-fd78e3164d0f");
+dCC("1981050917000002","2019","5","9","5","2","469e0ba2-9aff-4c25-871b-0abe27e21378");
+dCC("1981050917000003","2019","5","9","5","3","469e0ba2-9aff-4c25-871b-0abe27e21378");
+dCC("1981050917000008","2019","5","9","5","8","469e0ba2-9aff-4c25-871b-0abe27e21378");
+dCC("1981051609000002","2019","5","16","1","2","842ef6a0-aac1-4e93-807b-e187d53c36d1");
+dCC("1981051609000003","2019","5","16","1","3","842ef6a0-aac1-4e93-807b-e187d53c36d1");
+dCC("1981051609000006","2019","5","16","1","6","842ef6a0-aac1-4e93-807b-e187d53c36d1");
+dCC("1981051613340006","2019","5","16","1","6","842ef6a0-aac1-4e93-807b-e187d53c36d1");
+dCC("1981051617000002","2019","5","16","5","2","76e84a0d-c184-4eec-a9c4-2c534799c4b4");
+dCC("1981051617000003","2019","5","16","5","3","76e84a0d-c184-4eec-a9c4-2c534799c4b4");
+dCC("1981051617000008","2019","5","16","5","8","76e84a0d-c184-4eec-a9c4-2c534799c4b4");
+dCC("1981052309000002","2019","5","23","1","2","ad843475-6142-484d-b0a6-96a0733e8d1c");
+dCC("1981052309000003","2019","5","23","1","3","ad843475-6142-484d-b0a6-96a0733e8d1c");
+dCC("1981052309000006","2019","5","23","1","6","ad843475-6142-484d-b0a6-96a0733e8d1c");
+dCC("1981052317000002","2019","5","23","5","2","63ee5e90-809b-4925-84a2-fd3d735fc9fc");
+dCC("1981052317000003","2019","5","23","5","3","63ee5e90-809b-4925-84a2-fd3d735fc9fc");
+dCC("1981052317000008","2019","5","23","5","8","63ee5e90-809b-4925-84a2-fd3d735fc9fc");
+dCC("1981052318010006","2019","5","23","1","6","ad843475-6142-484d-b0a6-96a0733e8d1c");
+dCC("1981052910000002","2019","5","29","2","2","29c98234-61e6-4d0b-a14b-fb241e299e6b");
+dCC("1981052910000003","2019","5","29","2","3","29c98234-61e6-4d0b-a14b-fb241e299e6b");
+dCC("1981052910000006","2019","5","29","2","6","29c98234-61e6-4d0b-a14b-fb241e299e6b");
+dCC("1981052913200006","2019","5","29","2","6","29c98234-61e6-4d0b-a14b-fb241e299e6b");
+dCC("1981053009000002","2019","5","30","1","2","8afa664f-20cc-40c1-b1ec-27e25a4c1b78");
+dCC("1981053009000003","2019","5","30","1","3","8afa664f-20cc-40c1-b1ec-27e25a4c1b78");
+dCC("1981053009000005","2019","5","30","1","5","8afa664f-20cc-40c1-b1ec-27e25a4c1b78");
+dCC("1981053009000006","2019","5","30","1","6","8afa664f-20cc-40c1-b1ec-27e25a4c1b78");
+dCC("1981053017000002","2019","5","30","5","2","dfdb4967-df44-49d4-874d-9f31d7292fab");
+dCC("1981053017000003","2019","5","30","5","3","dfdb4967-df44-49d4-874d-9f31d7292fab");
+dCC("1981053017000008","2019","5","30","5","8","dfdb4967-df44-49d4-874d-9f31d7292fab");
+dCC("1981060600000002","2019","6","6","1","2","d6e796f4-26d3-4e4f-81f5-f43cc5e0ff14");
+dCC("1981060600000003","2019","6","6","1","3","d6e796f4-26d3-4e4f-81f5-f43cc5e0ff14");
+dCC("1981060600000006","2019","6","30 / 6","1","6","8afa664f-20cc-40c1-b1ec-27e25a4c1b78");
+dCC("1981060611540006","2019","6","30 / 6","1","6","8afa664f-20cc-40c1-b1ec-27e25a4c1b78");
+dCC("1981060612100006","2019","6","6","1","6","d6e796f4-26d3-4e4f-81f5-f43cc5e0ff14");
+dCC("1981060617080006","2019","6","6","1","6","d6e796f4-26d3-4e4f-81f5-f43cc5e0ff14");
+dCC("1981061309000002","2019","6","13","1","2","bfd83bab-2b28-4eeb-a851-661e951865a6");
+dCC("1981061309000003","2019","6","13","1","3","bfd83bab-2b28-4eeb-a851-661e951865a6");
+dCC("1981061309000006","2019","6","13","1","6","bfd83bab-2b28-4eeb-a851-661e951865a6");
+dCC("1981061315020006","2019","6","13","1","6","bfd83bab-2b28-4eeb-a851-661e951865a6");
+dCC("1981061317000002","2019","6","13","5","2","1959dac1-947a-4105-8b15-2511402c36f1");
+dCC("1981061317000003","2019","6","13","5","3","1959dac1-947a-4105-8b15-2511402c36f1");
+dCC("1981061317000008","2019","6","13","5","8","1959dac1-947a-4105-8b15-2511402c36f1");
+dCC("1981062009000002","2019","6","20","1","2","742a8f45-7083-45f2-a154-4b3ae8aa62ca");
+dCC("1981062009000003","2019","6","20","1","3","742a8f45-7083-45f2-a154-4b3ae8aa62ca");
+dCC("1981062009000006","2019","6","20","1","6","742a8f45-7083-45f2-a154-4b3ae8aa62ca");
+dCC("1981062016380006","2019","6","20","1","6","742a8f45-7083-45f2-a154-4b3ae8aa62ca");
+dCC("1981062017000002","2019","6","20","5","2","1b72cb6e-2c9e-4a77-9f70-b531071419c1");
+dCC("1981062017000003","2019","6","20","5","3","1b72cb6e-2c9e-4a77-9f70-b531071419c1");
+dCC("1981062017000008","2019","6","20","5","8","1b72cb6e-2c9e-4a77-9f70-b531071419c1");
+dCC("1981070800000002","2019","7","8","6","2","bf39fdb9-c49b-4e96-ac99-1dc0aaee9bad");
+dCC("1981070800000003","2019","7","8","6","3","bf39fdb9-c49b-4e96-ac99-1dc0aaee9bad");
+dCC("1981070809000002","2019","7","8","6","2","fd325927-353e-42c1-9a13-7ebc716af6c4");
+dCC("1981070809000003","2019","7","8","6","3","fd325927-353e-42c1-9a13-7ebc716af6c4");
+dCC("1981070809000006","2019","7","8","6","6","fd325927-353e-42c1-9a13-7ebc716af6c4");
+dCC("1981070809270006","2019","7","8","6","6","fd325927-353e-42c1-9a13-7ebc716af6c4");
+dCC("1981070811300002","2019","7","8","6","2","486e6b48-6e8e-4d8c-8854-019d4fae631b");
+dCC("1981070811300003","2019","7","8","6","3","486e6b48-6e8e-4d8c-8854-019d4fae631b");
+dCC("1981070811300006","2019","7","8","6","6","486e6b48-6e8e-4d8c-8854-019d4fae631b");
+dCC("1981070815510006","2019","7","8","6","6","486e6b48-6e8e-4d8c-8854-019d4fae631b");
+dCC("1981070816000006","2019","7","8","6","6","bf39fdb9-c49b-4e96-ac99-1dc0aaee9bad");
+dCC("1981070816210006","2019","7","8","6","6","bf39fdb9-c49b-4e96-ac99-1dc0aaee9bad");
+dCC("1981090509000002","2019","9","5","1","2","91dc4225-ae0a-4c3e-9359-5c81449b91b6");
+dCC("1981090509000003","2019","9","5","1","3","91dc4225-ae0a-4c3e-9359-5c81449b91b6");
+dCC("1981090509000006","2019","9","5","1","6","91dc4225-ae0a-4c3e-9359-5c81449b91b6");
+dCC("1981090512100006","2019","9","5","1","6","91dc4225-ae0a-4c3e-9359-5c81449b91b6");
+dCC("1981091209000002","2019","9","12","1","2","2a81a32b-9a32-4a97-b8a8-5f11335d896e");
+dCC("1981091209000003","2019","9","12","1","3","2a81a32b-9a32-4a97-b8a8-5f11335d896e");
+dCC("1981091209000006","2019","9","12","1","6","2a81a32b-9a32-4a97-b8a8-5f11335d896e");
+dCC("1981091210000006","2019","9","12","1","6","2a81a32b-9a32-4a97-b8a8-5f11335d896e");
+dCC("1981091217000002","2019","9","12","5","2","c38b4d97-57f8-472d-ae87-bf87abe37f3b");
+dCC("1981091217000003","2019","9","12","5","3","c38b4d97-57f8-472d-ae87-bf87abe37f3b");
+dCC("1981091217000006","2019","9","12","5","6","c38b4d97-57f8-472d-ae87-bf87abe37f3b");
+dCC("1981091217100006","2019","9","12","5","6","c38b4d97-57f8-472d-ae87-bf87abe37f3b");
+dCC("1981091909000002","2019","9","19","1","2","62f3a113-84ee-4a45-9fb3-187ddd71d2ad");
+dCC("1981091909000003","2019","9","19","1","3","62f3a113-84ee-4a45-9fb3-187ddd71d2ad");
+dCC("1981091909000006","2019","9","19","1","6","62f3a113-84ee-4a45-9fb3-187ddd71d2ad");
+dCC("1981091915150006","2019","9","19","1","6","62f3a113-84ee-4a45-9fb3-187ddd71d2ad");
+dCC("1981091917000002","2019","9","19","5","2","ff1fcad7-33f0-48d0-9976-50042ba5c791");
+dCC("1981091917000003","2019","9","19","5","3","ff1fcad7-33f0-48d0-9976-50042ba5c791");
+dCC("1981091917000006","2019","9","19","5","6","ff1fcad7-33f0-48d0-9976-50042ba5c791");
+dCC("1981091917130006","2019","9","19","5","6","ff1fcad7-33f0-48d0-9976-50042ba5c791");
+dCC("1981092609000002","2019","9","26","1","2","a46dd6c0-cc8d-4e43-b6de-b9590c18a733");
+dCC("1981092609000003","2019","9","26","1","3","a46dd6c0-cc8d-4e43-b6de-b9590c18a733");
+dCC("1981092609000006","2019","9","26","1","6","a46dd6c0-cc8d-4e43-b6de-b9590c18a733");
+dCC("1981092616070006","2019","9","26","1","6","a46dd6c0-cc8d-4e43-b6de-b9590c18a733");
+dCC("1981092617000002","2019","9","26","5","2","1153bb0c-a4da-40ef-97f7-a9b80f5606f4");
+dCC("1981092617000003","2019","9","26","5","3","1153bb0c-a4da-40ef-97f7-a9b80f5606f4");
+dCC("1981092617000008","2019","9","26","5","8","1153bb0c-a4da-40ef-97f7-a9b80f5606f4");
+dCC("1981100309000002","2019","10","3","1","2","597c6b39-a6a5-4deb-b0dd-ee46a996f115");
+dCC("1981100309000003","2019","10","3","1","3","597c6b39-a6a5-4deb-b0dd-ee46a996f115");
+dCC("1981100309000006","2019","10","3","1","6","597c6b39-a6a5-4deb-b0dd-ee46a996f115");
+dCC("1981100312050006","2019","10","3","1","6","597c6b39-a6a5-4deb-b0dd-ee46a996f115");
+dCC("1981100317000002","2019","10","3","5","2","87425366-24bc-40da-8008-b8e9cbac982d");
+dCC("1981100317000003","2019","10","3","5","3","87425366-24bc-40da-8008-b8e9cbac982d");
+dCC("1981100317000008","2019","10","3","5","8","87425366-24bc-40da-8008-b8e9cbac982d");
+dCC("1981101009000002","2019","10","10","1","2","2727c5cc-3710-4f0a-9b62-ea37d48ef57b");
+dCC("1981101009000003","2019","10","10","1","3","2727c5cc-3710-4f0a-9b62-ea37d48ef57b");
+dCC("1981101009000006","2019","10","10","1","6","2727c5cc-3710-4f0a-9b62-ea37d48ef57b");
+dCC("1981101015130006","2019","10","10","1","6","2727c5cc-3710-4f0a-9b62-ea37d48ef57b");
+dCC("1981101017000002","2019","10","10","5","2","eec16e89-f08f-448b-bbfd-d505685a605d");
+dCC("1981101017000003","2019","10","10","5","3","eec16e89-f08f-448b-bbfd-d505685a605d");
+dCC("1981101017000008","2019","10","10","5","8","eec16e89-f08f-448b-bbfd-d505685a605d");
+dCC("1981101709000002","2019","10","17","1","2","62939392-a5ae-4f43-9c54-1b0776e17782");
+dCC("1981101709000003","2019","10","17","1","3","62939392-a5ae-4f43-9c54-1b0776e17782");
+dCC("1981101709000006","2019","10","17","1","6","62939392-a5ae-4f43-9c54-1b0776e17782");
+dCC("1981101714430006","2019","10","17","1","6","62939392-a5ae-4f43-9c54-1b0776e17782");
+dCC("1981101717000002","2019","10","17","5","2","9e26d06d-1648-4f94-aaf9-c5737b2b1791");
+dCC("1981101717000003","2019","10","17","5","3","9e26d06d-1648-4f94-aaf9-c5737b2b1791");
+dCC("1981101717000008","2019","10","17","5","8","9e26d06d-1648-4f94-aaf9-c5737b2b1791");
+dCC("1981102400000002","2019","10","24","2","2","2333cb2c-65bb-426b-b6c1-1f8c5fd1e55a");
+dCC("1981102400000003","2019","10","24","2","3","2333cb2c-65bb-426b-b6c1-1f8c5fd1e55a");
+dCC("1981102400000008","2019","10","24","2","8","2333cb2c-65bb-426b-b6c1-1f8c5fd1e55a");
+dCC("1981102409000002","2019","10","24","1","2","b7d56d41-4943-494f-ab28-062a7dee3d44");
+dCC("1981102409000003","2019","10","24","1","3","b7d56d41-4943-494f-ab28-062a7dee3d44");
+dCC("1981102409000006","2019","10","24","1","6","b7d56d41-4943-494f-ab28-062a7dee3d44");
+dCC("1981102416290006","2019","10","24","1","6","b7d56d41-4943-494f-ab28-062a7dee3d44");
+dCC("1981102417000002","2019","10","24","5","2","696cdb91-6456-40eb-8c07-3dae86874308");
+dCC("1981102417000003","2019","10","24","5","3","696cdb91-6456-40eb-8c07-3dae86874308");
+dCC("1981102417000008","2019","10","24","5","8","696cdb91-6456-40eb-8c07-3dae86874308");
+dCC("1981103000000002","2019","10","30","2","2","b2050b4c-2072-4f73-b222-fe2db61b3449");
+dCC("1981103010000003","2019","10","30","2","3","b2050b4c-2072-4f73-b222-fe2db61b3449");
+dCC("1981103010000006","2019","10","30","2","6","b2050b4c-2072-4f73-b222-fe2db61b3449");
+dCC("1981103019030006","2019","10","30","2","6","b2050b4c-2072-4f73-b222-fe2db61b3449");
+dCC("1981103109000002","2019","10","31","1","2","436c10a7-0b3b-4923-9618-383be5c0dd37");
+dCC("1981103109000003","2019","10","31","1","3","436c10a7-0b3b-4923-9618-383be5c0dd37");
+dCC("1981103109000006","2019","10","31","1","6","436c10a7-0b3b-4923-9618-383be5c0dd37");
+dCC("1981103111210006","2019","10","31","1","6","436c10a7-0b3b-4923-9618-383be5c0dd37");
+dCC("1981103117000002","2019","10","31","5","2","d6a14383-940e-41e2-960d-e353b3631757");
+dCC("1981103117000003","2019","10","31","5","3","d6a14383-940e-41e2-960d-e353b3631757");
+dCC("1981103117000008","2019","10","31","5","8","d6a14383-940e-41e2-960d-e353b3631757");
+dCC("1981110709000002","2019","11","7","1","2","b0d7ecc2-389b-4c1a-ac09-851b81791523");
+dCC("1981110709000003","2019","11","7","1","3","b0d7ecc2-389b-4c1a-ac09-851b81791523");
+dCC("1981110709000006","2019","11","7","1","6","b0d7ecc2-389b-4c1a-ac09-851b81791523");
+dCC("1981110715410006","2019","11","7","1","6","b0d7ecc2-389b-4c1a-ac09-851b81791523");
+dCC("1981110717000002","2019","11","7","5","2","585eee7c-04fe-4b44-bb28-1f854dc5e73d");
+dCC("1981110717000003","2019","11","7","5","3","585eee7c-04fe-4b44-bb28-1f854dc5e73d");
+dCC("1981110717000008","2019","11","7","5","8","585eee7c-04fe-4b44-bb28-1f854dc5e73d");
+dCC("1981111300000002","2019","11","13","2","2","9e586350-9cef-4b2d-a2e8-c9be87c3b7d9");
+dCC("1981111309000003","2019","11","13","2","3","9e586350-9cef-4b2d-a2e8-c9be87c3b7d9");
+dCC("1981111309000005","2019","11","13","2","5","9e586350-9cef-4b2d-a2e8-c9be87c3b7d9");
+dCC("1981111309000006","2019","11","13","2","6","9e586350-9cef-4b2d-a2e8-c9be87c3b7d9");
+dCC("1981111400000003","2019","11","14","1","3","a9e4b4a8-de99-4fdc-940a-c1586f5a5149");
+
+
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ dCC("1981111400000006","2019","11","13 / 14","2","6","9e586350-9cef-4b2d-a2e8-c9be87c3b7d9");
+dCC("1981111400000006","2019","11","14","1","6","a9e4b4a8-de99-4fdc-940a-c1586f5a5149");
+dCC("1981111409000002","2019","11","14","1","2","a9e4b4a8-de99-4fdc-940a-c1586f5a5149");
+dCC("1981111417000002","2019","11","14","5","2","ed38bf5d-437b-41a0-96ae-36d3f9255825");
+dCC("1981111417000003","2019","11","14","5","3","ed38bf5d-437b-41a0-96ae-36d3f9255825");
+dCC("1981111417000008","2019","11","14","5","8","ed38bf5d-437b-41a0-96ae-36d3f9255825");
+dCC("1981111421200006","2019","11","13 / 14","2","6","9e586350-9cef-4b2d-a2e8-c9be87c3b7d9");
+dCC("1981111800000002","2019","11","18","3","2","bf46ee45-5474-4db9-a14a-4e2daf2763fd");
+dCC("1981111812000003","2019","11","18","3","3","bf46ee45-5474-4db9-a14a-4e2daf2763fd");
+dCC("1981111812000006","2019","11","18","3","6","bf46ee45-5474-4db9-a14a-4e2daf2763fd");
+dCC("1981111812260006","2019","11","18","3","6","bf46ee45-5474-4db9-a14a-4e2daf2763fd");
+dCC("1981112109000002","2019","11","21","1","2","c3ba8d3b-d8b5-4085-94ce-12e8aa302216");
+dCC("1981112112180006","2019","11","14 / 21","1","6","a9e4b4a8-de99-4fdc-940a-c1586f5a5149");
+dCC("1981112113300003","2019","11","21","1","3","c3ba8d3b-d8b5-4085-94ce-12e8aa302216");
+dCC("1981112113300006","2019","11","21","1","6","c3ba8d3b-d8b5-4085-94ce-12e8aa302216");
+dCC("1981112115170006","2019","11","21","1","6","c3ba8d3b-d8b5-4085-94ce-12e8aa302216");
+dCC("1981112809000002","2019","11","28","1","2","14e6982e-734d-4e4d-9707-cee894c97b03");
+dCC("1981112809000003","2019","11","28","1","3","14e6982e-734d-4e4d-9707-cee894c97b03");
+dCC("1981112809000005","2019","11","28","1","5","14e6982e-734d-4e4d-9707-cee894c97b03");
+dCC("1981112809000006","2019","11","28","1","6","14e6982e-734d-4e4d-9707-cee894c97b03");
+dCC("1981120500000002","2019","12","5","1","2","db74b5b3-184e-49b9-a572-c6c293edc9e3");
+dCC("1981120500000006","2019","12","28 / 5","1","6","14e6982e-734d-4e4d-9707-cee894c97b03");
+dCC("1981120512060006","2019","12","28 / 5","1","6","14e6982e-734d-4e4d-9707-cee894c97b03");
+dCC("1981120513000003","2019","12","5","1","3","db74b5b3-184e-49b9-a572-c6c293edc9e3");
+dCC("1981120513000006","2019","12","5","1","6","db74b5b3-184e-49b9-a572-c6c293edc9e3");
+dCC("1981120517000002","2019","12","5","5","2","1127dcd1-8fff-4600-9495-0d58eb0f783d");
+dCC("1981120517000003","2019","12","5","5","3","1127dcd1-8fff-4600-9495-0d58eb0f783d");
+dCC("1981120517000008","2019","12","5","5","8","1127dcd1-8fff-4600-9495-0d58eb0f783d");
+dCC("1981120517240006","2019","12","5","1","6","db74b5b3-184e-49b9-a572-c6c293edc9e3");
+dCC("1981121209000002","2019","12","12","1","2","7e2b7319-9fef-4d48-80a7-17d61c8c6e7d");
+dCC("1981121209000003","2019","12","12","1","3","7e2b7319-9fef-4d48-80a7-17d61c8c6e7d");
+dCC("1981121209000005","2019","12","12","1","5","7e2b7319-9fef-4d48-80a7-17d61c8c6e7d");
+dCC("1981121209000006","2019","12","12","1","6","7e2b7319-9fef-4d48-80a7-17d61c8c6e7d");
+dCC("1981121217000002","2019","12","12","5","2","c194c62d-9780-4b7d-bcba-f08353a6c42e");
+dCC("1981121217000003","2019","12","12","5","3","c194c62d-9780-4b7d-bcba-f08353a6c42e");
+dCC("1981121217000008","2019","12","12","5","8","c194c62d-9780-4b7d-bcba-f08353a6c42e");
+dCC("1981121800000002","2019","12","18","2","2","2be93008-a676-4045-a9f7-f8afd1a55149");
+dCC("1981121800000002","2019","12","18","2","2","9e3b14dc-821d-4bed-9b40-53c2fd9b487c");
+dCC("1981121800000002","2019","12","18","2","2","bcacfc4d-a5c2-458e-931a-1978c52a5fe9");
+dCC("1981121800000003","2019","12","18","2","3","2be93008-a676-4045-a9f7-f8afd1a55149");
+dCC("1981121800000006","2019","12","18","2","6","2be93008-a676-4045-a9f7-f8afd1a55149");
+dCC("1981121812000003","2019","12","18","2","3","9e3b14dc-821d-4bed-9b40-53c2fd9b487c");
+dCC("1981121812000006","2019","12","18","2","6","9e3b14dc-821d-4bed-9b40-53c2fd9b487c");
+dCC("1981121812210006","2019","12","18","2","6","9e3b14dc-821d-4bed-9b40-53c2fd9b487c");
+dCC("1981121813440006","2019","12","18","2","6","2be93008-a676-4045-a9f7-f8afd1a55149");
+dCC("1981121817200003","2019","12","18","2","3","bcacfc4d-a5c2-458e-931a-1978c52a5fe9");
+dCC("1981121817200006","2019","12","18","2","6","bcacfc4d-a5c2-458e-931a-1978c52a5fe9");
+dCC("1981121818430006","2019","12","18","2","6","bcacfc4d-a5c2-458e-931a-1978c52a5fe9");
+dCC("1981121900000002","2019","12","19","1","2","370c6706-3626-49d5-a2fc-8b956d8be840");
+dCC("1981121900000003","2019","12","19","1","3","370c6706-3626-49d5-a2fc-8b956d8be840");
+dCC("1981121900000005","2019","12","19","1","5","370c6706-3626-49d5-a2fc-8b956d8be840");
+dCC("1981121900000006","2019","12","19","1","6","370c6706-3626-49d5-a2fc-8b956d8be840");
+dCC("1981121909000005","2019","12","12 / 19","1","5","7e2b7319-9fef-4d48-80a7-17d61c8c6e7d");
+dCC("1981121909000006","2019","12","12 / 19","1","6","7e2b7319-9fef-4d48-80a7-17d61c8c6e7d");
+dCC("1981121911330006","2019","12","12 / 19","1","6","7e2b7319-9fef-4d48-80a7-17d61c8c6e7d");
+dCC("1981121917000002","2019","12","19","5","2","f4734cc8-dc0c-4010-b99d-c362faf99830");
+dCC("1981121917000003","2019","12","19","5","3","f4734cc8-dc0c-4010-b99d-c362faf99830");
+dCC("1981121917000008","2019","12","19","5","8","f4734cc8-dc0c-4010-b99d-c362faf99830");
+dCC("1981121922070006","2019","12","19","1","6","370c6706-3626-49d5-a2fc-8b956d8be840");
+dCC("1982110610000002","2018","11","6","1","2","ac53e23a-29d9-468f-b39b-8429fa44a5cd");
+dCC("1982110610000006","2018","11","6","1","6","ac53e23a-29d9-468f-b39b-8429fa44a5cd");
+dCC("1982110619220006","2018","11","6","1","6","ac53e23a-29d9-468f-b39b-8429fa44a5cd");
+dCC("1982111310000002","2018","11","13","2","2","2cc8e271-9720-4936-8af8-0605361c7fdb");
+dCC("1982111310000003","2018","11","13","2","3","2cc8e271-9720-4936-8af8-0605361c7fdb");
+dCC("1982111310000006","2018","11","13","2","6","2cc8e271-9720-4936-8af8-0605361c7fdb");
+dCC("1982111310090006","2018","11","13","2","6","2cc8e271-9720-4936-8af8-0605361c7fdb");
+dCC("1982111811000002","2018","11","18","3","2","87c42d36-4056-4a82-a3d0-a51b97cacf85");
+dCC("1982111811000003","2018","11","18","3","3","87c42d36-4056-4a82-a3d0-a51b97cacf85");
+dCC("1982111811000006","2018","11","18","3","6","87c42d36-4056-4a82-a3d0-a51b97cacf85");
+dCC("1982111811370006","2018","11","18","3","6","87c42d36-4056-4a82-a3d0-a51b97cacf85");
+dCC("1982112010000002","2018","11","20","2","2","af5de8ad-7015-4640-bc3a-3cce536ecee5");
+dCC("1982112010000003","2018","11","20","2","3","af5de8ad-7015-4640-bc3a-3cce536ecee5");
+dCC("1982112010000006","2018","11","20","2","6","af5de8ad-7015-4640-bc3a-3cce536ecee5");
+dCC("1982112010050006","2018","11","20","2","6","af5de8ad-7015-4640-bc3a-3cce536ecee5");
+dCC("1982112209000002","2018","11","22","1","2","643f495f-fd21-4c6a-a9a7-16f7dfb312e2");
+dCC("1982112209000003","2018","11","22","1","3","643f495f-fd21-4c6a-a9a7-16f7dfb312e2");
+dCC("1982112209000006","2018","11","22","1","6","643f495f-fd21-4c6a-a9a7-16f7dfb312e2");
+dCC("1982112209240006","2018","11","22","1","6","643f495f-fd21-4c6a-a9a7-16f7dfb312e2");
+dCC("1982112909000002","2018","11","29","1","2","3f40e634-6cff-4677-b6d2-14d4dba7ea29");
+dCC("1982112909000003","2018","11","29","1","3","3f40e634-6cff-4677-b6d2-14d4dba7ea29");
+dCC("1982112909000006","2018","11","29","1","6","3f40e634-6cff-4677-b6d2-14d4dba7ea29");
+dCC("1982112910360006","2018","11","29","1","6","3f40e634-6cff-4677-b6d2-14d4dba7ea29");
+dCC("1982120609000002","2018","12","6","1","2","fa10b301-177a-476a-9dc6-ba818ee60b35");
+dCC("1982120609000003","2018","12","6","1","3","fa10b301-177a-476a-9dc6-ba818ee60b35");
+dCC("1982120609000006","2018","12","6","1","6","fa10b301-177a-476a-9dc6-ba818ee60b35");
+dCC("1982120613100006","2018","12","6","1","6","fa10b301-177a-476a-9dc6-ba818ee60b35");
+dCC("1982120617000002","2018","12","6","5","2","82eb7478-982d-450d-b49b-dc6ec878873c");
+dCC("1982120617000003","2018","12","6","5","3","82eb7478-982d-450d-b49b-dc6ec878873c");
+dCC("1982120617000008","2018","12","6","5","8","82eb7478-982d-450d-b49b-dc6ec878873c");
+dCC("1982121309000002","2018","12","13","1","2","fb6d7859-7429-4db7-9b6f-6e1e931c191a");
+dCC("1982121309000003","2018","12","13","1","3","fb6d7859-7429-4db7-9b6f-6e1e931c191a");
+dCC("1982121309000006","2018","12","13","1","6","fb6d7859-7429-4db7-9b6f-6e1e931c191a");
+dCC("1982121312380006","2018","12","13","1","6","fb6d7859-7429-4db7-9b6f-6e1e931c191a");
+dCC("1982121317000002","2018","12","13","5","2","cd763c7d-fdfa-4da1-b0bf-080a7c0ba783");
+dCC("1982121317000003","2018","12","13","5","3","cd763c7d-fdfa-4da1-b0bf-080a7c0ba783");
+dCC("1982121317000008","2018","12","13","5","8","cd763c7d-fdfa-4da1-b0bf-080a7c0ba783");
+dCC("1982122009000002","2018","12","20","1","2","d4de8e1b-d653-4a1e-9f49-71f23ead8584");
+dCC("1982122009000003","2018","12","20","1","3","d4de8e1b-d653-4a1e-9f49-71f23ead8584");
+dCC("1982122009000006","2018","12","20","1","6","d4de8e1b-d653-4a1e-9f49-71f23ead8584");
+dCC("1982122016130006","2018","12","20","1","6","d4de8e1b-d653-4a1e-9f49-71f23ead8584");
+dCC("1982122017000002","2018","12","20","5","2","0b13da31-c2c5-4a53-ab20-414eb966d919");
+dCC("1982122017000003","2018","12","20","5","3","0b13da31-c2c5-4a53-ab20-414eb966d919");
+dCC("1982122017000008","2018","12","20","5","8","0b13da31-c2c5-4a53-ab20-414eb966d919");
+
+finishCalendarCode(); 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ 
+</div>
+<div class="viewHolder" id="viewHolder" valign=top>
+<br><div id='headerHolder'>
+</div>
+<div id='emptyLine'></div>
+ 	<!-- BREAK  INFO -->
+<div id="viewHolderSD" class="viewHolderSD">
+<div class="viewHolder" id="tableHolder" valign=top>
+<table cellspacing="0" cellpadding="0" border="0" width="100%" id="contentTable">
+<script language="javascript">
+try{
+var nodoc=document.getElementById('viewHolderText');
+if(nodoc){eval(nodoc.innerHTML);}
+//var dbPathLp="";
+//var dbPathLm="";
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  	//<!-- ATTACHMENTS -->
+dataParsingFinished=true;
+}catch(e){ 
+if(!atLeastOneDkpAdded) document.write("<div class='searchMsg'>Neviens dokuments nav atrasts</div>");
+}
+</script>
+</table>
+ <div  class='Stage' style='margin-left:15px;'><div>S&#275;des tipa skaidrojums:</div>A - &#257;rk&#257;rtas s&#275;de, S - svin&#299;g&#257; s&#275;de, Sl - sl&#275;gt&#257; s&#275;de, J - atbil&#382;u snieg&#353;ana uz deput&#257;tu jaut&#257;jumiem, As - &#257;rk&#257;rtas sesijas s&#275;de</div>	<!-- Kalendara saisinajumu paskaidrojumi -->
+</div>
+</div>
+</div><br>
+ 	<!-- END INFO -->
+</div>
+</td>
+</tr>
+</table>
+<br>
+</td>
+<td width=7 class="scrOnly"><img src="/icons/ecblank.gif" width=7></td>
+</tr>
+<tr><td colspan="3"><img src="/icons/ecblank.gif" style="width:990px;height:1px;"></td></tr>
+</table></form>
+</body>
+</html>
+

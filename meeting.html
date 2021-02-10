@@ -1,0 +1,883 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Darba k&#257;rt&#299;ba </title><meta name = "format-detection" content = "telephone=no" /> 
+<link rel="shortcut icon" href="/LIVS13/SaeimaLIVS2_DK.nsf/mainicon.ico" type="image/x-icon" />
+<script language="JavaScript" type="text/javascript" src="WEB_viewFunctions.js"></script>
+<script language="JavaScript" type="text/javascript" src="./commonFunctions.js"></script>
+<script language="JavaScript" type="text/javascript" src="calendar.js?OpenJavascriptLibrary"></script>
+<link rel="stylesheet" href="WEB_viewDocStyles.css?ReadForm" />
+<script type="text/javascript">
+	var dbPath="/LIVS13/SaeimaLIVS2_DK.nsf/";
+	var dateFMT='dd.mm.yyyy';
+// necessary for calendar
+var calendar = null;
+function selected(cal, date) {
+  cal.sel.value = date; 
+  if (cal.sel.id == "id_startDate" || cal.sel.id == "id_endDate" || cal.sel.id == "pid_startDate" || cal.sel.id == "pid_endDate")
+       cal.callCloseHandler();
+}
+// end calendar
+</script>
+<script language="JavaScript" type="text/javascript">
+<!-- 
+document._domino_target = "_self";
+function _doClick(v, o, t) {
+  var returnValue = false;
+  var url="/LIVS13/SaeimaLIVS2_DK.nsf/DK?ReadForm&nr=dd05f96a-3dfb-4fce-b84e-229255f1302d&Click=" + v;
+  if (o.href != null) {
+    o.href = url;
+    returnValue = true;
+  } else {
+    if (t == null)
+      t = document._domino_target;
+    window.open(url, t);
+  }
+  return returnValue;
+}
+// -->
+</script>
+<link rel="stylesheet" type="text/css" href="/LIVS13/SaeimaLIVS2_DK.nsf/calendar-exigen.css?OpenCssResource">
+</head>
+<body text="#000000" bgcolor="#FFFFFF" rightmargin="0"  leftmargin="0" marginheight="0" marginwidth="0" topmargin="0" >
+
+<form onsubmit="return submitFlag;return true;" action=""> 
+<div style="display:none">
+	<!-- CACHE FLAG -->
+	readedFromCache=true
+</div>
+<script language="javascript">
+isActualDay="";
+stageLabels["1"]="Sagatave";
+stageLabels["2"]="Projekts";
+stageLabels["3"]="Apstiprin&#257;ta";
+stageLabels["4"]="Public&#275;ta";
+stageLabels["5"]="S&#257;kta s&#275;de";
+stageLabels["6"]="Izskat&#299;ta";
+stageLabels["7"]="P&#257;rtraukta s&#275;de";
+stageLabels["8"]="Atcelta";
+stageLabels["9"]="Dz&#275;sta";
+stageLabels["10"]="S&#275;de nav notikusi";
+stageLabels["11"]="Nav kvoruma - s&#275;de sl&#275;gta";
+stageLabels["12"]="P&#257;rcelta";
+stageLabels["15"]="Sagatave_fiks&#275;ta";	//stageLabels
+var drAl=[];
+drAl["1"]="Nodo&#353;ana komisij&#257;m";
+drAl["2"]="1. las&#299;jums";
+drAl["3"]="2. las&#299;jums";
+drAl["4"]="3. las&#299;jums";
+drAl["5"]="Nodo&#353;ana komisij&#257;m";
+drAl["6"]="Otrreiz&#275;ja caurl&#363;ko&#353;ana";
+drAl["7"]="";
+drAl["8"]="";
+drAl["9"]="";
+drAl["10"]="1. las&#299;jums";
+drAl["11"]="2. las&#299;jums";	//drAl
+var dkpStatusViewed="3";
+var dkpStatusIsBeingViewed="2";
+var nullStatusLst=[];
+nullStatusLst["1"]=true;
+nullStatusLst["5"]=true;	//nullStatusLst
+var pants39HideLst="";
+pants39HideLst='2';	// 39pants 1. reading aliases List
+var dkpSecondReadingLst=[];
+dkpSecondReadingLst["5"]="Valsts%20prezidents";	//dkpSecondReadingLst
+var setupDocTypes=[];
+setupDocTypes['1']="Likumprojekts";
+setupDocTypes['2']="L%C4%93muma%20projekts";
+setupDocTypes['3']="Piepras%C4%ABjums";
+setupDocTypes['4']="Jaut%C4%81jums";
+setupDocTypes['5']="";
+setupDocTypes['6']="";
+setupDocTypes['7']="";
+setupDocTypes['8']="";
+setupDocTypes['9']="Likums";	//setupDocTypes
+var hideSend2Com=[];
+hideSend2Com['Noraid&#299;ts']=true;
+hideSend2Com['Atsaukts']=true;	//hideSend2Com
+var qTypesTexts=[];
+qTypesTexts["Jaut%C4%81jums"]='q';	//qTypesTexts question
+qTypesTexts["Atbilde%20uz%20deput%C4%81tu%20jaut%C4%81jumu"]='a';
+qTypesTexts["V%C4%93stule%20par%20jaut%C4%81juma%20p%C4%81radres%C4%81ciju"]='a';
+qTypesTexts["V%C4%93stule%20par%20neiera%C5%A1anos%20uz%20atbildes%20snieg%C5%A1anu"]='a';	//qTypesTexts answer
+var lastViewedID="d16e8c7c-a46f-4c30-894e-616b73e8c20e";
+	//page reload for XML
+var calendarSesTpAliases=[];
+calendarSesTpAliases["1"]="";
+calendarSesTpAliases["2"]="A";
+calendarSesTpAliases["3"]="S";
+calendarSesTpAliases["4"]="Sl";
+calendarSesTpAliases["5"]="J";
+calendarSesTpAliases["6"]="As";
+calendarSesTpAliases["7"]="";
+calendarSesTpAliases["8"]="As";
+calendarSesTpAliases["9"]="As";	//sedes tipa aliases
+var sesTpTitles=[];
+sesTpTitles["1"]="k&#257;rt&#275;j&#257;s";
+sesTpTitles["2"]="&#257;rk&#257;rtas";
+sesTpTitles["3"]="svin&#299;g&#257;s";
+sesTpTitles["4"]="sl&#275;gt&#257;s";
+sesTpTitles["5"]="jaut&#257;jumu";
+sesTpTitles["6"]="&#257;rk&#257;rtas sesijas";
+sesTpTitles["7"]="k&#257;rt&#275;j&#257;s s&#275;des pusstundu p&#275;c &#257;rk&#257;rtas";
+sesTpTitles["8"]="otr&#257;s &#257;rk&#257;rtas sesijas";
+sesTpTitles["9"]="tre&#353;&#257;s &#257;rk&#257;rtas sesijas";	//sedes tipa nosaukumi
+var showAttachSections=false; //sedes tips
+var actualXML_DkId="76f449bf-59ec-4aec-af31-4a5653e15265";
+</script>
+<span style="display:none;" id="additionalStylesHolder"></span>
+ <table class="mainTable" width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width=7 class="scrOnly"><img src="/icons/ecblank.gif" width=7></td>
+<td style="width:100%" >
+<input type=hidden name="ViewTitle" id="ViewTitle" value="web_DkpByDkUnid">
+<input type=hidden name="FullWebPath" id="FullWebPath" value="http://titania.saeima.lv/LIVS13/SaeimaLIVS2_DK.nsf/">
+<div class="pageHeader">
+<div style="margin-top:5px;width:100%;background-image:URL('./web_logo_bg.gif');background-repeat:repeat-x">
+<a href="https://www.saeima.lv" style="position:absolute;z-index:99"><img src="./ecblank.gif" style="width:230px; height:58px;"></a>
+<img src="./ecblank.gif" height="58" width="1">
+</div>
+<div style="position:absolute;top:7px;left:14px;color:#F5F5F5;font-family:Arial,Trebuchet MS; font-size:11px;">
+<b>LATVIJAS REPUBLIKAS</b>
+</div>
+<div style="position:absolute;top:17px;left:13px;color:#900000;font-family:Arial,Trebuchet MS; font-size:29px;">
+13<font style="font-size:20px">.</font>SAEIMA
+</div>
+<div style="position:absolute;top:22px;width:100%;">
+<table width=100% class="DBswitch" cellspacing=0 cellpadding=0><tr><td width=263>&nbsp;</td><td width=142 background="top_tab_neact.gif""><a href="https://titania.saeima.lv/LIVS13/saeimalivs13.nsf/webAll?OpenView">LIKUMPROJEKTI</a></td> <td width=142 background="top_tab_neact.gif""><a href="https://titania.saeima.lv/LIVS13/saeimalivs_lmp.nsf/webAll?OpenView">L&#274;MUMU PROJEKTI</a></td> <td width=142 background="top_tab_neact.gif""><a href="https://titania.saeima.lv/LIVS13/saeimalivs_lmp.nsf/WEB_requests?OpenView">PIEPRAS&#298;JUMI</a></td> <td width=142 background="top_tab_neact.gif""><a href="https://titania.saeima.lv/LIVS13/saeimalivs_lmp.nsf/WEB_questions?OpenView">JAUT&#256;JUMI</a></td> <td width=142 class="Act" background="top_tab_act.gif""><a href="https://titania.saeima.lv/LIVS13/saeimalivs2_dk.nsf">DARBA K&#256;RT&#298;BAS</a></td> <td width=4><img src="top_tab_sturis.gif" border=0></td><td style="background-repeat:repeat-x" background="top_tab_bg.gif">&nbsp;</td></tr></table>
+<script type="text/javascript">
+dbPathLp="https://titania.saeima.lv/LIVS13/saeimalivs13.nsf";
+dbPathLm="https://titania.saeima.lv/LIVS13/saeimalivs_lmp.nsf";
+dbPathPub="https://titania.saeima.lv/ELDIS/webpublic.nsf";
+</script>
+
+</div>
+<div class="printButton"  style="position:absolute;top:46px;">
+<span style="margin:0px 20px 0px 0px;font-family:Arial;font-size:12px;vertical-align:middle;" >
+<img src="./ecblank.gif" mark="1" onclick="shSD(this)" style="height:9px;width:9px;border:1px solid gray;" class=""> R&#257;d&#299;t saist&#299;tos dokumentus
+<!-- Atslegt lapas automatisko parladi -->
+
+</span>
+<span style="margin:0px 5px 0px 0px;font-family:Default Sans Serif, Arial;font-size:12px;">
+Teksta izm&#275;rs: &nbsp; 
+<b>
+<a id="switchFSSM" style="font-size:8pt;cursor:pointer;color:#303030;text-decoration:underline;" onclick="javascript:chFS(this,'SM');return void(0)" sz="SM">A</a>
+ | 
+<a id="switchFSNR" style="font-size:10pt;cursor:pointer;color:#404040;" onclick="javascript:chFS(this, 'NR');return void(0)" sz="NR">A</a>
+</b>
+</span>
+<br>
+<span style="vertical-align:middle;margin-top:3px;" ><a  onclick="window.print()" ><span>Druk&#257;t&nbsp;</span><img src="web_bigPrint.jpg"  alt="Druk&#257;t"></a></span>
+</div>
+</div>
+<table class="mainTable" border="0" cellspacing="0" cellpadding="0">
+<tr><td colspan="3" class="scrOnly"><img src="/icons/ecblank.gif" height=5></td></tr>
+<tr>
+<td class="outlines" valign="top" ><div class="OutlineTitle">Darba k&#257;rt&#299;bas</div>
+<div style="width:250px;background-image:url(WEB_bg_m2.jpg);background-repeat:repeat-y;margin-bottom:0px">
+<div style="background-image:url(WEB_bg_m1.jpg);background-repeat:no-repeat;">
+<div style="background-image:url(WEB_bg_m3.jpg);background-repeat:no-repeat;background-position:bottom left">
+<div class="menuBlock">
+<div class="mainOutline" style="margin-top:6px;">
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a href="./DK?ReadForm&nr=2efcc4da-63b1-49ee-9608-7caba1dbdd2a">05.11.2020 / 12.11.2020 / 19.11.2020 Saeimas &#257;rk&#257;rtas s&#275;des darba k&#257;rt&#299;bas</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a href="./DK?ReadForm&nr=76bdee8a-92dd-48f8-8e71-77f8df6e2397">19.11.2020 Saeimas pirm&#257;s att&#257;lin&#257;t&#257;s &#257;rk&#257;rtas s&#275;des darba k&#257;rt&#299;ba</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a href="./DK?ReadForm&nr=3ea764c3-4cc3-4956-890f-b27d8872c7b1">23.11.2020 Saeimas &#257;rk&#257;rtas s&#275;des darba k&#257;rt&#299;ba</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a href="./DK?ReadForm&actual=1">19.11.2020 / 26.11.2020 Saeimas tre&#353;&#257;s att&#257;lin&#257;t&#257;s &#257;rk&#257;rtas s&#275;des darba k&#257;rt&#299;ba</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a href="./DK?ReadForm&nr=2823f5c6-9c4e-4203-b410-7e47f6bada56">19.11.2020 / 26.11.2020 Saeimas otr&#257;s att&#257;lin&#257;t&#257;s &#257;rk&#257;rtas s&#275;des darba k&#257;rt&#299;ba</a></b></div>	<!-- Saeimas s&#275;des aktu&#257;l&#257; darba k&#257;rt&#299;ba -->
+<div  style="background-image:URL('./Calendar_view.gif');"><b><a href="./DK?ReadForm&calendar=1">Visas Saeimas s&#275;&#382;u darba k&#257;rt&#299;bas</a></b></div> 	<!-- Visas Saeimas s&#275;d&#382;u darba k&#257;rt&#299;bas -->
+</div>
+</div>
+</div>
+</div>
+</div>
+<div style="background-image:url(WEB_bg_m2.jpg);background-repeat:repeat-y;background-position:bottom left;margin-bottom:10px">
+<div style="background-image:url(WEB_bg_m3F.jpg);background-repeat:no-repeat;background-position:top left">
+<div style="background-image:url(WEB_bg_m3.jpg);background-repeat:no-repeat;background-position:bottom left">
+<div class="menuBlock" style="">
+<div><img src="WEB_search.gif"><b>&nbsp;&nbsp;Detaliz&#275;ta mekl&#275;&#353;ana</b></div>
+<div style="border:1px solid #E0E0E0;margin:2px 0px;padding:2px 4px;background-color:#F0F0D0;">
+<div align=right>
+<input align=left name="sFilter" id="sFilter" type=text onkeypress="if (event.keyCode==13 && (this.value!='')) submitSearch()" style="margin:2px 0px 0px 0px; width: 225px;"><br>
+<div style="text-align:center;margin:0px 5px 7px 3px;padding:0px;font-size:8pt">mekl&#275;t p&#275;c nosaukuma (ar&#299; nepilna)</div>
+<div style="display:none;margin:0px 5px 7px 3px;padding:0px;cursor:pointer;font-size:8pt" onclick="srchFullW(this)" id="srchFull" ><img src="WEB_CB_white.gif" style="width:7px; height:7px; border:1px solid #909090;"> mekl&#275;t p&#275;c piln&#257; v&#257;rda</div>
+</div>
+</div>
+<div style="border:1px solid #E0E0E0;margin:2px 0px;padding:2px 4px;background-color:#F0F0D0;">
+<div style="margin-top:5px">S&#275;des datums</div>
+<div style="font-size:8pt; padding-left:10px">no&nbsp;<input name="startDatePi" value="" id="pid_startDate" style="width: 70px;"> <img src="/LIVS13/SaeimaLIVS2_DK.nsf/WEB_DateSelector.gif?OpenImageResource" style="cursor: pointer;" onClick="showCalendar('pid_startDate',dateFMT);" alt="" />
+&nbsp;l&#299;dz&nbsp;<input name="endDatePi" value="" id="pid_endDate" style="width: 70px;"> <img src="/LIVS13/SaeimaLIVS2_DK.nsf/WEB_DateSelector.gif?OpenImageResource" style="cursor: pointer;" onClick="showCalendar('pid_endDate',dateFMT);" alt="" /></div>
+<div style="font-size:9px;text-align:right;">(form&#257;t&#257; - dd.mm.gggg) &nbsp; </div>
+</div>
+<div class="srchButtons" style="background-color:#FCFDF7;">
+<input type=button value="Mekl&#275;t" onclick="submitSearch()" style="font-weight:bold;font-size:10pt;height:24;width:105px;">&nbsp;
+<input type=button id="searchBackButt" value="Atcelt mekl&#275;&#353;anu" onclick="window.location.reload()"  style="display:none;font-size:10pt;height:24;width:115px;">
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div style="margin-top:10px;">
+<!-- Active documents -->
+<div class="OutlineTitle">Dokumenti</div>
+<div style="width:250px;background-image:url(WEB_bg_m2.jpg);background-repeat:repeat-y;margin-bottom:0px">
+<div style="background-image:url(WEB_bg_m1.jpg);background-repeat:no-repeat;">
+<div style="background-image:url(WEB_bg_m3.jpg);background-repeat:no-repeat;background-position:bottom left">
+<div class="menuBlock">
+<div class="mainOutline" style="margin-top:6px;">
+<div style="background-image:URL('./WEB_activeDocuments.png');"><b><a href="https://titania.saeima.lv/LIVS13/saeimalivs13.nsf/activeDocuments.xsp" target="_blank"">Aktu&#257;lo Saeimas s&#275;&#382;u dokumenti</a></b></div> 	<!-- Saeimas s&#275;&#382;u aktu&#257;lie dokumenti-->
+</div>
+</div>
+</div>
+</div>
+</div></div><div style="margin-top:10px;">
+<!-- Statistic -->
+<div class="OutlineTitle">Statistika</div>
+<div style="width:250px;background-image:url(WEB_bg_m2.jpg);background-repeat:repeat-y;margin-bottom:0px">
+<div style="background-image:url(WEB_bg_m1.jpg);background-repeat:no-repeat;">
+<div style="background-image:url(WEB_bg_m3.jpg);background-repeat:no-repeat;background-position:bottom left">
+<div class="menuBlock">
+<div class="mainOutline" style="margin-top:6px;">
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a href="./Statistics?ReadForm&key=1&stat=1&rt=L">S&#275;des statistika</a></b></div> 	<!-- Sedes -->
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a href="./Statistics?ReadForm&key=1&stat=1&rt=S">Likumdo&#353;anas statistika</a></b></div> 	<!-- Likumdo&#353;anas statistika-->
+</div>
+</div>
+</div>
+</div>
+</div></div>
+<div style="margin-top:10px;">
+<!-- Archive-->
+<div class="OutlineTitle">Arh&#299;vs</div>
+<div style="width:250px;background-image:url(WEB_bg_m2.jpg);background-repeat:repeat-y;margin-bottom:0px">
+<div style="background-image:url(WEB_bg_m1.jpg);background-repeat:no-repeat;">
+<div style="background-image:url(WEB_bg_m3.jpg);background-repeat:no-repeat;background-position:bottom left">
+<div class="menuBlock">
+<div class="mainOutline" style="margin-top:6px;">
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a target="_blank" href="https://titania.saeima.lv/LIVS12/SaeimaLIVS2_DK.nsf/DK?ReadForm&calendar=1">12.Saeimas s&#275;&#382;u darba k&#257;rt&#299;bas</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a target="_blank" href="https://titania.saeima.lv/LIVS11/SaeimaLIVS2_DK.nsf/DK?ReadForm&calendar=1">11.Saeimas s&#275;&#382;u darba k&#257;rt&#299;bas</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a target="_blank" href="https://titania.saeima.lv/LIVS10/SaeimaLIVS2_DK.nsf/DK?ReadForm&calendar=1">10.Saeimas s&#275;&#382;u darba k&#257;rt&#299;bas</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a target="_blank" href="https://titania.saeima.lv/LIVS/SaeimaLIVS2_DK.nsf/DK?ReadForm&calendar=1">9.Saeimas s&#275;&#382;u darba k&#257;rt&#299;bas</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a target="_blank" href="https://saeima.lv/lv/par-saeimu/arhivs/8-saeima/8-saeimas-sezu-darba-kartibas/">8.Saeimas s&#275;&#382;u darba k&#257;rt&#299;bas</a></b></div> 	<!-- Archive-->
+</div>
+</div>
+</div>
+</div>
+</div></div>
+</td>
+<td style="width:14px"><img src="/icons/ecblank.gif" height=5 width=14></td>
+<td class="views">
+<div class="viewHolderFSSM" id="viewHolderFS">
+<script>var sfs=readCookie("selectedFontSize"); if(sfs) chFS(document.getElementById("switchFS"+sfs), sfs);</script>
+<div class="scrOnly" id="stageNavigationBlock" style="display:block;">
+ <div class="StageDate" style="width:550px;">2020.gada 9.janv&#257;ra Saeimas k&#257;rt&#275;j&#257;s s&#275;des darba k&#257;rt&#299;ba</div> 
+<div class="Stage"><span class="StageNoneAct"><a href='./DK?ReadForm&nr=dd05f96a-3dfb-4fce-b84e-229255f1302d&stage=2'>Projekts</a></span> | <span class="StageNoneAct"><a href='./DK?ReadForm&nr=dd05f96a-3dfb-4fce-b84e-229255f1302d&stage=3'>Apstiprin&#257;ta</a></span> | <span class="StageAct"><a href='./DK?ReadForm&nr=dd05f96a-3dfb-4fce-b84e-229255f1302d&stage=6'>Izskat&#299;ta</a></span></div>	<!-- Stage Navigation -->
+</div>
+<div class="viewHolderText" id="viewHolderText" style="display:none">
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ drawDKP_UT("","","Par%20likumprojekta%20Groz%C4%ABjumi%20Visp%C4%81r%C4%93j%C4%81s%20izgl%C4%ABt%C4%ABbas%20likum%C4%81%20(319%2FLp13)%2C%203.las%C4%ABjums%20iek%C4%BCau%C5%A1anu%20Saeimas%20s%C4%93des%20darba%20k%C4%81rt%C4%ABb%C4%81","","","F62BDAE896F347C4C22584EA007E585E","","","","","","","","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:02","","","","93604d18-e492-4675-847c-5b3ef4a383c9","","6","","","09:00","1","","0","","","","");
+drawDKP_UT("","","Par%20likumprojekta%20Groz%C4%ABjumi%20likum%C4%81%20%E2%80%9CPar%20nodok%C4%BCu%20piem%C4%93ro%C5%A1anu%20br%C4%ABvost%C4%81s%20un%20speci%C4%81laj%C4%81s%20ekonomiskaj%C4%81s%20zon%C4%81s%E2%80%9D%20(380%2FLp13)%2C%202.las%C4%ABjums%20iek%C4%BCau%C5%A1anu%20Saeimas%20s%C4%93des%20darba%20k%C4%81rt%C4%ABb%C4%81","","","8ED38B2B728F89A3C22584EA007E5860","","","","","","","","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:02","","","","00d633da-c302-4b9b-8e82-6791819a5eb9","","6","","","09:00","1","","0","","","","");
+drawDKP_UT("","","Par%20likumprojekta%20Pre%C4%8Du%20z%C4%ABmju%20likums%20(409%2FLp13)%2C%202.las%C4%ABjums%20iek%C4%BCau%C5%A1anu%20Saeimas%20s%C4%93des%20darba%20k%C4%81rt%C4%ABb%C4%81","","","2927E0CA22FD4DACC22584EA007E5862","","","","","","","","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:03","","","","740f0d1a-3baf-43d9-ba12-bbccdb53c43b","","6","","","09:00","1","","0","","","","");
+drawDKP_UT("","","Par%20likumprojekta%20Groz%C4%ABjumi%20Republikas%20pils%C4%93tas%20domes%20un%20novada%20domes%20v%C4%93l%C4%93%C5%A1anu%20likum%C4%81%20(539%2FLp13)%2C%20nodo%C5%A1ana%20komisij%C4%81m%20iek%C4%BCau%C5%A1anu%20Saeimas%20s%C4%93des%20darba%20k%C4%81rt%C4%ABb%C4%81","","","ED70F79FA664ADA6C22584EA007E5864","","","par 67, pret 3, atturas 0 &nbsp;","","","","","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:02","","","","9b0fdee3-3052-478f-b774-55001ae29143","","6","","","09:00","1","0#0#0","0","","","","");
+drawDKP_UT("","","Par%20l%C4%93muma%20projekta%20Par%20Saeimas%20deput%C4%81ta%20Jura%20Jura%C5%A1a%20iev%C4%93l%C4%93%C5%A1anu%20Publisko%20izdevumu%20un%20rev%C4%ABziju%20komisij%C4%81%20(292%2FLm13)%20iek%C4%BCau%C5%A1anu%20Saeimas%20s%C4%93des%20darba%20k%C4%81rt%C4%ABb%C4%81","","","EC91B5C050279440C22584EA007E5865","","","","","","","","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:03","","","","7460fbdd-de84-4676-8520-b66cc2866a87","","6","","","09:00","1","","0","","","","");
+drawDKP_UT("","","Par%20likumprojekta%20Groz%C4%ABjums%20likum%C4%81%20%E2%80%9CPar%20tautas%20nobalso%C5%A1anu%2C%20likumu%20ierosin%C4%81%C5%A1anu%20un%20Eiropas%20pilso%C5%86u%20iniciat%C4%ABvu%E2%80%9D%20(546%2FLp13)%2C%20nodo%C5%A1ana%20komisij%C4%81m%20iek%C4%BCau%C5%A1anu%20Saeimas%20s%C4%93des%20darba%20k%C4%81rt%C4%ABb%C4%81","","","435E41AE3330E67FC22584EA007E587B","","","par 81, pret 0, atturas 0 &nbsp;","","","1","","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:03","","","","f632f1e1-45b8-4998-b9f3-059cd3d992a5","","6","","","09:00","1","0#0#0","0","","","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20Farm%C4%81cijas%20likum%C4%81","517/Lp13","1","CC4505DEB139E3CCC22584EA007E587D","Ministru kabinets","Soci%C4%81lo%20un%20darba%20lietu%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1855, 1855A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:06","","","","a1488292-35e4-46db-914d-b10b07563c68","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20Latvijas%20Sodu%20izpildes%20kodeks%C4%81","518/Lp13","2","C3489C6B215E94D9C22584EA007E587F","Ministru kabinets","Aizsardz%C4%ABbas%2C%20iek%C5%A1lietu%20un%20korupcijas%20nov%C4%93r%C5%A1anas%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1856, 1856A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:06","","","","ce83bdcb-5624-4ee4-a732-582a95e3419f","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20Apcietin%C4%81jum%C4%81%20tur%C4%93%C5%A1anas%20k%C4%81rt%C4%ABbas%20likum%C4%81","519/Lp13","3","0BF803711E7A16B6C22584EA007E5881","Ministru kabinets","Aizsardz%C4%ABbas%2C%20iek%C5%A1lietu%20un%20korupcijas%20nov%C4%93r%C5%A1anas%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1857, 1857A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:07","","","","f36f0eac-e38f-42d5-ba55-8342fbc80b57","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20Ieslodz%C4%ABjuma%20vietu%20p%C4%81rvaldes%20likum%C4%81","520/Lp13","4","EC93CA1BC02C0513C22584EA007E5884","Ministru kabinets","Aizsardz%C4%ABbas%2C%20iek%C5%A1lietu%20un%20korupcijas%20nov%C4%93r%C5%A1anas%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1858, 1858A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:07","","","","3aab1d7b-f419-4cbd-9738-72721a3351a8","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20likum%C4%81%20%E2%80%9CPar%20iedz%C4%ABvot%C4%81ju%20ien%C4%81kuma%20nodokli%E2%80%9D","521/Lp13","5","B236E0DF74355628C22584EA007E5898","Ministru kabinets","Bud%C5%BEeta%20un%20finan%C5%A1u%20(nodok%C4%BCu)%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1859, 1859A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:07","","","","29c27cb4-e0b1-41d5-a00b-3a5999df9e1d","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjums%20likum%C4%81%20%E2%80%9CPar%20nekustamo%20%C4%ABpa%C5%A1umu%20atsavin%C4%81%C5%A1anu%20Latvijas%20Republikas%20valsts%20robe%C5%BEas%20joslas%20ier%C4%ABko%C5%A1anai%20uz%20Latvijas%20Republikas%20un%20Krievijas%20Feder%C4%81cijas%20valsts%20robe%C5%BEas%E2%80%9D","522/Lp13","6","8A14A5245F2A2719C22584EA007E589A","Ministru kabinets","Juridisk%C4%81%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1860, 1860A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:08","","","","9949319f-1e5c-47ec-9904-69a250a52af5","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20Fizisko%20personu%20re%C4%A3istra%20likum%C4%81","523/Lp13","7","B8A4589C7721D743C22584EA007E589C","Ministru kabinets","Aizsardz%C4%ABbas%2C%20iek%C5%A1lietu%20un%20korupcijas%20nov%C4%93r%C5%A1anas%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1861, 1861A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:08","","","","b824100b-4db9-48e8-84bb-bf07d5084c8e","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20likum%C4%81%20%E2%80%9CPar%201971.gada%202.febru%C4%81ra%20Konvenciju%20par%20starptautiskas%20noz%C4%ABmes%20mitr%C4%81jiem%2C%20%C4%ABpa%C5%A1i%20k%C4%81%20%C5%ABdensputnu%20dz%C4%ABves%20vidi%E2%80%9D","524/Lp13","8","BE6CC2ABE21DC83EC22584EA007E589E","Ministru kabinets","%C4%80rlietu%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1862, 1862A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:08","","","","2c46e839-7d43-4c73-b937-b7c00b9a3878","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20likum%C4%81%20%E2%80%9CPar%20zemes%20privatiz%C4%81ciju%20lauku%20apvidos%E2%80%9D","525/Lp13","9","81DC17A90AC889ECC22584EA007E58A0","Ministru kabinets","Tautsaimniec%C4%ABbas%2C%20agr%C4%81r%C4%81s%2C%20vides%20un%20re%C4%A3ion%C4%81l%C4%81s%20politikas%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1863, 1863A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:09","","","","44bdc1b9-aa4e-4283-8f91-392267ceb63a","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20P%C4%81rtikas%20aprites%20uzraudz%C4%ABbas%20likum%C4%81","526/Lp13","10","F6E8E896B59067AAC22584EA007E58AD","Ministru kabinets","Tautsaimniec%C4%ABbas%2C%20agr%C4%81r%C4%81s%2C%20vides%20un%20re%C4%A3ion%C4%81l%C4%81s%20politikas%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1864, 1864A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:09","","","","af43372f-4fb5-4579-8a94-aff137b9bb7e","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjums%20Republikas%20pils%C4%93tu%20un%20novadu%20v%C4%93l%C4%93%C5%A1anu%20komisiju%20un%20v%C4%93l%C4%93%C5%A1anu%20iecirk%C5%86u%20komisiju%20likum%C4%81","527/Lp13","11","7D458F1906482BC6C22584EA007E58AF","Ministru kabinets","Administrat%C4%ABvi%20teritori%C4%81l%C4%81s%20reformas%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","1","1865, 1865A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:10","","","","787016ad-3e5d-4018-adad-940f31c668ce","","1","1","0","09:00","1","","1","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20Priek%C5%A1v%C4%93l%C4%93%C5%A1anu%20a%C4%A3it%C4%81cijas%20likum%C4%81","528/Lp13","12","A7CE367BFBAEE6CAC22584EA007E58B2","Ministru kabinets","Valsts%20p%C4%81rvaldes%20un%20pa%C5%A1vald%C4%ABbas%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1866, 1866A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:11","","","","31d20ee3-5f58-46ab-bdc2-529649260f07","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20likum%C4%81%20%E2%80%9CPar%20tautas%20nobalso%C5%A1anu%2C%20likumu%20ierosin%C4%81%C5%A1anu%20un%20Eiropas%20pilso%C5%86u%20iniciat%C4%ABvu%E2%80%9D","529/Lp13","13","AA7D6254B07425D2C22584EA007E58B4","Ministru kabinets","Juridisk%C4%81%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1867, 1867A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:12","","","","53c5a7d5-eaa8-4440-983a-590423f78e77","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20Republikas%20pils%C4%93tas%20domes%20un%20novada%20domes%20v%C4%93l%C4%93%C5%A1anu%20likum%C4%81","539/Lp13","27","FF7AE58E71CD79EBC22584EA007E58C1","Ministru kabinets","Administrat%C4%ABvi%20teritori%C4%81l%C4%81s%20reformas%20komisija(atbild%C4%ABg%C4%81)","par 80, pret 4, atturas 0 &nbsp; <b>Nod. kom.</b>","1","","1","1897, 1897A, 1892B","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:12","","","","63728c53-2e4a-489a-8b82-0a995db4a175","","1","1","0","09:00","1","0#0#0","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjums%20likum%C4%81%20%E2%80%9CPar%20tautas%20nobalso%C5%A1anu%2C%20likumu%20ierosin%C4%81%C5%A1anu%20un%20Eiropas%20pilso%C5%86u%20iniciat%C4%ABvu%E2%80%9D","546/Lp13","29","39E22FF4F6D7D92CC22584EA007E58C4","Deput&#257;ti Viktors Valainis, Armands Krauze, Uldis Augulis, J&#257;nis Urbanovi&#269;s, Gundars Daudze, Raimonds Bergmanis, J&#257;nis D&#363;klavs, Jan&#299;na Jalinska, Ivars Zari&#326;&#353;, J&#257;nis Kri&#353;&#257;ns, Val&#275;rijs Age&#353;ins","Valsts%20p%C4%81rvaldes%20un%20pa%C5%A1vald%C4%ABbas%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","1","1913","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:13","","","","0c0fa320-4c35-4eb3-af00-7bd221acd913","","1","1","0","09:00","1","","1","","1","","");
+drawDKP_Pr("6","12","Par%20pie%C5%A1%C4%B7irto%20neapmaks%C4%81to%20atva%C4%BCin%C4%81jumu%20deput%C4%81tei%20%C4%BBubovai%20%C5%A0vecovai%202019.gada%2019.decembr%C4%AB","","14","1E0B6A9124FFF23EC22584EA007E58C7","","","<b>Pie&#353;&#311;irts</b>","9","","","1874., 611.1.8/1-61-13/19","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:15","","","","629b00eb-3598-468e-b0a9-fbd2ef279f4d","","5","","0","09:00","1","","0","","5","","");
+drawDKP_Pr("8","","Par%20Saeimas%20deput%C4%81ta%20Jura%20Jura%C5%A1a%20iev%C4%93l%C4%93%C5%A1anu%20Publisko%20izdevumu%20un%20rev%C4%ABziju%20komisij%C4%81","292/Lm13","28","CBB97379025DFAE0C22584EA007E58C9","Deput&#257;ti Juta Str&#299;&#311;e, Kri&#353;j&#257;nis Feldmans, J&#257;nis Ciel&#275;ns, Anita Mui&#382;niece, Juris Ranc&#257;ns, Normunds &#381;unna, Reinis Znoti&#326;&#353;, Dagm&#257;ra Beitnere-Le Galla, J&#257;nis But&#257;ns, Uldis Budri&#311;is","","par 83, pret 0, atturas 0 &nbsp; <b>Pazi&#326;ojums</b>","9","","","1911","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:16","","","","9bddd968-95e9-486e-8c4b-a05501319f07","","2","1","0","09:00","1","0#0#0","0","","2","","");
+drawDKP_Pr("Deput&#257;tu piepras&#299;jumu izskat&#299;&#353;ana","Piepras&#299;jumu komisijas atzinums","Deput%C4%81tu%20Ivara%20Zari%C5%86a%2C%20J%C4%81%C5%86a%20Tutina%2C%20Val%C4%93rija%20Age%C5%A1ina%2C%20Ivana%20Klementjeva%2C%20J%C4%81%C5%86a%20%C4%80damsona%2C%20Edgara%20Kucina%2C%20Vit%C4%81lija%20Orlova%2C%20J%C4%81%C5%86a%20Kri%C5%A1%C4%81na%2C%20Reg%C4%ABnas%20Lo%C4%8Dmeles-Lu%C5%86ovas%2C%20Nikolaja%20Kabanova%20piepras%C4%ABjums%20Ministru%20prezidentam%20Arturam%20Kri%C5%A1j%C4%81nim%20Kari%C5%86am%20%22Par%20vald%C4%ABbas%20nesp%C4%93ju%20pamatot%20sava%20l%C4%93muma%20tiesiskumu%20saist%C4%ABb%C4%81%20ar%20likum%C4%81%20noteikt%C4%81%20finans%C4%93juma%20palielin%C4%81juma%20nenodro%C5%A1in%C4%81%C5%A1anu%20vesel%C4%ABbas%20apr%C5%ABpes%20darbinieku%20darba%20samaksai%22","21/P13","15","DD89E2EA0190E8EEC22584EA007E58D8","Piepras&#299;jumu komisija","","par 35, pret 55, atturas 0 &nbsp; <b>Noraid&#299;ts</b>","7","","1","1400, 1400A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:17","","","","b84243f8-55cd-47f1-8df1-9d1e15a3f59d","","3","","0","09:00","1","0#0#0","0","Ivars Puga","3","","");
+drawDKP_Pr("Deput&#257;tu piepras&#299;jumu izskat&#299;&#353;ana","Piepras&#299;jumu komisijas atzinums","Deput%C4%81tu%20Viktora%20Valai%C5%86a%2C%20Armanda%20Krauzes%2C%20Raimonda%20Bergma%C5%86a%2C%20Danas%20Reiznieces-Ozolas%2C%20Gundara%20Daudzes%2C%20M%C4%81ra%20Ku%C4%8Dinska%2C%20J%C5%ABlijas%20Stepa%C5%86enko%2C%20Karinas%20Spr%C5%ABdes%2C%20Alda%20Gobzema%2C%20Did%C5%BEa%20%C5%A0mita%20piepras%C4%ABjums%20Ministru%20prezidentam%20Arturam%20Kri%C5%A1j%C4%81nim%20Kari%C5%86am%20%22Par%20Vides%20aizsardz%C4%ABbas%20un%20re%C4%A3ion%C4%81l%C4%81s%20att%C4%ABst%C4%ABbas%20ministra%20Jura%20P%C5%ABces%20informat%C4%ABvo%20kampa%C5%86u%22","23/P13","16","13FCD724F192F45FC22584EA007E58DA","Piepras&#299;jumu komisija","","par 33, pret 54, atturas 0 &nbsp; <b>Noraid&#299;ts</b>","7","","1","1763, 1763A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:51","","","","8f615e6c-93c6-41ef-ae89-7ea4c084960f","","3","","0","09:00","1","0#0#0","0","Ivars Puga","3","","");
+drawDKP_Pr("Deput&#257;tu piepras&#299;jumu izskat&#299;&#353;ana","Piepras&#299;jumu komisijas atzinums","Deput%C4%81tu%20J%C5%ABlijas%20Stepa%C5%86enko%2C%20Did%C5%BEa%20%C5%A0mita%2C%20Karinas%20Spr%C5%ABdes%2C%20Alda%20Gobzema%2C%20J%C4%81%C5%86a%20D%C5%ABklava%2C%20J%C4%81%C5%86a%20Vuc%C4%81na%2C%20Armanda%20Krauzes%2C%20Danas%20Reiznieces-Ozolas%2C%20Viktora%20Valai%C5%86a%2C%20Ulda%20Augu%C4%BCa%20piepras%C4%ABjums%20vides%20aizsardz%C4%ABbas%20un%20re%C4%A3ion%C4%81l%C4%81s%20att%C4%ABst%C4%ABbas%20ministram%20Jurim%20P%C5%ABcem%20%22Par%20ministra%20r%C4%ABc%C4%ABbu%2C%20novilcinot%20administrat%C4%ABv%C4%81s%20atbild%C4%ABbas%20iek%C4%BCau%C5%A1anu%20likumos%20par%20vides%20aizsardz%C4%ABbu%20un%20radioakt%C4%ABvo%20dro%C5%A1%C4%ABbu%22","24/P13","17","A31412A831350E48C22584EA007E58DC","Piepras&#299;jumu komisija","","par 34, pret 55, atturas 0 &nbsp; <b>Noraid&#299;ts</b>","7","","1","1804, 1804A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","10:06","","","","e559f5ef-30bf-47f2-a101-12f13bfcba72","","3","","0","09:00","1","0#0#0","0","M&#257;rti&#326;&#353; Sta&#311;is","3","","");
+drawDKP_Pr("Deput&#257;tu piepras&#299;jumu izskat&#299;&#353;ana","Piepras&#299;jumu komisijas atzinums","Deput%C4%81tu%20J%C5%ABlijas%20Stepa%C5%86enko%2C%20Karinas%20Spr%C5%ABdes%2C%20Ulda%20Augu%C4%BCa%2C%20Armanda%20Krauzes%2C%20Gundara%20Daudzes%2C%20Did%C5%BEa%20%C5%A0mita%2C%20J%C4%81%C5%86a%20D%C5%ABklava%2C%20Danas%20Reiznieces-Ozolas%2C%20Alda%20Gobzema%2C%20J%C4%81%C5%86a%20Vuc%C4%81na%20piepras%C4%ABjums%20vides%20aizsardz%C4%ABbas%20un%20re%C4%A3ion%C4%81l%C4%81s%20att%C4%ABst%C4%ABbas%20ministram%20Jurim%20P%C5%ABcem%20%22Par%20ministra%20patva%C4%BC%C4%ABbu%2C%20izr%C4%ABkojot%20Centr%C4%81lo%20v%C4%93l%C4%93%C5%A1anu%20komisiju%20un%20publiski%20maldinot%20sabiedr%C4%ABbu%22","25/P13","18","6AEDFCBBFE84D2BBC22584EA007E58DE","Piepras&#299;jumu komisija","","par 32, pret 56, atturas 0 &nbsp; <b>Noraid&#299;ts</b>","7","","1","1837, 1837A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","10:20","","","","6a3d3990-75fd-4d4c-80eb-d8d49c169531","","3","","0","09:00","1","0#0#0","0","Uldis Budri&#311;is","3","","");
+drawDKP_UT("","","Deput%C4%81tu%20kl%C4%81tb%C5%ABtnes%20re%C4%A3istr%C4%81cija","","","C03F08982A592B8CC22584EA007E58DF","","","re&#291;istr&#275;ju&#353;ies 90 &nbsp;","","","","","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","10:27","","","","76e3e549-8030-4f03-8614-6074fbd99f4c","","6","","","09:00","1","0#0#0","0","","","","");
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ drawDKP_UT("","","Par%20l%C4%93muma%20projekta%20Par%20likumprojekta%20%E2%80%9CR%C4%ABgas%20domes%20atlai%C5%A1anas%20likums%E2%80%9D%20(Nr.%20530%2FLp13%3B%20steidzams)%20izskat%C4%AB%C5%A1anas%20Saeimas%20s%C4%93d%C4%93%20datuma%20mai%C5%86u%20no%202020.%20gada%2016.%20janv%C4%81ra%20uz%202020.%20gada%2013.%20febru%C4%81ri%20(293%2FLm13)%20iek%C4%BCau%C5%A1anu%20Saeimas%20s%C4%93des%20darba%20k%C4%81rt%C4%ABb%C4%81","","","9958F76DD2D07B40C22584EA007E58F5","","","par 71, pret 7, atturas 0 &nbsp;","","","1","","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","11:02","","","","4f044c25-57f6-42a7-badf-34b1e33b51fc","","6","","","09:00","1","0#0#0","0","","","","");
+drawDKP_Pr("1","","Groz%C4%ABjumi%20likum%C4%81%20%E2%80%9CPar%20presi%20un%20citiem%20masu%20inform%C4%81cijas%20l%C4%ABdzek%C4%BCiem%E2%80%9D","412/Lp13","19","0BDD56CA4C30DD2BC22584EA007E58F7","Cilv&#275;kties&#299;bu un sabiedrisko lietu komisija","","par 81, pret 0, atturas 0 &nbsp; <b>Likums</b>","4","Nav priek&#353;likumu","","1870","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","11:11","","","","34e58ee8-875b-43ed-b53f-14b4072f77d3","","1","1","0","09:00","1","0#0#0","0","Boriss Cilevi&#269;s","1","","");
+drawDKP_Pr("1","","Groz%C4%ABjumi%20Korupcijas%20nov%C4%93r%C5%A1anas%20un%20apkaro%C5%A1anas%20biroja%20likum%C4%81","34/Lp13","20","1C831C7669A150D2C22584EA007E58F8","Aizsardz&#299;bas, iek&#353;lietu un korupcijas nov&#275;r&#353;anas komisija","","par 83, pret 0, atturas 0 &nbsp; <b>Pie&#326;emts</b>","2","","","56, 1872","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","11:12","","","","8d49e8aa-b313-4084-b297-64ea0dd0a76f","","1","1","0","09:00","1","0#0#0","0","Juris Ranc&#257;ns","1","","");
+drawDKP_Pr("1","","Par%20nekustam%C4%81%20%C4%ABpa%C5%A1uma%20%E2%80%9CJaund%C5%ABvi%C5%86i%E2%80%9D%20Limba%C5%BEu%20pagast%C4%81%2C%20Limba%C5%BEu%20novad%C4%81%2C%20da%C4%BCu%20atsavin%C4%81%C5%A1anu%20sabiedr%C4%ABbas%20vajadz%C4%ABb%C4%81m%20%E2%80%93%20valsts%20re%C4%A3ion%C4%81l%C4%81%20autoce%C4%BCa%20P53%20Du%C4%8Di%E2%80%93Limba%C5%BEi%20p%C4%81rb%C5%ABves%20projekta%20%C4%ABsteno%C5%A1anai","499/Lp13","21","77260F8F256672D4C22584EA007E58F9","Juridisk&#257; komisija","","par 79, pret 0, atturas 0 &nbsp; <b>Pie&#326;emts</b>","2","","","1744, 1880","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","11:14","","","","10aae470-1bcc-4b5e-93f1-12463a0973e6","","1","1","0","09:00","1","0#0#0","0","J&#257;nis But&#257;ns","1","","");
+drawDKP_Pr("1","","Groz%C4%ABjumi%20likum%C4%81%20%E2%80%9CPar%20nodok%C4%BCiem%20un%20nodev%C4%81m%E2%80%9D","418/Lp13","22","C7418E67018190B9C22584EA007E58FC","Bud&#382;eta un finan&#353;u (nodok&#316;u) komisija","","par 79, pret 0, atturas 0 &nbsp; <b>Pie&#326;emts</b>","2","","","1414, 1881","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","11:17","","","","0a5568b2-49fc-4fcc-bd58-e135d7007863","","1","1","0","09:00","1","0#0#0","0","Iveta Benhena-B&#275;kena","1","","");
+drawDKP_Pr("1","","Groz%C4%ABjumi%20J%C5%ABras%20kodeks%C4%81","479/Lp13","23","969298D35F0628EBC22584EA007E5913","Tautsaimniec&#299;bas, agr&#257;r&#257;s, vides un re&#291;ion&#257;l&#257;s politikas komisija","","par 84, pret 0, atturas 0 &nbsp; <b>Pie&#326;emts</b>","2","","","1591, 1887","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","11:18","","","","dce2ed62-530a-47e1-a5bc-55278f3d20ad","","1","1","0","09:00","1","0#0#0","0","J&#257;nis D&#363;klavs","1","","");
+drawDKP_Pr("1","","Groz%C4%ABjumi%20Visp%C4%81r%C4%93j%C4%81s%20izgl%C4%ABt%C4%ABbas%20likum%C4%81","319/Lp13","24","7B5DB95CE774B7F0C22584EA007E5916","Izgl&#299;t&#299;bas, kult&#363;ras un zin&#257;tnes komisija","","par 84, pret 0, atturas 0 &nbsp; <b>Likums</b>","4","9 priek&#353;likumi","","1893","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","11:20","","","","c7ffbf19-41c2-418d-833d-7a90f8859a4e","","1","1","0","09:00","1","0#0#0","0","Anita Mui&#382;niece","1","","");
+drawDKP_Pr("1","","Groz%C4%ABjumi%20likum%C4%81%20%E2%80%9CPar%20nodok%C4%BCu%20piem%C4%93ro%C5%A1anu%20br%C4%ABvost%C4%81s%20un%20speci%C4%81laj%C4%81s%20ekonomiskaj%C4%81s%20zon%C4%81s%E2%80%9D","380/Lp13","25","B4B9C7540867BF58C22584EA007E5918","Bud&#382;eta un finan&#353;u (nodok&#316;u) komisija","","par 82, pret 0, atturas 0 &nbsp; <b>Pie&#326;emts</b>","3","76 priek&#353;likumi","","1906, 1892A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","11:24","","","","0acc0bc7-ff10-4dba-952a-fbdbb33b2e20","","1","1","0","09:00","1","0#0#0","1","Jan&#299;na Jalinska","1","","");
+addTechDKP("B4B9C7540867BF58C22584EA007E5918");
+drawDKP_Pr("1","","Pre%C4%8Du%20z%C4%ABmju%20likums","409/Lp13","26","74E78AD19B2AD71FC22584EA007E591A","Izgl&#299;t&#299;bas, kult&#363;ras un zin&#257;tnes komisija","","par 84, pret 0, atturas 0 &nbsp; <b>Pie&#326;emts</b>","3","244 priek&#353;likumi","","1910","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","11:42","","","","06820e89-829a-4885-b880-911b80fbbb3d","","1","1","0","09:00","1","0#0#0","1","Arvils A&#353;eradens","1","","");
+addTechDKP("74E78AD19B2AD71FC22584EA007E591A");
+drawDKP_Pr("9","","Par%20likumprojekta%20%E2%80%9CR%C4%ABgas%20domes%20atlai%C5%A1anas%20likums%E2%80%9D%20(Nr.%20530%2FLp13%3B%20steidzams)%20izskat%C4%AB%C5%A1anas%20Saeimas%20s%C4%93d%C4%93%20datuma%20mai%C5%86u%20no%202020.%20gada%2016.%20janv%C4%81ra%20uz%202020.%20gada%2013.%20febru%C4%81ri","293/Lm13","30","163462975FD04FA3C22584EA007E592E","Deput&#257;ti Art&#363;rs Toms Ple&#353;s, Aldis Adamovi&#269;s, Dace Blu&#311;e, Raivis Dzintars, M&#257;rti&#326;&#353; Bondars, Juta Str&#299;&#311;e, Daniels Pav&#316;uts, Ainars Latkovskis, Artuss Kaimi&#326;&#353;, Ilze Indriksone","","par 73, pret 9, atturas 0 &nbsp; <b>Pie&#326;emts</b>","9","","1","1914","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","12:09","","","","d16e8c7c-a46f-4c30-894e-616b73e8c20e","","2","1","0","09:00","1","0#0#0","0","","2","","");
+drawDKP_UT("","","Deput%C4%81tu%20kl%C4%81tb%C5%ABtnes%20re%C4%A3istr%C4%81cija","","","5EE585B947DB4831C22584EA007E5930","","","re&#291;istr&#275;ju&#353;ies 91 &nbsp;","","","","","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","12:13","","","","0ff59b05-1e33-421f-87ef-615ec573c079","","6","","","09:00","1","0#0#0","0","","","","");
+addTechDKP("7D458F1906482BC6C22584EA007E58AF");
+addTechDKP("39E22FF4F6D7D92CC22584EA007E58C4");
+addVotesLink("0BDD56CA4C30DD2BC22584EA007E58F7","EECA9BB5BA744557C22584EA007E5901","0","0","0");
+addVotesLink("13FCD724F192F45FC22584EA007E58DA","BC83F013F00706D5C22584EA007E58E4","0","0","0");
+addVotesLink("163462975FD04FA3C22584EA007E592E","3160598E29221D6EC22584EA007E5934","0","0","0");
+addVotesLink("1C831C7669A150D2C22584EA007E58F8","C02E79F9F403FE20C22584EA007E5903","0","0","0");
+addVotesLink("435E41AE3330E67FC22584EA007E587B","01822C4BD2F6CEA7C22584EA007E5887","0","0","0");
+addVotesLink("5EE585B947DB4831C22584EA007E5930","ED1E38E1F523E125C22584EA007E5936","0","0","0");
+addVotesLink("5F954EF740A80C15C22584EA007E5919","7D61E7891919884BC22584EA007E5922","0","0","0");
+addVotesLink("6AEDFCBBFE84D2BBC22584EA007E58DE","96E6227445B69D34C22584EA007E58E8","0","0","0");
+addVotesLink("74E78AD19B2AD71FC22584EA007E591A","367B5B8F0B6AB9D0C22584EA007E5924","0","0","0");
+addVotesLink("77260F8F256672D4C22584EA007E58F9","D88B3E1D4A7E3075C22584EA007E5905","0","0","0");
+addVotesLink("7B5DB95CE774B7F0C22584EA007E5916","33E39D23DA1DF60EC22584EA007E591E","0","0","0");
+addVotesLink("969298D35F0628EBC22584EA007E5913","A1BE97664BF3069AC22584EA007E591C","0","0","0");
+addVotesLink("9958F76DD2D07B40C22584EA007E58F5","7A61CC73AE10EF48C22584EA007E58FE","0","0","0");
+addVotesLink("A31412A831350E48C22584EA007E58DC","E9836D00E1B6C8D7C22584EA007E58E6","0","0","0");
+addVotesLink("A65FE13D1627A001C22584EA007E592C","22959D604A57920FC22584EA007E5932","0","0","0");
+addVotesLink("B4B9C7540867BF58C22584EA007E5918","4521403620E8FB1CC22584EA007E5920","0","0","0");
+addVotesLink("C03F08982A592B8CC22584EA007E58DF","7C2A9B0129D7DEB7C22584EA007E58EA","0","0","0");
+addVotesLink("C7418E67018190B9C22584EA007E58FC","4D3F46EFC2E388C2C22584EA007E5907","0","0","0");
+addVotesLink("CBB97379025DFAE0C22584EA007E58C9","AE1AD00ADC527B3EC22584EA007E58D0","0","0","0");
+addVotesLink("CBF2630CAFBF1172C22584EA007E58B0","DFBF7DF7996DB8BAC22584EA007E58B6","0","0","0");
+addVotesLink("DD89E2EA0190E8EEC22584EA007E58D8","B635003647A5D02EC22584EA007E58E2","0","0","0");
+addVotesLink("ED70F79FA664ADA6C22584EA007E5864","01B49F24A3C44001C22584EA007E5868","0","0","0");
+addVotesLink("FBE0FD12C36A51C3C22584EA007E58C6","E36E591C96F6BBC1C22584EA007E58CE","0","0","0");
+addVotesLink("FF7AE58E71CD79EBC22584EA007E58C1","EA770CC9997AF49FC22584EA007E58CC","0","0","0");
+
+</div>
+<div class="viewHolder" id="viewHolder" valign=top>
+<br><div id='headerHolder'>
+<div class='DKhead1' id='DKheadDiv'>Latvijas Republikas Saeimas<br />2020.gada 9.janv&#257;ra<br />k&#257;rt&#275;j&#257;s s&#275;des darba k&#257;rt&#299;ba 09:00<br />  </div>	<!-- HEAD -->
+</div>
+<div id='emptyLine'></div>
+ 	<!-- BREAK  INFO -->
+<div id="viewHolderSD" class="viewHolderSD">
+<div class="viewHolder" id="tableHolder" valign=top>
+<table cellspacing="0" cellpadding="0" border="0" width="100%" id="contentTable">
+<script language="javascript">
+try{
+var nodoc=document.getElementById('viewHolderText');
+if(nodoc){eval(nodoc.innerHTML);}
+//var dbPathLp="";
+//var dbPathLm="";
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  	//<!-- ATTACHMENTS -->
+runAfterTasks()
+dataParsingFinished=true;
+}catch(e){ 
+if(!atLeastOneDkpAdded) document.write("<div class='searchMsg'>Neviens dokuments nav atrasts</div>");
+}
+</script>
+</table>
+ 	<!-- Kalendara saisinajumu paskaidrojumi -->
+</div>
+</div>
+</div><br>
+ <div id='timeMsgBott'><span class='breakMsg1'>S&#275;de beigusies 09.01.2020 12:14</span><span class='breakMsg2'>&nbsp;&nbsp;&nbsp;&nbsp;</span></div>	<!-- END INFO -->
+</div>
+</td>
+</tr>
+</table>
+<br>
+</td>
+<td width=7 class="scrOnly"><img src="/icons/ecblank.gif" width=7></td>
+</tr>
+<tr><td colspan="3"><img src="/icons/ecblank.gif" style="width:990px;height:1px;"></td></tr>
+</table></form>
+</body>
+</html>
+
+<Buffer 3c 21 44 4f 43 54 59 50 45 20 48 54 4d 4c 20 50 55 42 4c 49 43 20 22 2d 2f 2f 57 33 43 2f 2f 44 54 44 20 48 54 4d 4c 20 34 2e 30 31 20 54 72 61 6e 73 ... 44117 more bytes>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Darba k&#257;rt&#299;ba </title><meta name = "format-detection" content = "telephone=no" /> 
+<link rel="shortcut icon" href="/LIVS13/SaeimaLIVS2_DK.nsf/mainicon.ico" type="image/x-icon" />
+<script language="JavaScript" type="text/javascript" src="WEB_viewFunctions.js"></script>
+<script language="JavaScript" type="text/javascript" src="./commonFunctions.js"></script>
+<script language="JavaScript" type="text/javascript" src="calendar.js?OpenJavascriptLibrary"></script>
+<link rel="stylesheet" href="WEB_viewDocStyles.css?ReadForm" />
+<script type="text/javascript">
+	var dbPath="/LIVS13/SaeimaLIVS2_DK.nsf/";
+	var dateFMT='dd.mm.yyyy';
+// necessary for calendar
+var calendar = null;
+function selected(cal, date) {
+  cal.sel.value = date; 
+  if (cal.sel.id == "id_startDate" || cal.sel.id == "id_endDate" || cal.sel.id == "pid_startDate" || cal.sel.id == "pid_endDate")
+       cal.callCloseHandler();
+}
+// end calendar
+</script>
+<script language="JavaScript" type="text/javascript">
+<!-- 
+document._domino_target = "_self";
+function _doClick(v, o, t) {
+  var returnValue = false;
+  var url="/LIVS13/SaeimaLIVS2_DK.nsf/DK?ReadForm&nr=dd05f96a-3dfb-4fce-b84e-229255f1302d&Click=" + v;
+  if (o.href != null) {
+    o.href = url;
+    returnValue = true;
+  } else {
+    if (t == null)
+      t = document._domino_target;
+    window.open(url, t);
+  }
+  return returnValue;
+}
+// -->
+</script>
+<link rel="stylesheet" type="text/css" href="/LIVS13/SaeimaLIVS2_DK.nsf/calendar-exigen.css?OpenCssResource">
+</head>
+<body text="#000000" bgcolor="#FFFFFF" rightmargin="0"  leftmargin="0" marginheight="0" marginwidth="0" topmargin="0" >
+
+<form onsubmit="return submitFlag;return true;" action=""> 
+<div style="display:none">
+	<!-- CACHE FLAG -->
+	readedFromCache=true
+</div>
+<script language="javascript">
+isActualDay="";
+stageLabels["1"]="Sagatave";
+stageLabels["2"]="Projekts";
+stageLabels["3"]="Apstiprin&#257;ta";
+stageLabels["4"]="Public&#275;ta";
+stageLabels["5"]="S&#257;kta s&#275;de";
+stageLabels["6"]="Izskat&#299;ta";
+stageLabels["7"]="P&#257;rtraukta s&#275;de";
+stageLabels["8"]="Atcelta";
+stageLabels["9"]="Dz&#275;sta";
+stageLabels["10"]="S&#275;de nav notikusi";
+stageLabels["11"]="Nav kvoruma - s&#275;de sl&#275;gta";
+stageLabels["12"]="P&#257;rcelta";
+stageLabels["15"]="Sagatave_fiks&#275;ta";	//stageLabels
+var drAl=[];
+drAl["1"]="Nodo&#353;ana komisij&#257;m";
+drAl["2"]="1. las&#299;jums";
+drAl["3"]="2. las&#299;jums";
+drAl["4"]="3. las&#299;jums";
+drAl["5"]="Nodo&#353;ana komisij&#257;m";
+drAl["6"]="Otrreiz&#275;ja caurl&#363;ko&#353;ana";
+drAl["7"]="";
+drAl["8"]="";
+drAl["9"]="";
+drAl["10"]="1. las&#299;jums";
+drAl["11"]="2. las&#299;jums";	//drAl
+var dkpStatusViewed="3";
+var dkpStatusIsBeingViewed="2";
+var nullStatusLst=[];
+nullStatusLst["1"]=true;
+nullStatusLst["5"]=true;	//nullStatusLst
+var pants39HideLst="";
+pants39HideLst='2';	// 39pants 1. reading aliases List
+var dkpSecondReadingLst=[];
+dkpSecondReadingLst["5"]="Valsts%20prezidents";	//dkpSecondReadingLst
+var setupDocTypes=[];
+setupDocTypes['1']="Likumprojekts";
+setupDocTypes['2']="L%C4%93muma%20projekts";
+setupDocTypes['3']="Piepras%C4%ABjums";
+setupDocTypes['4']="Jaut%C4%81jums";
+setupDocTypes['5']="";
+setupDocTypes['6']="";
+setupDocTypes['7']="";
+setupDocTypes['8']="";
+setupDocTypes['9']="Likums";	//setupDocTypes
+var hideSend2Com=[];
+hideSend2Com['Noraid&#299;ts']=true;
+hideSend2Com['Atsaukts']=true;	//hideSend2Com
+var qTypesTexts=[];
+qTypesTexts["Jaut%C4%81jums"]='q';	//qTypesTexts question
+qTypesTexts["Atbilde%20uz%20deput%C4%81tu%20jaut%C4%81jumu"]='a';
+qTypesTexts["V%C4%93stule%20par%20jaut%C4%81juma%20p%C4%81radres%C4%81ciju"]='a';
+qTypesTexts["V%C4%93stule%20par%20neiera%C5%A1anos%20uz%20atbildes%20snieg%C5%A1anu"]='a';	//qTypesTexts answer
+var lastViewedID="d16e8c7c-a46f-4c30-894e-616b73e8c20e";
+	//page reload for XML
+var calendarSesTpAliases=[];
+calendarSesTpAliases["1"]="";
+calendarSesTpAliases["2"]="A";
+calendarSesTpAliases["3"]="S";
+calendarSesTpAliases["4"]="Sl";
+calendarSesTpAliases["5"]="J";
+calendarSesTpAliases["6"]="As";
+calendarSesTpAliases["7"]="";
+calendarSesTpAliases["8"]="As";
+calendarSesTpAliases["9"]="As";	//sedes tipa aliases
+var sesTpTitles=[];
+sesTpTitles["1"]="k&#257;rt&#275;j&#257;s";
+sesTpTitles["2"]="&#257;rk&#257;rtas";
+sesTpTitles["3"]="svin&#299;g&#257;s";
+sesTpTitles["4"]="sl&#275;gt&#257;s";
+sesTpTitles["5"]="jaut&#257;jumu";
+sesTpTitles["6"]="&#257;rk&#257;rtas sesijas";
+sesTpTitles["7"]="k&#257;rt&#275;j&#257;s s&#275;des pusstundu p&#275;c &#257;rk&#257;rtas";
+sesTpTitles["8"]="otr&#257;s &#257;rk&#257;rtas sesijas";
+sesTpTitles["9"]="tre&#353;&#257;s &#257;rk&#257;rtas sesijas";	//sedes tipa nosaukumi
+var showAttachSections=false; //sedes tips
+var actualXML_DkId="76f449bf-59ec-4aec-af31-4a5653e15265";
+</script>
+<span style="display:none;" id="additionalStylesHolder"></span>
+ <table class="mainTable" width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width=7 class="scrOnly"><img src="/icons/ecblank.gif" width=7></td>
+<td style="width:100%" >
+<input type=hidden name="ViewTitle" id="ViewTitle" value="web_DkpByDkUnid">
+<input type=hidden name="FullWebPath" id="FullWebPath" value="http://titania.saeima.lv/LIVS13/SaeimaLIVS2_DK.nsf/">
+<div class="pageHeader">
+<div style="margin-top:5px;width:100%;background-image:URL('./web_logo_bg.gif');background-repeat:repeat-x">
+<a href="https://www.saeima.lv" style="position:absolute;z-index:99"><img src="./ecblank.gif" style="width:230px; height:58px;"></a>
+<img src="./ecblank.gif" height="58" width="1">
+</div>
+<div style="position:absolute;top:7px;left:14px;color:#F5F5F5;font-family:Arial,Trebuchet MS; font-size:11px;">
+<b>LATVIJAS REPUBLIKAS</b>
+</div>
+<div style="position:absolute;top:17px;left:13px;color:#900000;font-family:Arial,Trebuchet MS; font-size:29px;">
+13<font style="font-size:20px">.</font>SAEIMA
+</div>
+<div style="position:absolute;top:22px;width:100%;">
+<table width=100% class="DBswitch" cellspacing=0 cellpadding=0><tr><td width=263>&nbsp;</td><td width=142 background="top_tab_neact.gif""><a href="https://titania.saeima.lv/LIVS13/saeimalivs13.nsf/webAll?OpenView">LIKUMPROJEKTI</a></td> <td width=142 background="top_tab_neact.gif""><a href="https://titania.saeima.lv/LIVS13/saeimalivs_lmp.nsf/webAll?OpenView">L&#274;MUMU PROJEKTI</a></td> <td width=142 background="top_tab_neact.gif""><a href="https://titania.saeima.lv/LIVS13/saeimalivs_lmp.nsf/WEB_requests?OpenView">PIEPRAS&#298;JUMI</a></td> <td width=142 background="top_tab_neact.gif""><a href="https://titania.saeima.lv/LIVS13/saeimalivs_lmp.nsf/WEB_questions?OpenView">JAUT&#256;JUMI</a></td> <td width=142 class="Act" background="top_tab_act.gif""><a href="https://titania.saeima.lv/LIVS13/saeimalivs2_dk.nsf">DARBA K&#256;RT&#298;BAS</a></td> <td width=4><img src="top_tab_sturis.gif" border=0></td><td style="background-repeat:repeat-x" background="top_tab_bg.gif">&nbsp;</td></tr></table>
+<script type="text/javascript">
+dbPathLp="https://titania.saeima.lv/LIVS13/saeimalivs13.nsf";
+dbPathLm="https://titania.saeima.lv/LIVS13/saeimalivs_lmp.nsf";
+dbPathPub="https://titania.saeima.lv/ELDIS/webpublic.nsf";
+</script>
+
+</div>
+<div class="printButton"  style="position:absolute;top:46px;">
+<span style="margin:0px 20px 0px 0px;font-family:Arial;font-size:12px;vertical-align:middle;" >
+<img src="./ecblank.gif" mark="1" onclick="shSD(this)" style="height:9px;width:9px;border:1px solid gray;" class=""> R&#257;d&#299;t saist&#299;tos dokumentus
+<!-- Atslegt lapas automatisko parladi -->
+
+</span>
+<span style="margin:0px 5px 0px 0px;font-family:Default Sans Serif, Arial;font-size:12px;">
+Teksta izm&#275;rs: &nbsp; 
+<b>
+<a id="switchFSSM" style="font-size:8pt;cursor:pointer;color:#303030;text-decoration:underline;" onclick="javascript:chFS(this,'SM');return void(0)" sz="SM">A</a>
+ | 
+<a id="switchFSNR" style="font-size:10pt;cursor:pointer;color:#404040;" onclick="javascript:chFS(this, 'NR');return void(0)" sz="NR">A</a>
+</b>
+</span>
+<br>
+<span style="vertical-align:middle;margin-top:3px;" ><a  onclick="window.print()" ><span>Druk&#257;t&nbsp;</span><img src="web_bigPrint.jpg"  alt="Druk&#257;t"></a></span>
+</div>
+</div>
+<table class="mainTable" border="0" cellspacing="0" cellpadding="0">
+<tr><td colspan="3" class="scrOnly"><img src="/icons/ecblank.gif" height=5></td></tr>
+<tr>
+<td class="outlines" valign="top" ><div class="OutlineTitle">Darba k&#257;rt&#299;bas</div>
+<div style="width:250px;background-image:url(WEB_bg_m2.jpg);background-repeat:repeat-y;margin-bottom:0px">
+<div style="background-image:url(WEB_bg_m1.jpg);background-repeat:no-repeat;">
+<div style="background-image:url(WEB_bg_m3.jpg);background-repeat:no-repeat;background-position:bottom left">
+<div class="menuBlock">
+<div class="mainOutline" style="margin-top:6px;">
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a href="./DK?ReadForm&nr=2efcc4da-63b1-49ee-9608-7caba1dbdd2a">05.11.2020 / 12.11.2020 / 19.11.2020 Saeimas &#257;rk&#257;rtas s&#275;des darba k&#257;rt&#299;bas</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a href="./DK?ReadForm&nr=76bdee8a-92dd-48f8-8e71-77f8df6e2397">19.11.2020 Saeimas pirm&#257;s att&#257;lin&#257;t&#257;s &#257;rk&#257;rtas s&#275;des darba k&#257;rt&#299;ba</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a href="./DK?ReadForm&nr=3ea764c3-4cc3-4956-890f-b27d8872c7b1">23.11.2020 Saeimas &#257;rk&#257;rtas s&#275;des darba k&#257;rt&#299;ba</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a href="./DK?ReadForm&actual=1">19.11.2020 / 26.11.2020 Saeimas tre&#353;&#257;s att&#257;lin&#257;t&#257;s &#257;rk&#257;rtas s&#275;des darba k&#257;rt&#299;ba</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a href="./DK?ReadForm&nr=2823f5c6-9c4e-4203-b410-7e47f6bada56">19.11.2020 / 26.11.2020 Saeimas otr&#257;s att&#257;lin&#257;t&#257;s &#257;rk&#257;rtas s&#275;des darba k&#257;rt&#299;ba</a></b></div>	<!-- Saeimas s&#275;des aktu&#257;l&#257; darba k&#257;rt&#299;ba -->
+<div  style="background-image:URL('./Calendar_view.gif');"><b><a href="./DK?ReadForm&calendar=1">Visas Saeimas s&#275;&#382;u darba k&#257;rt&#299;bas</a></b></div> 	<!-- Visas Saeimas s&#275;d&#382;u darba k&#257;rt&#299;bas -->
+</div>
+</div>
+</div>
+</div>
+</div>
+<div style="background-image:url(WEB_bg_m2.jpg);background-repeat:repeat-y;background-position:bottom left;margin-bottom:10px">
+<div style="background-image:url(WEB_bg_m3F.jpg);background-repeat:no-repeat;background-position:top left">
+<div style="background-image:url(WEB_bg_m3.jpg);background-repeat:no-repeat;background-position:bottom left">
+<div class="menuBlock" style="">
+<div><img src="WEB_search.gif"><b>&nbsp;&nbsp;Detaliz&#275;ta mekl&#275;&#353;ana</b></div>
+<div style="border:1px solid #E0E0E0;margin:2px 0px;padding:2px 4px;background-color:#F0F0D0;">
+<div align=right>
+<input align=left name="sFilter" id="sFilter" type=text onkeypress="if (event.keyCode==13 && (this.value!='')) submitSearch()" style="margin:2px 0px 0px 0px; width: 225px;"><br>
+<div style="text-align:center;margin:0px 5px 7px 3px;padding:0px;font-size:8pt">mekl&#275;t p&#275;c nosaukuma (ar&#299; nepilna)</div>
+<div style="display:none;margin:0px 5px 7px 3px;padding:0px;cursor:pointer;font-size:8pt" onclick="srchFullW(this)" id="srchFull" ><img src="WEB_CB_white.gif" style="width:7px; height:7px; border:1px solid #909090;"> mekl&#275;t p&#275;c piln&#257; v&#257;rda</div>
+</div>
+</div>
+<div style="border:1px solid #E0E0E0;margin:2px 0px;padding:2px 4px;background-color:#F0F0D0;">
+<div style="margin-top:5px">S&#275;des datums</div>
+<div style="font-size:8pt; padding-left:10px">no&nbsp;<input name="startDatePi" value="" id="pid_startDate" style="width: 70px;"> <img src="/LIVS13/SaeimaLIVS2_DK.nsf/WEB_DateSelector.gif?OpenImageResource" style="cursor: pointer;" onClick="showCalendar('pid_startDate',dateFMT);" alt="" />
+&nbsp;l&#299;dz&nbsp;<input name="endDatePi" value="" id="pid_endDate" style="width: 70px;"> <img src="/LIVS13/SaeimaLIVS2_DK.nsf/WEB_DateSelector.gif?OpenImageResource" style="cursor: pointer;" onClick="showCalendar('pid_endDate',dateFMT);" alt="" /></div>
+<div style="font-size:9px;text-align:right;">(form&#257;t&#257; - dd.mm.gggg) &nbsp; </div>
+</div>
+<div class="srchButtons" style="background-color:#FCFDF7;">
+<input type=button value="Mekl&#275;t" onclick="submitSearch()" style="font-weight:bold;font-size:10pt;height:24;width:105px;">&nbsp;
+<input type=button id="searchBackButt" value="Atcelt mekl&#275;&#353;anu" onclick="window.location.reload()"  style="display:none;font-size:10pt;height:24;width:115px;">
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div style="margin-top:10px;">
+<!-- Active documents -->
+<div class="OutlineTitle">Dokumenti</div>
+<div style="width:250px;background-image:url(WEB_bg_m2.jpg);background-repeat:repeat-y;margin-bottom:0px">
+<div style="background-image:url(WEB_bg_m1.jpg);background-repeat:no-repeat;">
+<div style="background-image:url(WEB_bg_m3.jpg);background-repeat:no-repeat;background-position:bottom left">
+<div class="menuBlock">
+<div class="mainOutline" style="margin-top:6px;">
+<div style="background-image:URL('./WEB_activeDocuments.png');"><b><a href="https://titania.saeima.lv/LIVS13/saeimalivs13.nsf/activeDocuments.xsp" target="_blank"">Aktu&#257;lo Saeimas s&#275;&#382;u dokumenti</a></b></div> 	<!-- Saeimas s&#275;&#382;u aktu&#257;lie dokumenti-->
+</div>
+</div>
+</div>
+</div>
+</div></div><div style="margin-top:10px;">
+<!-- Statistic -->
+<div class="OutlineTitle">Statistika</div>
+<div style="width:250px;background-image:url(WEB_bg_m2.jpg);background-repeat:repeat-y;margin-bottom:0px">
+<div style="background-image:url(WEB_bg_m1.jpg);background-repeat:no-repeat;">
+<div style="background-image:url(WEB_bg_m3.jpg);background-repeat:no-repeat;background-position:bottom left">
+<div class="menuBlock">
+<div class="mainOutline" style="margin-top:6px;">
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a href="./Statistics?ReadForm&key=1&stat=1&rt=L">S&#275;des statistika</a></b></div> 	<!-- Sedes -->
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a href="./Statistics?ReadForm&key=1&stat=1&rt=S">Likumdo&#353;anas statistika</a></b></div> 	<!-- Likumdo&#353;anas statistika-->
+</div>
+</div>
+</div>
+</div>
+</div></div>
+<div style="margin-top:10px;">
+<!-- Archive-->
+<div class="OutlineTitle">Arh&#299;vs</div>
+<div style="width:250px;background-image:url(WEB_bg_m2.jpg);background-repeat:repeat-y;margin-bottom:0px">
+<div style="background-image:url(WEB_bg_m1.jpg);background-repeat:no-repeat;">
+<div style="background-image:url(WEB_bg_m3.jpg);background-repeat:no-repeat;background-position:bottom left">
+<div class="menuBlock">
+<div class="mainOutline" style="margin-top:6px;">
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a target="_blank" href="https://titania.saeima.lv/LIVS12/SaeimaLIVS2_DK.nsf/DK?ReadForm&calendar=1">12.Saeimas s&#275;&#382;u darba k&#257;rt&#299;bas</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a target="_blank" href="https://titania.saeima.lv/LIVS11/SaeimaLIVS2_DK.nsf/DK?ReadForm&calendar=1">11.Saeimas s&#275;&#382;u darba k&#257;rt&#299;bas</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a target="_blank" href="https://titania.saeima.lv/LIVS10/SaeimaLIVS2_DK.nsf/DK?ReadForm&calendar=1">10.Saeimas s&#275;&#382;u darba k&#257;rt&#299;bas</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a target="_blank" href="https://titania.saeima.lv/LIVS/SaeimaLIVS2_DK.nsf/DK?ReadForm&calendar=1">9.Saeimas s&#275;&#382;u darba k&#257;rt&#299;bas</a></b></div>
+<div  style="background-image:URL('./WEB_scroll5.gif');"><b><a target="_blank" href="https://saeima.lv/lv/par-saeimu/arhivs/8-saeima/8-saeimas-sezu-darba-kartibas/">8.Saeimas s&#275;&#382;u darba k&#257;rt&#299;bas</a></b></div> 	<!-- Archive-->
+</div>
+</div>
+</div>
+</div>
+</div></div>
+</td>
+<td style="width:14px"><img src="/icons/ecblank.gif" height=5 width=14></td>
+<td class="views">
+<div class="viewHolderFSSM" id="viewHolderFS">
+<script>var sfs=readCookie("selectedFontSize"); if(sfs) chFS(document.getElementById("switchFS"+sfs), sfs);</script>
+<div class="scrOnly" id="stageNavigationBlock" style="display:block;">
+ <div class="StageDate" style="width:550px;">2020.gada 9.janv&#257;ra Saeimas k&#257;rt&#275;j&#257;s s&#275;des darba k&#257;rt&#299;ba</div> 
+<div class="Stage"><span class="StageNoneAct"><a href='./DK?ReadForm&nr=dd05f96a-3dfb-4fce-b84e-229255f1302d&stage=2'>Projekts</a></span> | <span class="StageNoneAct"><a href='./DK?ReadForm&nr=dd05f96a-3dfb-4fce-b84e-229255f1302d&stage=3'>Apstiprin&#257;ta</a></span> | <span class="StageAct"><a href='./DK?ReadForm&nr=dd05f96a-3dfb-4fce-b84e-229255f1302d&stage=6'>Izskat&#299;ta</a></span></div>	<!-- Stage Navigation -->
+</div>
+<div class="viewHolderText" id="viewHolderText" style="display:none">
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ drawDKP_UT("","","Par%20likumprojekta%20Groz%C4%ABjumi%20Visp%C4%81r%C4%93j%C4%81s%20izgl%C4%ABt%C4%ABbas%20likum%C4%81%20(319%2FLp13)%2C%203.las%C4%ABjums%20iek%C4%BCau%C5%A1anu%20Saeimas%20s%C4%93des%20darba%20k%C4%81rt%C4%ABb%C4%81","","","F62BDAE896F347C4C22584EA007E585E","","","","","","","","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:02","","","","93604d18-e492-4675-847c-5b3ef4a383c9","","6","","","09:00","1","","0","","","","");
+drawDKP_UT("","","Par%20likumprojekta%20Groz%C4%ABjumi%20likum%C4%81%20%E2%80%9CPar%20nodok%C4%BCu%20piem%C4%93ro%C5%A1anu%20br%C4%ABvost%C4%81s%20un%20speci%C4%81laj%C4%81s%20ekonomiskaj%C4%81s%20zon%C4%81s%E2%80%9D%20(380%2FLp13)%2C%202.las%C4%ABjums%20iek%C4%BCau%C5%A1anu%20Saeimas%20s%C4%93des%20darba%20k%C4%81rt%C4%ABb%C4%81","","","8ED38B2B728F89A3C22584EA007E5860","","","","","","","","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:02","","","","00d633da-c302-4b9b-8e82-6791819a5eb9","","6","","","09:00","1","","0","","","","");
+drawDKP_UT("","","Par%20likumprojekta%20Pre%C4%8Du%20z%C4%ABmju%20likums%20(409%2FLp13)%2C%202.las%C4%ABjums%20iek%C4%BCau%C5%A1anu%20Saeimas%20s%C4%93des%20darba%20k%C4%81rt%C4%ABb%C4%81","","","2927E0CA22FD4DACC22584EA007E5862","","","","","","","","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:03","","","","740f0d1a-3baf-43d9-ba12-bbccdb53c43b","","6","","","09:00","1","","0","","","","");
+drawDKP_UT("","","Par%20likumprojekta%20Groz%C4%ABjumi%20Republikas%20pils%C4%93tas%20domes%20un%20novada%20domes%20v%C4%93l%C4%93%C5%A1anu%20likum%C4%81%20(539%2FLp13)%2C%20nodo%C5%A1ana%20komisij%C4%81m%20iek%C4%BCau%C5%A1anu%20Saeimas%20s%C4%93des%20darba%20k%C4%81rt%C4%ABb%C4%81","","","ED70F79FA664ADA6C22584EA007E5864","","","par 67, pret 3, atturas 0 &nbsp;","","","","","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:02","","","","9b0fdee3-3052-478f-b774-55001ae29143","","6","","","09:00","1","0#0#0","0","","","","");
+drawDKP_UT("","","Par%20l%C4%93muma%20projekta%20Par%20Saeimas%20deput%C4%81ta%20Jura%20Jura%C5%A1a%20iev%C4%93l%C4%93%C5%A1anu%20Publisko%20izdevumu%20un%20rev%C4%ABziju%20komisij%C4%81%20(292%2FLm13)%20iek%C4%BCau%C5%A1anu%20Saeimas%20s%C4%93des%20darba%20k%C4%81rt%C4%ABb%C4%81","","","EC91B5C050279440C22584EA007E5865","","","","","","","","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:03","","","","7460fbdd-de84-4676-8520-b66cc2866a87","","6","","","09:00","1","","0","","","","");
+drawDKP_UT("","","Par%20likumprojekta%20Groz%C4%ABjums%20likum%C4%81%20%E2%80%9CPar%20tautas%20nobalso%C5%A1anu%2C%20likumu%20ierosin%C4%81%C5%A1anu%20un%20Eiropas%20pilso%C5%86u%20iniciat%C4%ABvu%E2%80%9D%20(546%2FLp13)%2C%20nodo%C5%A1ana%20komisij%C4%81m%20iek%C4%BCau%C5%A1anu%20Saeimas%20s%C4%93des%20darba%20k%C4%81rt%C4%ABb%C4%81","","","435E41AE3330E67FC22584EA007E587B","","","par 81, pret 0, atturas 0 &nbsp;","","","1","","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:03","","","","f632f1e1-45b8-4998-b9f3-059cd3d992a5","","6","","","09:00","1","0#0#0","0","","","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20Farm%C4%81cijas%20likum%C4%81","517/Lp13","1","CC4505DEB139E3CCC22584EA007E587D","Ministru kabinets","Soci%C4%81lo%20un%20darba%20lietu%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1855, 1855A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:06","","","","a1488292-35e4-46db-914d-b10b07563c68","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20Latvijas%20Sodu%20izpildes%20kodeks%C4%81","518/Lp13","2","C3489C6B215E94D9C22584EA007E587F","Ministru kabinets","Aizsardz%C4%ABbas%2C%20iek%C5%A1lietu%20un%20korupcijas%20nov%C4%93r%C5%A1anas%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1856, 1856A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:06","","","","ce83bdcb-5624-4ee4-a732-582a95e3419f","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20Apcietin%C4%81jum%C4%81%20tur%C4%93%C5%A1anas%20k%C4%81rt%C4%ABbas%20likum%C4%81","519/Lp13","3","0BF803711E7A16B6C22584EA007E5881","Ministru kabinets","Aizsardz%C4%ABbas%2C%20iek%C5%A1lietu%20un%20korupcijas%20nov%C4%93r%C5%A1anas%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1857, 1857A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:07","","","","f36f0eac-e38f-42d5-ba55-8342fbc80b57","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20Ieslodz%C4%ABjuma%20vietu%20p%C4%81rvaldes%20likum%C4%81","520/Lp13","4","EC93CA1BC02C0513C22584EA007E5884","Ministru kabinets","Aizsardz%C4%ABbas%2C%20iek%C5%A1lietu%20un%20korupcijas%20nov%C4%93r%C5%A1anas%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1858, 1858A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:07","","","","3aab1d7b-f419-4cbd-9738-72721a3351a8","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20likum%C4%81%20%E2%80%9CPar%20iedz%C4%ABvot%C4%81ju%20ien%C4%81kuma%20nodokli%E2%80%9D","521/Lp13","5","B236E0DF74355628C22584EA007E5898","Ministru kabinets","Bud%C5%BEeta%20un%20finan%C5%A1u%20(nodok%C4%BCu)%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1859, 1859A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:07","","","","29c27cb4-e0b1-41d5-a00b-3a5999df9e1d","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjums%20likum%C4%81%20%E2%80%9CPar%20nekustamo%20%C4%ABpa%C5%A1umu%20atsavin%C4%81%C5%A1anu%20Latvijas%20Republikas%20valsts%20robe%C5%BEas%20joslas%20ier%C4%ABko%C5%A1anai%20uz%20Latvijas%20Republikas%20un%20Krievijas%20Feder%C4%81cijas%20valsts%20robe%C5%BEas%E2%80%9D","522/Lp13","6","8A14A5245F2A2719C22584EA007E589A","Ministru kabinets","Juridisk%C4%81%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1860, 1860A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:08","","","","9949319f-1e5c-47ec-9904-69a250a52af5","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20Fizisko%20personu%20re%C4%A3istra%20likum%C4%81","523/Lp13","7","B8A4589C7721D743C22584EA007E589C","Ministru kabinets","Aizsardz%C4%ABbas%2C%20iek%C5%A1lietu%20un%20korupcijas%20nov%C4%93r%C5%A1anas%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1861, 1861A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:08","","","","b824100b-4db9-48e8-84bb-bf07d5084c8e","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20likum%C4%81%20%E2%80%9CPar%201971.gada%202.febru%C4%81ra%20Konvenciju%20par%20starptautiskas%20noz%C4%ABmes%20mitr%C4%81jiem%2C%20%C4%ABpa%C5%A1i%20k%C4%81%20%C5%ABdensputnu%20dz%C4%ABves%20vidi%E2%80%9D","524/Lp13","8","BE6CC2ABE21DC83EC22584EA007E589E","Ministru kabinets","%C4%80rlietu%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1862, 1862A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:08","","","","2c46e839-7d43-4c73-b937-b7c00b9a3878","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20likum%C4%81%20%E2%80%9CPar%20zemes%20privatiz%C4%81ciju%20lauku%20apvidos%E2%80%9D","525/Lp13","9","81DC17A90AC889ECC22584EA007E58A0","Ministru kabinets","Tautsaimniec%C4%ABbas%2C%20agr%C4%81r%C4%81s%2C%20vides%20un%20re%C4%A3ion%C4%81l%C4%81s%20politikas%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1863, 1863A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:09","","","","44bdc1b9-aa4e-4283-8f91-392267ceb63a","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20P%C4%81rtikas%20aprites%20uzraudz%C4%ABbas%20likum%C4%81","526/Lp13","10","F6E8E896B59067AAC22584EA007E58AD","Ministru kabinets","Tautsaimniec%C4%ABbas%2C%20agr%C4%81r%C4%81s%2C%20vides%20un%20re%C4%A3ion%C4%81l%C4%81s%20politikas%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1864, 1864A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:09","","","","af43372f-4fb5-4579-8a94-aff137b9bb7e","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjums%20Republikas%20pils%C4%93tu%20un%20novadu%20v%C4%93l%C4%93%C5%A1anu%20komisiju%20un%20v%C4%93l%C4%93%C5%A1anu%20iecirk%C5%86u%20komisiju%20likum%C4%81","527/Lp13","11","7D458F1906482BC6C22584EA007E58AF","Ministru kabinets","Administrat%C4%ABvi%20teritori%C4%81l%C4%81s%20reformas%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","1","1865, 1865A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:10","","","","787016ad-3e5d-4018-adad-940f31c668ce","","1","1","0","09:00","1","","1","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20Priek%C5%A1v%C4%93l%C4%93%C5%A1anu%20a%C4%A3it%C4%81cijas%20likum%C4%81","528/Lp13","12","A7CE367BFBAEE6CAC22584EA007E58B2","Ministru kabinets","Valsts%20p%C4%81rvaldes%20un%20pa%C5%A1vald%C4%ABbas%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1866, 1866A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:11","","","","31d20ee3-5f58-46ab-bdc2-529649260f07","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20likum%C4%81%20%E2%80%9CPar%20tautas%20nobalso%C5%A1anu%2C%20likumu%20ierosin%C4%81%C5%A1anu%20un%20Eiropas%20pilso%C5%86u%20iniciat%C4%ABvu%E2%80%9D","529/Lp13","13","AA7D6254B07425D2C22584EA007E58B4","Ministru kabinets","Juridisk%C4%81%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","","1867, 1867A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:12","","","","53c5a7d5-eaa8-4440-983a-590423f78e77","","1","1","0","09:00","1","","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjumi%20Republikas%20pils%C4%93tas%20domes%20un%20novada%20domes%20v%C4%93l%C4%93%C5%A1anu%20likum%C4%81","539/Lp13","27","FF7AE58E71CD79EBC22584EA007E58C1","Ministru kabinets","Administrat%C4%ABvi%20teritori%C4%81l%C4%81s%20reformas%20komisija(atbild%C4%ABg%C4%81)","par 80, pret 4, atturas 0 &nbsp; <b>Nod. kom.</b>","1","","1","1897, 1897A, 1892B","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:12","","","","63728c53-2e4a-489a-8b82-0a995db4a175","","1","1","0","09:00","1","0#0#0","0","","1","","");
+drawDKP_Pr("6","3","Groz%C4%ABjums%20likum%C4%81%20%E2%80%9CPar%20tautas%20nobalso%C5%A1anu%2C%20likumu%20ierosin%C4%81%C5%A1anu%20un%20Eiropas%20pilso%C5%86u%20iniciat%C4%ABvu%E2%80%9D","546/Lp13","29","39E22FF4F6D7D92CC22584EA007E58C4","Deput&#257;ti Viktors Valainis, Armands Krauze, Uldis Augulis, J&#257;nis Urbanovi&#269;s, Gundars Daudze, Raimonds Bergmanis, J&#257;nis D&#363;klavs, Jan&#299;na Jalinska, Ivars Zari&#326;&#353;, J&#257;nis Kri&#353;&#257;ns, Val&#275;rijs Age&#353;ins","Valsts%20p%C4%81rvaldes%20un%20pa%C5%A1vald%C4%ABbas%20komisija(atbild%C4%ABg%C4%81)","<b>Nod. kom.</b>","1","","1","1913","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:13","","","","0c0fa320-4c35-4eb3-af00-7bd221acd913","","1","1","0","09:00","1","","1","","1","","");
+drawDKP_Pr("6","12","Par%20pie%C5%A1%C4%B7irto%20neapmaks%C4%81to%20atva%C4%BCin%C4%81jumu%20deput%C4%81tei%20%C4%BBubovai%20%C5%A0vecovai%202019.gada%2019.decembr%C4%AB","","14","1E0B6A9124FFF23EC22584EA007E58C7","","","<b>Pie&#353;&#311;irts</b>","9","","","1874., 611.1.8/1-61-13/19","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:15","","","","629b00eb-3598-468e-b0a9-fbd2ef279f4d","","5","","0","09:00","1","","0","","5","","");
+drawDKP_Pr("8","","Par%20Saeimas%20deput%C4%81ta%20Jura%20Jura%C5%A1a%20iev%C4%93l%C4%93%C5%A1anu%20Publisko%20izdevumu%20un%20rev%C4%ABziju%20komisij%C4%81","292/Lm13","28","CBB97379025DFAE0C22584EA007E58C9","Deput&#257;ti Juta Str&#299;&#311;e, Kri&#353;j&#257;nis Feldmans, J&#257;nis Ciel&#275;ns, Anita Mui&#382;niece, Juris Ranc&#257;ns, Normunds &#381;unna, Reinis Znoti&#326;&#353;, Dagm&#257;ra Beitnere-Le Galla, J&#257;nis But&#257;ns, Uldis Budri&#311;is","","par 83, pret 0, atturas 0 &nbsp; <b>Pazi&#326;ojums</b>","9","","","1911","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:16","","","","9bddd968-95e9-486e-8c4b-a05501319f07","","2","1","0","09:00","1","0#0#0","0","","2","","");
+drawDKP_Pr("Deput&#257;tu piepras&#299;jumu izskat&#299;&#353;ana","Piepras&#299;jumu komisijas atzinums","Deput%C4%81tu%20Ivara%20Zari%C5%86a%2C%20J%C4%81%C5%86a%20Tutina%2C%20Val%C4%93rija%20Age%C5%A1ina%2C%20Ivana%20Klementjeva%2C%20J%C4%81%C5%86a%20%C4%80damsona%2C%20Edgara%20Kucina%2C%20Vit%C4%81lija%20Orlova%2C%20J%C4%81%C5%86a%20Kri%C5%A1%C4%81na%2C%20Reg%C4%ABnas%20Lo%C4%8Dmeles-Lu%C5%86ovas%2C%20Nikolaja%20Kabanova%20piepras%C4%ABjums%20Ministru%20prezidentam%20Arturam%20Kri%C5%A1j%C4%81nim%20Kari%C5%86am%20%22Par%20vald%C4%ABbas%20nesp%C4%93ju%20pamatot%20sava%20l%C4%93muma%20tiesiskumu%20saist%C4%ABb%C4%81%20ar%20likum%C4%81%20noteikt%C4%81%20finans%C4%93juma%20palielin%C4%81juma%20nenodro%C5%A1in%C4%81%C5%A1anu%20vesel%C4%ABbas%20apr%C5%ABpes%20darbinieku%20darba%20samaksai%22","21/P13","15","DD89E2EA0190E8EEC22584EA007E58D8","Piepras&#299;jumu komisija","","par 35, pret 55, atturas 0 &nbsp; <b>Noraid&#299;ts</b>","7","","1","1400, 1400A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:17","","","","b84243f8-55cd-47f1-8df1-9d1e15a3f59d","","3","","0","09:00","1","0#0#0","0","Ivars Puga","3","","");
+drawDKP_Pr("Deput&#257;tu piepras&#299;jumu izskat&#299;&#353;ana","Piepras&#299;jumu komisijas atzinums","Deput%C4%81tu%20Viktora%20Valai%C5%86a%2C%20Armanda%20Krauzes%2C%20Raimonda%20Bergma%C5%86a%2C%20Danas%20Reiznieces-Ozolas%2C%20Gundara%20Daudzes%2C%20M%C4%81ra%20Ku%C4%8Dinska%2C%20J%C5%ABlijas%20Stepa%C5%86enko%2C%20Karinas%20Spr%C5%ABdes%2C%20Alda%20Gobzema%2C%20Did%C5%BEa%20%C5%A0mita%20piepras%C4%ABjums%20Ministru%20prezidentam%20Arturam%20Kri%C5%A1j%C4%81nim%20Kari%C5%86am%20%22Par%20Vides%20aizsardz%C4%ABbas%20un%20re%C4%A3ion%C4%81l%C4%81s%20att%C4%ABst%C4%ABbas%20ministra%20Jura%20P%C5%ABces%20informat%C4%ABvo%20kampa%C5%86u%22","23/P13","16","13FCD724F192F45FC22584EA007E58DA","Piepras&#299;jumu komisija","","par 33, pret 54, atturas 0 &nbsp; <b>Noraid&#299;ts</b>","7","","1","1763, 1763A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","09:51","","","","8f615e6c-93c6-41ef-ae89-7ea4c084960f","","3","","0","09:00","1","0#0#0","0","Ivars Puga","3","","");
+drawDKP_Pr("Deput&#257;tu piepras&#299;jumu izskat&#299;&#353;ana","Piepras&#299;jumu komisijas atzinums","Deput%C4%81tu%20J%C5%ABlijas%20Stepa%C5%86enko%2C%20Did%C5%BEa%20%C5%A0mita%2C%20Karinas%20Spr%C5%ABdes%2C%20Alda%20Gobzema%2C%20J%C4%81%C5%86a%20D%C5%ABklava%2C%20J%C4%81%C5%86a%20Vuc%C4%81na%2C%20Armanda%20Krauzes%2C%20Danas%20Reiznieces-Ozolas%2C%20Viktora%20Valai%C5%86a%2C%20Ulda%20Augu%C4%BCa%20piepras%C4%ABjums%20vides%20aizsardz%C4%ABbas%20un%20re%C4%A3ion%C4%81l%C4%81s%20att%C4%ABst%C4%ABbas%20ministram%20Jurim%20P%C5%ABcem%20%22Par%20ministra%20r%C4%ABc%C4%ABbu%2C%20novilcinot%20administrat%C4%ABv%C4%81s%20atbild%C4%ABbas%20iek%C4%BCau%C5%A1anu%20likumos%20par%20vides%20aizsardz%C4%ABbu%20un%20radioakt%C4%ABvo%20dro%C5%A1%C4%ABbu%22","24/P13","17","A31412A831350E48C22584EA007E58DC","Piepras&#299;jumu komisija","","par 34, pret 55, atturas 0 &nbsp; <b>Noraid&#299;ts</b>","7","","1","1804, 1804A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","10:06","","","","e559f5ef-30bf-47f2-a101-12f13bfcba72","","3","","0","09:00","1","0#0#0","0","M&#257;rti&#326;&#353; Sta&#311;is","3","","");
+drawDKP_Pr("Deput&#257;tu piepras&#299;jumu izskat&#299;&#353;ana","Piepras&#299;jumu komisijas atzinums","Deput%C4%81tu%20J%C5%ABlijas%20Stepa%C5%86enko%2C%20Karinas%20Spr%C5%ABdes%2C%20Ulda%20Augu%C4%BCa%2C%20Armanda%20Krauzes%2C%20Gundara%20Daudzes%2C%20Did%C5%BEa%20%C5%A0mita%2C%20J%C4%81%C5%86a%20D%C5%ABklava%2C%20Danas%20Reiznieces-Ozolas%2C%20Alda%20Gobzema%2C%20J%C4%81%C5%86a%20Vuc%C4%81na%20piepras%C4%ABjums%20vides%20aizsardz%C4%ABbas%20un%20re%C4%A3ion%C4%81l%C4%81s%20att%C4%ABst%C4%ABbas%20ministram%20Jurim%20P%C5%ABcem%20%22Par%20ministra%20patva%C4%BC%C4%ABbu%2C%20izr%C4%ABkojot%20Centr%C4%81lo%20v%C4%93l%C4%93%C5%A1anu%20komisiju%20un%20publiski%20maldinot%20sabiedr%C4%ABbu%22","25/P13","18","6AEDFCBBFE84D2BBC22584EA007E58DE","Piepras&#299;jumu komisija","","par 32, pret 56, atturas 0 &nbsp; <b>Noraid&#299;ts</b>","7","","1","1837, 1837A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","10:20","","","","6a3d3990-75fd-4d4c-80eb-d8d49c169531","","3","","0","09:00","1","0#0#0","0","Uldis Budri&#311;is","3","","");
+drawDKP_UT("","","Deput%C4%81tu%20kl%C4%81tb%C5%ABtnes%20re%C4%A3istr%C4%81cija","","","C03F08982A592B8CC22584EA007E58DF","","","re&#291;istr&#275;ju&#353;ies 90 &nbsp;","","","","","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","10:27","","","","76e3e549-8030-4f03-8614-6074fbd99f4c","","6","","","09:00","1","0#0#0","0","","","","");
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ drawDKP_UT("","","Par%20l%C4%93muma%20projekta%20Par%20likumprojekta%20%E2%80%9CR%C4%ABgas%20domes%20atlai%C5%A1anas%20likums%E2%80%9D%20(Nr.%20530%2FLp13%3B%20steidzams)%20izskat%C4%AB%C5%A1anas%20Saeimas%20s%C4%93d%C4%93%20datuma%20mai%C5%86u%20no%202020.%20gada%2016.%20janv%C4%81ra%20uz%202020.%20gada%2013.%20febru%C4%81ri%20(293%2FLm13)%20iek%C4%BCau%C5%A1anu%20Saeimas%20s%C4%93des%20darba%20k%C4%81rt%C4%ABb%C4%81","","","9958F76DD2D07B40C22584EA007E58F5","","","par 71, pret 7, atturas 0 &nbsp;","","","1","","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","11:02","","","","4f044c25-57f6-42a7-badf-34b1e33b51fc","","6","","","09:00","1","0#0#0","0","","","","");
+drawDKP_Pr("1","","Groz%C4%ABjumi%20likum%C4%81%20%E2%80%9CPar%20presi%20un%20citiem%20masu%20inform%C4%81cijas%20l%C4%ABdzek%C4%BCiem%E2%80%9D","412/Lp13","19","0BDD56CA4C30DD2BC22584EA007E58F7","Cilv&#275;kties&#299;bu un sabiedrisko lietu komisija","","par 81, pret 0, atturas 0 &nbsp; <b>Likums</b>","4","Nav priek&#353;likumu","","1870","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","11:11","","","","34e58ee8-875b-43ed-b53f-14b4072f77d3","","1","1","0","09:00","1","0#0#0","0","Boriss Cilevi&#269;s","1","","");
+drawDKP_Pr("1","","Groz%C4%ABjumi%20Korupcijas%20nov%C4%93r%C5%A1anas%20un%20apkaro%C5%A1anas%20biroja%20likum%C4%81","34/Lp13","20","1C831C7669A150D2C22584EA007E58F8","Aizsardz&#299;bas, iek&#353;lietu un korupcijas nov&#275;r&#353;anas komisija","","par 83, pret 0, atturas 0 &nbsp; <b>Pie&#326;emts</b>","2","","","56, 1872","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","11:12","","","","8d49e8aa-b313-4084-b297-64ea0dd0a76f","","1","1","0","09:00","1","0#0#0","0","Juris Ranc&#257;ns","1","","");
+drawDKP_Pr("1","","Par%20nekustam%C4%81%20%C4%ABpa%C5%A1uma%20%E2%80%9CJaund%C5%ABvi%C5%86i%E2%80%9D%20Limba%C5%BEu%20pagast%C4%81%2C%20Limba%C5%BEu%20novad%C4%81%2C%20da%C4%BCu%20atsavin%C4%81%C5%A1anu%20sabiedr%C4%ABbas%20vajadz%C4%ABb%C4%81m%20%E2%80%93%20valsts%20re%C4%A3ion%C4%81l%C4%81%20autoce%C4%BCa%20P53%20Du%C4%8Di%E2%80%93Limba%C5%BEi%20p%C4%81rb%C5%ABves%20projekta%20%C4%ABsteno%C5%A1anai","499/Lp13","21","77260F8F256672D4C22584EA007E58F9","Juridisk&#257; komisija","","par 79, pret 0, atturas 0 &nbsp; <b>Pie&#326;emts</b>","2","","","1744, 1880","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","11:14","","","","10aae470-1bcc-4b5e-93f1-12463a0973e6","","1","1","0","09:00","1","0#0#0","0","J&#257;nis But&#257;ns","1","","");
+drawDKP_Pr("1","","Groz%C4%ABjumi%20likum%C4%81%20%E2%80%9CPar%20nodok%C4%BCiem%20un%20nodev%C4%81m%E2%80%9D","418/Lp13","22","C7418E67018190B9C22584EA007E58FC","Bud&#382;eta un finan&#353;u (nodok&#316;u) komisija","","par 79, pret 0, atturas 0 &nbsp; <b>Pie&#326;emts</b>","2","","","1414, 1881","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","11:17","","","","0a5568b2-49fc-4fcc-bd58-e135d7007863","","1","1","0","09:00","1","0#0#0","0","Iveta Benhena-B&#275;kena","1","","");
+drawDKP_Pr("1","","Groz%C4%ABjumi%20J%C5%ABras%20kodeks%C4%81","479/Lp13","23","969298D35F0628EBC22584EA007E5913","Tautsaimniec&#299;bas, agr&#257;r&#257;s, vides un re&#291;ion&#257;l&#257;s politikas komisija","","par 84, pret 0, atturas 0 &nbsp; <b>Pie&#326;emts</b>","2","","","1591, 1887","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","11:18","","","","dce2ed62-530a-47e1-a5bc-55278f3d20ad","","1","1","0","09:00","1","0#0#0","0","J&#257;nis D&#363;klavs","1","","");
+drawDKP_Pr("1","","Groz%C4%ABjumi%20Visp%C4%81r%C4%93j%C4%81s%20izgl%C4%ABt%C4%ABbas%20likum%C4%81","319/Lp13","24","7B5DB95CE774B7F0C22584EA007E5916","Izgl&#299;t&#299;bas, kult&#363;ras un zin&#257;tnes komisija","","par 84, pret 0, atturas 0 &nbsp; <b>Likums</b>","4","9 priek&#353;likumi","","1893","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","11:20","","","","c7ffbf19-41c2-418d-833d-7a90f8859a4e","","1","1","0","09:00","1","0#0#0","0","Anita Mui&#382;niece","1","","");
+drawDKP_Pr("1","","Groz%C4%ABjumi%20likum%C4%81%20%E2%80%9CPar%20nodok%C4%BCu%20piem%C4%93ro%C5%A1anu%20br%C4%ABvost%C4%81s%20un%20speci%C4%81laj%C4%81s%20ekonomiskaj%C4%81s%20zon%C4%81s%E2%80%9D","380/Lp13","25","B4B9C7540867BF58C22584EA007E5918","Bud&#382;eta un finan&#353;u (nodok&#316;u) komisija","","par 82, pret 0, atturas 0 &nbsp; <b>Pie&#326;emts</b>","3","76 priek&#353;likumi","","1906, 1892A","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","11:24","","","","0acc0bc7-ff10-4dba-952a-fbdbb33b2e20","","1","1","0","09:00","1","0#0#0","1","Jan&#299;na Jalinska","1","","");
+addTechDKP("B4B9C7540867BF58C22584EA007E5918");
+drawDKP_Pr("1","","Pre%C4%8Du%20z%C4%ABmju%20likums","409/Lp13","26","74E78AD19B2AD71FC22584EA007E591A","Izgl&#299;t&#299;bas, kult&#363;ras un zin&#257;tnes komisija","","par 84, pret 0, atturas 0 &nbsp; <b>Pie&#326;emts</b>","3","244 priek&#353;likumi","","1910","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","11:42","","","","06820e89-829a-4885-b880-911b80fbbb3d","","1","1","0","09:00","1","0#0#0","1","Arvils A&#353;eradens","1","","");
+addTechDKP("74E78AD19B2AD71FC22584EA007E591A");
+drawDKP_Pr("9","","Par%20likumprojekta%20%E2%80%9CR%C4%ABgas%20domes%20atlai%C5%A1anas%20likums%E2%80%9D%20(Nr.%20530%2FLp13%3B%20steidzams)%20izskat%C4%AB%C5%A1anas%20Saeimas%20s%C4%93d%C4%93%20datuma%20mai%C5%86u%20no%202020.%20gada%2016.%20janv%C4%81ra%20uz%202020.%20gada%2013.%20febru%C4%81ri","293/Lm13","30","163462975FD04FA3C22584EA007E592E","Deput&#257;ti Art&#363;rs Toms Ple&#353;s, Aldis Adamovi&#269;s, Dace Blu&#311;e, Raivis Dzintars, M&#257;rti&#326;&#353; Bondars, Juta Str&#299;&#311;e, Daniels Pav&#316;uts, Ainars Latkovskis, Artuss Kaimi&#326;&#353;, Ilze Indriksone","","par 73, pret 9, atturas 0 &nbsp; <b>Pie&#326;emts</b>","9","","1","1914","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","12:09","","","","d16e8c7c-a46f-4c30-894e-616b73e8c20e","","2","1","0","09:00","1","0#0#0","0","","2","","");
+drawDKP_UT("","","Deput%C4%81tu%20kl%C4%81tb%C5%ABtnes%20re%C4%A3istr%C4%81cija","","","5EE585B947DB4831C22584EA007E5930","","","re&#291;istr&#275;ju&#353;ies 91 &nbsp;","","","","","6","09.01.2020","dd05f96a-3dfb-4fce-b84e-229255f1302d","3","12:13","","","","0ff59b05-1e33-421f-87ef-615ec573c079","","6","","","09:00","1","0#0#0","0","","","","");
+addTechDKP("7D458F1906482BC6C22584EA007E58AF");
+addTechDKP("39E22FF4F6D7D92CC22584EA007E58C4");
+addVotesLink("0BDD56CA4C30DD2BC22584EA007E58F7","EECA9BB5BA744557C22584EA007E5901","0","0","0");
+addVotesLink("13FCD724F192F45FC22584EA007E58DA","BC83F013F00706D5C22584EA007E58E4","0","0","0");
+addVotesLink("163462975FD04FA3C22584EA007E592E","3160598E29221D6EC22584EA007E5934","0","0","0");
+addVotesLink("1C831C7669A150D2C22584EA007E58F8","C02E79F9F403FE20C22584EA007E5903","0","0","0");
+addVotesLink("435E41AE3330E67FC22584EA007E587B","01822C4BD2F6CEA7C22584EA007E5887","0","0","0");
+addVotesLink("5EE585B947DB4831C22584EA007E5930","ED1E38E1F523E125C22584EA007E5936","0","0","0");
+addVotesLink("5F954EF740A80C15C22584EA007E5919","7D61E7891919884BC22584EA007E5922","0","0","0");
+addVotesLink("6AEDFCBBFE84D2BBC22584EA007E58DE","96E6227445B69D34C22584EA007E58E8","0","0","0");
+addVotesLink("74E78AD19B2AD71FC22584EA007E591A","367B5B8F0B6AB9D0C22584EA007E5924","0","0","0");
+addVotesLink("77260F8F256672D4C22584EA007E58F9","D88B3E1D4A7E3075C22584EA007E5905","0","0","0");
+addVotesLink("7B5DB95CE774B7F0C22584EA007E5916","33E39D23DA1DF60EC22584EA007E591E","0","0","0");
+addVotesLink("969298D35F0628EBC22584EA007E5913","A1BE97664BF3069AC22584EA007E591C","0","0","0");
+addVotesLink("9958F76DD2D07B40C22584EA007E58F5","7A61CC73AE10EF48C22584EA007E58FE","0","0","0");
+addVotesLink("A31412A831350E48C22584EA007E58DC","E9836D00E1B6C8D7C22584EA007E58E6","0","0","0");
+addVotesLink("A65FE13D1627A001C22584EA007E592C","22959D604A57920FC22584EA007E5932","0","0","0");
+addVotesLink("B4B9C7540867BF58C22584EA007E5918","4521403620E8FB1CC22584EA007E5920","0","0","0");
+addVotesLink("C03F08982A592B8CC22584EA007E58DF","7C2A9B0129D7DEB7C22584EA007E58EA","0","0","0");
+addVotesLink("C7418E67018190B9C22584EA007E58FC","4D3F46EFC2E388C2C22584EA007E5907","0","0","0");
+addVotesLink("CBB97379025DFAE0C22584EA007E58C9","AE1AD00ADC527B3EC22584EA007E58D0","0","0","0");
+addVotesLink("CBF2630CAFBF1172C22584EA007E58B0","DFBF7DF7996DB8BAC22584EA007E58B6","0","0","0");
+addVotesLink("DD89E2EA0190E8EEC22584EA007E58D8","B635003647A5D02EC22584EA007E58E2","0","0","0");
+addVotesLink("ED70F79FA664ADA6C22584EA007E5864","01B49F24A3C44001C22584EA007E5868","0","0","0");
+addVotesLink("FBE0FD12C36A51C3C22584EA007E58C6","E36E591C96F6BBC1C22584EA007E58CE","0","0","0");
+addVotesLink("FF7AE58E71CD79EBC22584EA007E58C1","EA770CC9997AF49FC22584EA007E58CC","0","0","0");
+
+</div>
+<div class="viewHolder" id="viewHolder" valign=top>
+<br><div id='headerHolder'>
+<div class='DKhead1' id='DKheadDiv'>Latvijas Republikas Saeimas<br />2020.gada 9.janv&#257;ra<br />k&#257;rt&#275;j&#257;s s&#275;des darba k&#257;rt&#299;ba 09:00<br />  </div>	<!-- HEAD -->
+</div>
+<div id='emptyLine'></div>
+ 	<!-- BREAK  INFO -->
+<div id="viewHolderSD" class="viewHolderSD">
+<div class="viewHolder" id="tableHolder" valign=top>
+<table cellspacing="0" cellpadding="0" border="0" width="100%" id="contentTable">
+<script language="javascript">
+try{
+var nodoc=document.getElementById('viewHolderText');
+if(nodoc){eval(nodoc.innerHTML);}
+//var dbPathLp="";
+//var dbPathLm="";
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  	//<!-- ATTACHMENTS -->
+runAfterTasks()
+dataParsingFinished=true;
+}catch(e){ 
+if(!atLeastOneDkpAdded) document.write("<div class='searchMsg'>Neviens dokuments nav atrasts</div>");
+}
+</script>
+</table>
+ 	<!-- Kalendara saisinajumu paskaidrojumi -->
+</div>
+</div>
+</div><br>
+ <div id='timeMsgBott'><span class='breakMsg1'>S&#275;de beigusies 09.01.2020 12:14</span><span class='breakMsg2'>&nbsp;&nbsp;&nbsp;&nbsp;</span></div>	<!-- END INFO -->
+</div>
+</td>
+</tr>
+</table>
+<br>
+</td>
+<td width=7 class="scrOnly"><img src="/icons/ecblank.gif" width=7></td>
+</tr>
+<tr><td colspan="3"><img src="/icons/ecblank.gif" style="width:990px;height:1px;"></td></tr>
+</table></form>
+</body>
+</html>
+
