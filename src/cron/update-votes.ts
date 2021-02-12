@@ -1,4 +1,3 @@
-import { log } from 'console';
 import request from 'request';
 import { createConnection } from 'typeorm';
 import { Deputy, Party, Vote, VoteType, Proposal } from '../entities';

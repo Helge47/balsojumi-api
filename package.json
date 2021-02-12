@@ -5,6 +5,7 @@
   "main": "dist/app.js",
   "scripts": {
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
+    "watch:ts": "tsc -w",
     "build": "tsc",
     "start": "node .",
     "dev": "nodemon .",

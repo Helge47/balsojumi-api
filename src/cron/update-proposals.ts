@@ -4,7 +4,7 @@ import { Meeting, Proposal } from '../entities';
 import { createConnection } from 'typeorm';
 
 const proposalRegex = /drawDKP_Pr\("(.*)"\)/gm;
-const votingRegex = /addVotesLink\("(.*)","(.*)"(,"\d"){3}\);/gm
+const votingRegex = /addVotesLink\("(.*)","(.*)"(,"\d"){3}\);/gm;
 
 const processMeeting = (meeting: Meeting) => {
     return new Promise<void>((resolve) => {
