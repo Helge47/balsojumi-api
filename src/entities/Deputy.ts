@@ -6,7 +6,7 @@ export enum Party {
     NA = 'NA',
     JKP = 'JKP',
     ZZS = 'ZZS',
-    S = 'SASKA&#325;A',
+    S = 'SASKAŅA',
     KPV = 'KPV LV',
     NONE = '',
 };

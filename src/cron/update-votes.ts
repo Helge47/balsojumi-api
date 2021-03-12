@@ -1,6 +1,7 @@
 import request from 'request';
 import { createConnection } from 'typeorm';
 import { Deputy, Party, Vote, VoteType, Proposal } from '../entities';
+import { fixLatvianString } from './util';
 
 const regex = /voteFullListByNames=\["(.*)"\];/gm;
 const separator = '�';
@@ -40,14 +41,15 @@ const processProposal = async (proposal?: Proposal): Promise<void> => {
 
             for (const i in voteData) {
                 const [ orderNumber, name, partyName, voteType ] = voteData[i].split(separator);
+                const fixedName = fixLatvianString(name);
 
-                let deputy = deputies.find(d => d.name === name);
+                let deputy = deputies.find(d => d.name === fixedName);
 
                 if (deputy === undefined) {
-                    console.log('New deputy found: ' + name);
+                    console.log('New deputy found: ' + fixedName);
                     deputy = new Deputy();
-                    deputy.name = name;
-                    deputy.party = partyName as Party;
+                    deputy.name = fixedName;
+                    deputy.party = fixLatvianString(partyName) as Party;
     
                     await deputy.save();
                 }
@@ -58,6 +60,7 @@ const processProposal = async (proposal?: Proposal): Promise<void> => {
                 vote.type = voteType as VoteType;
 
                 await vote.save();
+                proposal.votes.push(vote);
             }
 
             proposal.isScraped = true;
@@ -72,7 +75,7 @@ const processProposal = async (proposal?: Proposal): Promise<void> => {
 
 const processAll = async () => {
     await createConnection();
-    const proposals = await Proposal.find({ take: 10, where: { isScraped: false, isAnonymous: false } });
+    const proposals = await Proposal.find({ relations: [ 'votes' ], take: 10, where: { isScraped: false, isAnonymous: false } });
 
     for (const i in proposals) {
         const proposal = proposals[i];

@@ -1,6 +1,6 @@
-import Meeting, { MeetingType } from './Meeting';
+import Sitting, { SittingType } from './Sitting';
 import Proposal from './Proposal';
 import Deputy, { Party } from './Deputy';
 import Vote, { VoteType } from './Vote';
 
-export { Meeting, MeetingType, Proposal, Deputy, Party, Vote, VoteType };
+export { Sitting, SittingType, Proposal, Deputy, Party, Vote, VoteType };

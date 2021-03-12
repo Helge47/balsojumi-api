@@ -1,5 +1,5 @@
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import Meeting from './Meeting';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import Sitting from './Sitting';
 import Vote from './Vote';
 
 @Entity()
@@ -32,8 +32,12 @@ class Proposal extends BaseEntity {
     @Column({ default: false })
     isAnonymous: Boolean;
 
-    @ManyToOne(() => Meeting, (meeting) => meeting.proposals)
-    meeting: Meeting;
+    @Column({ nullable: true })
+    sittingId: number;
+
+    @ManyToOne(() => Sitting, (sitting) => sitting.proposals)
+    @JoinColumn()
+    sitting: Sitting;
 
     @OneToMany(() => Vote, (vote) => vote.proposal)
     votes: Vote[];

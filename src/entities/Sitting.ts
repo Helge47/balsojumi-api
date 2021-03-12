@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import Proposal from './Proposal';
 
-export enum MeetingType {
+export enum SittingType {
     DEFAULT = 'default',
     CLOSED = 'closed',
     EMERGENCY = 'emergency',
@@ -11,7 +11,7 @@ export enum MeetingType {
 };
 
 @Entity()
-class Meeting extends BaseEntity {
+class Sitting extends BaseEntity {
 
     @PrimaryGeneratedColumn()
     id: number;
@@ -20,7 +20,7 @@ class Meeting extends BaseEntity {
     date: Date;
 
     @Column()
-    type: MeetingType;
+    type: SittingType;
 
     @Column({ unique: true })
     saeimaUid: string;
@@ -28,8 +28,8 @@ class Meeting extends BaseEntity {
     @Column({ default: false })
     isScraped: Boolean;
 
-    @OneToMany(() => Proposal, (proposal) => proposal.meeting)
+    @OneToMany(() => Proposal, (proposal) => proposal.sitting)
     proposals: Proposal[];
 }
 
-export default Meeting;
+export default Sitting;
