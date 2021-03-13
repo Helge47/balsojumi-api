@@ -1,6 +1,6 @@
 import request from 'request';
 import { createConnection } from 'typeorm';
-import { Deputy, Party, Vote, VoteType, Proposal } from '../entities';
+import { Deputy, Vote, VoteType, Proposal } from '../entities';
 import { fixLatvianString } from './util';
 
 const regex = /voteFullListByNames=\["(.*)"\];/gm;
@@ -42,15 +42,17 @@ const processProposal = async (proposal?: Proposal): Promise<void> => {
             for (const i in voteData) {
                 const [ orderNumber, name, partyName, voteType ] = voteData[i].split(separator);
                 const fixedName = fixLatvianString(name);
+                const fixedFaction = fixLatvianString(partyName);
 
-                let deputy = deputies.find(d => d.name === fixedName);
+                let deputy = deputies.find(d => d.surname + ' ' + d.name === fixedName);
 
                 if (deputy === undefined) {
-                    console.log('New deputy found: ' + fixedName);
-                    deputy = new Deputy();
-                    deputy.name = fixedName;
-                    deputy.party = fixLatvianString(partyName) as Party;
-    
+                    console.warn('Deputy not found: ' + fixedName);
+                    continue;
+                }
+
+                if (deputy.currentFaction !== fixedFaction) {
+                    deputy.currentFaction = fixedFaction;
                     await deputy.save();
                 }
 

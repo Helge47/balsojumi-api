@@ -1,5 +1,5 @@
 import { createConnection } from "typeorm";
-import { Deputy, Proposal, Party } from "../entities";
+import { Deputy, Proposal } from "../entities";
 
 const symbols = [
     { find: '%20', replacement: ' ' },
@@ -93,7 +93,6 @@ const fixLatvianInDatabase = async () => {
 
         console.log(d);
         d.name = fixLatvianString(d.name);
-        d.party = fixLatvianString(d.party) as Party;
         console.log(d);
 
         await d.save();

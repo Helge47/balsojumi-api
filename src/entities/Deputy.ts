@@ -1,15 +1,7 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import DeputyRecord from './DeputyRecord';
+import Mandate from './Mandate';
 import Vote from './Vote';
-
-export enum Party {
-    APAR = 'AP!',
-    NA = 'NA',
-    JKP = 'JKP',
-    ZZS = 'ZZS',
-    S = 'SASKAŅA',
-    KPV = 'KPV LV',
-    NONE = '',
-};
 
 @Entity()
 class Deputy extends BaseEntity {
@@ -17,14 +9,32 @@ class Deputy extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ unique: true })
+    @Column()
     name: string;
 
     @Column()
-    party: Party;
+    surname: string;
 
-    @OneToMany(() => Vote, (vote) => vote.deputy)
+    @Column()
+    currentFaction: string;
+
+    @Column()
+    birthYear: string;
+
+    @Column()
+    email: string;
+
+    @Column()
+    residence: string;
+
+    @OneToMany(() => Mandate, mandate => mandate.deputy)
+    mandates: Mandate[];
+
+    @OneToMany(() => Vote, vote => vote.deputy)
     votes: Vote[];
+
+    @OneToMany(() => DeputyRecord, record => record.deputy)
+    records: DeputyRecord[];
 }
 
 export default Deputy;

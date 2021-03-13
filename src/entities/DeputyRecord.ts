@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn, JoinColumn } from 'typeorm';
+import Deputy from './Deputy';
 
 @Entity()
 class DeputyRecord extends BaseEntity {
@@ -20,6 +21,13 @@ class DeputyRecord extends BaseEntity {
 
     @Column()
     uid: string;
+
+    @Column({ nullable: true })
+    deputyId: number;
+
+    @ManyToOne(() => Deputy, deputy => deputy.records, { nullable: true })
+    @JoinColumn()
+    deputy: Deputy;
 }
 
 export default DeputyRecord;
