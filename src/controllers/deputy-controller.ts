@@ -12,7 +12,7 @@ const getDeputyDataById: RequestHandler = async (req, res) => {
         return res.send({ success: false, error: 'No id provided' });
     }
 
-    const deputy = await Deputy.findOne(parseInt(req.params.id));
+    const deputy = await Deputy.findOne(parseInt(req.params.id), { relations: ['mandates']});
 
     return res.send({ success: true, data: deputy });
 };

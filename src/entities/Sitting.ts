@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import Proposal from './Proposal';
+import Reading from './Reading';
 
 export enum SittingType {
     DEFAULT = 'default',
@@ -28,8 +28,8 @@ class Sitting extends BaseEntity {
     @Column({ default: false })
     isScraped: Boolean;
 
-    @OneToMany(() => Proposal, (proposal) => proposal.sitting)
-    proposals: Proposal[];
+    @OneToMany(() => Reading, reading => reading.sitting)
+    readings: Reading[];
 }
 
 export default Sitting;

@@ -1,6 +1,3 @@
-import { createConnection } from "typeorm";
-import { Deputy, Proposal } from "../entities";
-
 const symbols = [
     { find: '%20', replacement: ' ' },
     { find: '%E2%80%9C', replacement: '«' },
@@ -71,6 +68,19 @@ export const fixLatvianString = (s: string) => {
     return s;
 };
 
+//converts date from dd.mm.yyyy format to Date object
+export const convertDate = (s: string) => {
+    const [ date, month, year ] = s.split('.').map(x => parseInt(x));
+
+    if (isNaN(date) || isNaN(month) || isNaN(year)) {
+        return null;
+    }
+
+    return new Date(year, month - 1, date);
+};
+
+
+/*
 const fixLatvianInDatabase = async () => {
     await createConnection();
     const proposals = await Proposal.find();
@@ -100,3 +110,4 @@ const fixLatvianInDatabase = async () => {
 };
 
 fixLatvianInDatabase();
+*/

@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { Deputy, DeputyRecord, Mandate } from '../entities';
-import { createConnection, IsNull } from 'typeorm';
-import { isNull } from 'util';
+import { createConnection } from 'typeorm';
 
 const archiveLinkRegex = /(Saeima.*.nsf)\/depArch/gm;
 const currentParliamentNumberRegex = /currentParlamentIndex="(\.+)"/m;

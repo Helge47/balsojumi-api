@@ -1,31 +1,29 @@
-import express from 'express';
-import helmet from 'helmet';
 import 'reflect-metadata';
-import routes from './routes';
-import bodyParser from 'body-parser';
-import { createConnection } from 'typeorm';
+import * as TypeORM from 'typeorm';
+import * as TypeGraphQL from 'type-graphql';
+import { Container } from 'typedi';
+import { ApolloServer } from 'apollo-server';
+import { DeputyResolver } from './resolvers/deputy-resolver';
 
-const app = express();
 const port = 3001;
-const FRONTEND_URI = 'http://localhost:3000';
-createConnection();
+TypeORM.useContainer(Container);
 
-app.use(helmet());
+async function bootstrap() {
+    try {
+        await TypeORM.createConnection();
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', FRONTEND_URI);
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+        const schema = await TypeGraphQL.buildSchema({
+            resolvers: [ DeputyResolver ],
+            container: Container,
+        });
 
-    //dev only
-    res.header('Access-Control-Allow-Credentials', 'true');
-    next();
-});
+        const server = new ApolloServer({ schema });
 
-//TODO: separate body-parser middlewares by routes
-app.use(bodyParser.json());
+        const { url } = await server.listen(port);
+        console.log('Server started at ' + url);
+    } catch (err) {
+        console.error(err);
+    }
+}
 
-app.use(routes);
-
-app.listen(port, () => {
-    console.log('server started on http://localhost:' + port);
-});
+bootstrap();

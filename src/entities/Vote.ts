@@ -1,16 +1,15 @@
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn, Index } from 'typeorm';
 import Deputy from './Deputy';
-import Proposal from './Proposal';
+import Reading from './Reading';
 
 export enum VoteType {
     FOR = 'Par',
     AGAINST = 'Pret',
     NO_VOTE = 'Nebalsoja',
-    //ABSTAIN = 'abstain'
 };
 
 @Entity()
-@Index(['deputy', 'proposal'], { unique: true })
+@Index(['deputy', 'reading'], { unique: true })
 class Vote extends BaseEntity {
 
     @PrimaryGeneratedColumn()
@@ -19,11 +18,11 @@ class Vote extends BaseEntity {
     @Column()
     type: VoteType;
 
-    @ManyToOne(() => Deputy, (deputy) => deputy.votes)
+    @ManyToOne(() => Deputy, deputy => deputy.votes)
     deputy: Deputy;
 
-    @ManyToOne(() => Proposal, (proposal) => proposal.votes)
-    proposal: Proposal;
+    @ManyToOne(() => Reading, reading => reading.votes)
+    reading: Reading;
 }
 
 export default Vote;
