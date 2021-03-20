@@ -11,6 +11,20 @@ const submitterRegex = /Iesniedzēj.: <\/font>(.+?)<\/div>/;
 const referentRegex = /Referent.: <\/font>(.*?)&/;
 const commissionNameRegex = /komisija:\s+<div.+?>(.*?)<\/div>/;
 
+//WIP
+const getCommissionDetails = async (commissionName: string, billNumber: string) => {
+    const url = 'https://titania.saeima.lv/LIVS13/saeimalivs13.nsf/WEBAllKA?OpenView=&count=1000&RestrictToCategory=6/'
+         + billNumber + '|'
+         + encodeURIComponent(commissionName);
+    
+    console.log(url);
+
+    const response = await axios.get(url);
+    const body = response.data;
+
+    console.log(body);
+};
+
 const parseRow = (row: string) => {
     const data = [];
     let match;
@@ -72,7 +86,7 @@ const getBillDetails = async (uid: string) => {
 };
 
 const checkAllBillsPage = async () => {
-    const response = await axios.get('https://titania.saeima.lv/LIVS13/saeimalivs13.nsf/webAll?OpenView&count=10&start=20');
+    const response = await axios.get('https://titania.saeima.lv/LIVS13/saeimalivs13.nsf/webAll?OpenView&count=50&start=1');
     const body = response.data;
     const uids = (await Motion.find({ where: { type: 'Bill' }})).map(m => m.uid);
 
@@ -86,6 +100,7 @@ const checkAllBillsPage = async () => {
         }
 
         const details = await getBillDetails(uid);
+        //const commissionDetails = await getCommissionDetails(details.commissionName, number);
 
         const motion = new Motion();
         motion.type = 'Bill';
@@ -98,7 +113,7 @@ const checkAllBillsPage = async () => {
         motion.submissionDate = convertDate(details.entries.find(x => x.status === 'Iesniegts').date);
         motion.docs = details.entries.find(x => x.status.includes('Nod')).docs;
 
-        motion.readings = details.entries.filter(x => x.status.includes('lasījums') || x.status === 'Izsludināts')
+        motion.readings = details.entries.filter(x => x.status.includes('lasījums') || x.status === 'Izsludināts' || x.status.includes('Nod'))
             .map(r => {
                 const reading = new Reading();
 

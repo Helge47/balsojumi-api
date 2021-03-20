@@ -1,3 +1,4 @@
+import { Field, ID } from 'type-graphql';
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import Reading from './Reading';
 
@@ -14,19 +15,20 @@ export enum SittingType {
 class Sitting extends BaseEntity {
 
     @PrimaryGeneratedColumn()
+    @Field(type => ID)
     id: number;
 
     @Column({ type: 'date' })
+    @Field()
     date: Date;
 
     @Column()
+    @Field()
     type: SittingType;
 
     @Column({ unique: true })
+    @Field()
     saeimaUid: string;
-
-    @Column({ default: false })
-    isScraped: Boolean;
 
     @OneToMany(() => Reading, reading => reading.sitting)
     readings: Reading[];

@@ -1,92 +1,79 @@
-import request from 'request';
+import axios from 'axios';
 import { createConnection } from 'typeorm';
-import { Deputy, Vote, VoteType, Proposal } from '../entities';
+import { Deputy, Vote, VoteType, Reading } from '../entities';
 import { fixLatvianString } from './util';
 
 const regex = /voteFullListByNames=\["(.*)"\];/gm;
 const separator = '�';
 
-const processProposal = async (proposal?: Proposal): Promise<void> => {
-    return new Promise((resolve, reject) => {
-        if (proposal.isScraped) {
-            console.log('Is already scraped, skipping')
-            return resolve();
+const processReading = async (reading: Reading) => {
+    if (reading.votes.length > 0) {
+        console.log('already has votes, skipping', reading.id);
+        return;
+    }
+
+    if (!reading.votingUid) {
+        console.log('No voting on this reading, skipping', reading.id);
+        return;
+    }
+
+    const url = 'https://titania.saeima.lv/LIVS13/SaeimaLIVS2_DK.nsf/0/' + reading.votingUid;
+    const response = await axios.get(url);
+    const page = response.data;
+
+    const deputies: Deputy[] = await Deputy.find();
+    const match = page.match(regex);
+
+    if (match === null || match[1] === '') {
+        console.log('The voting was anonymous, skipping');
+    }
+
+    const voteData = match[1].split('","');
+    reading.votes = [];
+
+    for (const i in voteData) {
+        const [ orderNumber, name, partyName, voteType ] = voteData[i].split(separator);
+        const fixedName = fixLatvianString(name);
+        const fixedFaction = fixLatvianString(partyName);
+
+        let deputy = deputies.find(d => d.surname + ' ' + d.name === fixedName);
+
+        if (deputy === undefined) {
+            console.warn('Deputy not found: ' + fixedName);
+            continue;
         }
 
-        if (proposal.votingUid === undefined) {
-            console.log('No voting for this proposal, skipping')
-            proposal.isScraped = true;
-            return proposal.save()
-                .then(() => resolve())
-                .catch(reject);
+        if (deputy.currentFaction !== fixedFaction) {
+            deputy.currentFaction = fixedFaction;
+            console.log('new faction ', deputy);
+            await deputy.save();
         }
 
-        const url = 'https://titania.saeima.lv/LIVS13/SaeimaLIVS2_DK.nsf/0/' + proposal.votingUid + '?OpenDocument';
+        const vote = new Vote();
+        vote.reading = reading;
+        vote.deputy = deputy;
+        vote.type = voteType as VoteType;
 
-        request(url, async (error, response, body) => {
-            const page = body as string;
+        reading.votes.push(vote);
+    }
 
-            const deputies: Deputy[] = await Deputy.find();
+    await reading.save();
 
-            let match = regex.exec(page);
-
-            if (match === null || match[1] === '') {
-                console.log('The voting was anonymous, setting flag and skipping');
-                proposal.isAnonymous = true;
-                await proposal.save();
-                return resolve();
-            }
-
-            const voteData = match[1].split('","');
-
-            for (const i in voteData) {
-                const [ orderNumber, name, partyName, voteType ] = voteData[i].split(separator);
-                const fixedName = fixLatvianString(name);
-                const fixedFaction = fixLatvianString(partyName);
-
-                let deputy = deputies.find(d => d.surname + ' ' + d.name === fixedName);
-
-                if (deputy === undefined) {
-                    console.warn('Deputy not found: ' + fixedName);
-                    continue;
-                }
-
-                if (deputy.currentFaction !== fixedFaction) {
-                    deputy.currentFaction = fixedFaction;
-                    await deputy.save();
-                }
-
-                const vote = new Vote();
-                vote.proposal = proposal;
-                vote.deputy = deputy;
-                vote.type = voteType as VoteType;
-
-                await vote.save();
-                proposal.votes.push(vote);
-            }
-
-            proposal.isScraped = true;
-            await proposal.save();
-
-            console.log('proposal votes saved');
-
-            resolve();
-        });
-    });
+    console.log('reading votes saved', reading);
 };
 
 const processAll = async () => {
     await createConnection();
-    const proposals = await Proposal.find({ relations: [ 'votes' ], take: 10, where: { isScraped: false, isAnonymous: false } });
+    const readings = await Reading.find({ relations: [ 'votes' ], take: 10 });
 
-    for (const i in proposals) {
-        const proposal = proposals[i];
-        console.log('Processing proposal ' + proposal.id);
+    for (const i in readings) {
+        const reading = readings[i];
+        console.log('Processing reading ' + reading.id);
 
-        await processProposal(proposal);
+        await processReading(reading);
     }
 
-    console.log('All proposals processed');
+    console.log('All readings processed');
 
     process.exit();
 };

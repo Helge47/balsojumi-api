@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Index } from 'typeorm';
 import Motion from './Motion';
 import Sitting from './Sitting';
 import Vote from './Vote';
@@ -10,6 +10,7 @@ type ReadingObject = 'Bill' | 'Decision' | 'Request';
 
 @Entity()
 @ObjectType()
+@Index(['sitting', 'motion'], { unique: true })
 class Reading extends BaseEntity {
 
     @PrimaryGeneratedColumn()
@@ -24,14 +25,22 @@ class Reading extends BaseEntity {
     @Field()
     outcome: string;
 
-    @Column({ length: 1000, nullable: true})
+    @Column({ length: 1000, nullable: true })
     docs: string;
 
-    @Column({ type: 'date', nullable: true})
+    @Column({ type: 'date', nullable: true })
     @Field()
     date: Date;
 
-    @OneToMany(() => Vote, vote => vote.reading)
+    @Column({ nullable: true })
+    @Field()
+    votingUid: string;
+
+    @Column({ default: false })
+    @Field()
+    isVotingAnonymous: boolean;
+
+    @OneToMany(() => Vote, vote => vote.reading, { cascade: true })
     votes: Vote[];
 
     @ManyToOne(() => Sitting, sitting => sitting.readings, { nullable: true })

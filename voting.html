@@ -1,76 +1,0 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title>Balso&#353;anas rezult&#257;ti</title><meta name = "format-detection" content = "telephone=no" /> 
-<link rel="shortcut icon" href="/LIVS13/SaeimaLIVS2_DK.nsf/mainicon.ico" type="image/x-icon" />
-<link rel="stylesheet" href="../WEB_VotesStyles.css?ReadForm" />
-<script language="JavaScript" type="text/javascript">
-<!-- 
-function redrawMainTable(lst){	var totalResults=new Array();	totalResults["Par"]=0;	totalResults["Pret"]=0;	totalResults["Atturas"]=0;	var isOdd=Math.floor(lst.length/2)==lst.length/2;	var lines=Math.floor(lst.length/2)+(isOdd?0:1);	var res='<table class="mainInfoTable" border="0" cellspacing="0" cellpadding="0">';	res+='<tr class="headRow">';	res+='<td width=10>&nbsp;</td>';	res+='<td width=185>V&#257;rds</td>';	res+='<td width=90>Frakcija</td>';	res+='<td width=50>Balss</td>';	res+='<td width=15 class="emptyCell">&nbsp;</td>';		res+='<td width=10>&nbsp;</td>';	res+='<td width=185>V&#257;rds</td>';	res+='<td width=90>Frakcija</td>';	res+='<td width=50>Balss</td>';	res+="</tr>";			var elms=lst[0].split("�").length;	for(var i=0; i<lines; i++){		var arr=lst[i].split("�");		res+='<tr class="c1">';		for(var j=0; j<elms; j++){			res+='<td>'+decodeURI(arr[j])+'</td>';		}				if(!totalResults[decodeURI(arr[elms-1])]) totalResults[decodeURI(arr[elms-1])]=0;		totalResults[decodeURI(arr[elms-1])]++;			res+='<td class="emptyCell">&nbsp</td>';		var arr=(lst[i+lines])?lst[i+lines].split("�"):["&nbsp;","&nbsp;","&nbsp;","&nbsp;"];		// last empty line		for(var j=0; j<elms; j++){			res+='<td>'+decodeURI(arr[j])+'</td>';		}		res+"</tr>";			if(lst[i+lines]){				if(!totalResults[decodeURI(arr[elms-1])]) totalResults[decodeURI(arr[elms-1])]=0;				totalResults[decodeURI(arr[elms-1])]++;		}	}	res+="</table>"	var obj=document.getElementById("mainContentHolder");	if(obj) obj.innerHTML=res		/*	res="";		obj=document.getElementById("totalResultRow");	if(obj){		res+="Par: "+totalResults["Par"]+" &nbsp;&nbsp;&nbsp;";		res+="Pret: "+totalResults["Pret"]+" &nbsp;&nbsp;&nbsp;";		res+="Atturas: "+totalResults["Atturas"]+" &nbsp;&nbsp;&nbsp;";				obj.innerHTML=res;	}	*/	if(lst[0]!="1.���" && lst[0]!=""){		obj=document.getElementById("showFullInfo");		if(obj) obj.style.display="block";			}}function redrawMainTableShort(lst){	var res='<table class="mainInfoTable" border="0" cellspacing="0" cellpadding="0">';	res+='<tr class="headRow">';	res+='<td width=10>&nbsp;</td>';	res+='<td width=450>Kandid&#257;ts</td>';	res+='<td width=80>Par</td>';	res+='<td width=80>Pret</td>';	res+"</tr>";			var elms=lst[0].split("�").length;	for(var i=0; i<lst.length; i++){		var arr=lst[i].split("�");		res+='<tr class="c1">';		for(var j=0; j<elms; j++){			res+='<td>'+decodeURI(arr[j])+'</td>';		}		res+"</tr>";		}	res+="</table>"		var obj=document.getElementById("mainContentHolder");	if(obj) obj.innerHTML=res		if(lst[0]!="1.���" && lst[0]!=""){		obj=document.getElementById("showFullInfo");		if(obj) obj.style.display="block";			}}function relocateMe(id, tm){	var lc=window.location.href;	if(!tm){		lc=lc.toLowerCase().split(".nsf/0/")[0]+".nsf/0/"+id+"?OpenDocument"	}else{		lc=lc.toLowerCase().split(".nsf/")[0]+".nsf/Voting?ReadForm&parentID="+id+"&tm="+tm;		}	window.location=lc;}
-// -->
-</script>
-
-<script language="JavaScript" type="text/javascript">
-<!-- 
-document._domino_target = "_self";
-function _doClick(v, o, t) {
-  var returnValue = false;
-  var url="/LIVS13/SaeimaLIVS2_DK.nsf/0/76fc9f62160c0f2cc22585ed003fa687?OpenDocument&Click=" + v;
-  if (o.href != null) {
-    o.href = url;
-    returnValue = true;
-  } else {
-    if (t == null)
-      t = document._domino_target;
-    window.open(url, t);
-  }
-  return returnValue;
-}
-// -->
-</script>
-</head>
-<body text="#000000" bgcolor="#FFFFFF" rightmargin="0"  leftmargin="0" marginheight="0" marginwidth="0" topmargin="0"  onload="window.focus()">
-
-<form onsubmit="return false;return true;" action=""> 
-<div style="display:none">
-	<!-- CACHE FLAG -->
-	readedFromCache=none XML
-</div>
-<script language="javascript">
-var voteFullListByNames=["1.�Age%C5%A1ins%20Val%C4%93rijs�SASKA&#325;A �Par","2.�A%C5%A1eradens%20Arvils�JV�Par","3.�Augulis%20Uldis�ZZS�Nebalsoja","4.�Baumane%20Krista�AP!�Par","5.�Beitnere-Le%20Galla%20Dagm%C4%81ra�JK�Par","6.�Benhena-B%C4%93kena%20Iveta�KPV LV�Par","7.�Bergmanis%20Raimonds�ZZS�Par","8.�Blu%C4%B7e%20Dace�AP!�Par","9.�Blumbergs%20Aldis� �Par","10.�Bondars%20M%C4%81rti%C5%86%C5%A1�AP!�Par","11.�Budri%C4%B7is%20Uldis�JK�Par","12.�But%C4%81ns%20J%C4%81nis�JK�Par","13.�Ciel%C4%93ns%20J%C4%81nis�JK�Par","14.�Cilevi%C4%8Ds%20Boriss�SASKA&#325;A �Par","15.�%C4%8Cak%C5%A1a%20Anda� �Par","16.�Daudze%20Gundars�ZZS�Par","17.�Dolgopolovs%20Sergejs�SASKA&#325;A �Nebalsoja","18.�Dombrava%20J%C4%81nis�NA�Par","19.�Dzintars%20Raivis�NA�Par","20.�D%C5%ABr%C4%ABtis%20Ilm%C4%81rs�AP!�Par","21.�Egl%C4%ABtis%20Gatis�JK�Par","22.�Feldmans%20Kri%C5%A1j%C4%81nis�JK�Par","23.�Geid%C4%81ns%20Aivars�KPV LV�Par","24.�Gobzems%20Aldis� �Nebalsoja","25.�Goldberga%20Inga�SASKA&#325;A �Par","26.�Golubeva%20Marija�AP!�Par","27.�%C4%A2ir%C4%A3ens%20Kaspars�KPV LV�Par","28.�Iesalnieks%20J%C4%81nis�NA�Par","29.�Ikstena%20Inese�AP!�Par","30.�Indriksone%20Ilze�NA�Par","31.�Jalinska%20Jan%C4%ABna�ZZS�Par","32.�Jansons%20Ritvars�NA�Par","33.�Judins%20Andrejs�JV�Par","34.�Jura%C5%A1s%20Juris�JK�Par","35.�Kabanovs%20Nikolajs�SASKA&#325;A �Par","36.�Kaimi%C5%86%C5%A1%20Artuss� �Par","37.�Kazinovskis%20Andris� �Par","38.�Kir%C5%A1teins%20Aleksandrs�NA�Par","39.�Klementjevs%20Andrejs�SASKA&#325;A �Par","40.�Klementjevs%20Ivans�SASKA&#325;A �Nebalsoja","41.�Kols%20Rihards�NA�Par","42.�Kozlovskis%20Rihards�JV�Par","43.�Krap%C4%81ne%20Ieva�KPV LV�Par","44.�Kri%C5%A1%C4%81ns%20J%C4%81nis�SASKA&#325;A �Par","45.�Kucins%20Edgars�SASKA&#325;A �Par","46.�Kurs%C4%ABte-Pakule%20Jan%C4%ABna�NA�Par","47.�Kurs%C4%ABte%20Jan%C4%ABna�KPV LV�Par","48.�Latkovskis%20Ainars�JV�Par","49.�Leji%C5%86%C5%A1%20Atis�JV�Par","50.�Liepi%C5%86a%20Linda� �Nebalsoja","51.�Lo%C4%8Dmele-Lu%C5%86ova%20Reg%C4%ABna�SASKA&#325;A �Par","52.�L%C4%ABbi%C5%86a-Egnere%20Inese�JV�Nebalsoja","53.�M%C4%81rtu%C5%BEa%20Eva�JK�Par","54.�Mui%C5%BEniece%20Anita�JK�Par","55.�M%C5%ABrniece%20In%C4%81ra�NA�Par","56.�Naudi%C5%86%C5%A1%20Rom%C4%81ns�NA�Par","57.�Nikonovs%20Vladimirs�SASKA&#325;A �Par","58.�Orlovs%20Vit%C4%81lijs�SASKA&#325;A �Par","59.�Ozola%20Linda�JK�Par","60.�Papule%20Evija�SASKA&#325;A �Nebalsoja","61.�Pav%C4%BCuts%20Daniels�AP!�Par","62.�Pimenovs%20Igors�SASKA&#325;A �Par","63.�Ple%C5%A1s%20Art%C5%ABrs%20Toms�AP!�Par","64.�Pucens%20%C4%92riks�KPV LV�Par","65.�Puga%20Ivars�KPV LV�Par","66.�Ranc%C4%81ns%20Juris�JK�Par","67.�Ribakovs%20Ivans�SASKA&#325;A �Par","68.�Rieksti%C5%86%C5%A1%20Sandis�JK�Par","69.�Ruk%C5%A1%C4%81ne-%C5%A0%C4%8Dip%C4%8Dinska%20Dace�AP!�Par","70.�R%C4%ABbena%20Inguna� �Par","71.�Skride%20Andris�AP!�Par","72.�Spr%C5%ABde%20Karina� �Nebalsoja","73.�Stepa%C5%86enko%20J%C5%ABlija� �Nebalsoja","74.�%C5%A0mits%20Didzis� �Par","75.�%C5%A0nore%20Edv%C4%ABns�NA�Par","76.�%C5%A0teins%20M%C4%81rti%C5%86%C5%A1�AP!�Par","77.�%C5%A0vecova%20%C4%BBubova� �Par","78.�Teirumnieks%20Edmunds�NA�Par","79.�T%C4%93rauda%20Vita%20Anda�AP!�Par","80.�Tutins%20J%C4%81nis�SASKA&#325;A �Par","81.�Urbanovi%C4%8Ds%20J%C4%81nis�SASKA&#325;A �Par","82.�Valainis%20Viktors�ZZS�Par","83.�Voika%20Inese�AP!�Par","84.�Vuc%C4%81ns%20J%C4%81nis�ZZS�Par","85.�Zari%C5%86%C5%A1%20Ivars�SASKA&#325;A �Par","86.�Z%C4%81l%C4%ABte-Grosa%20Evita�JK�Par","87.�Znoti%C5%86%C5%A1%20Reinis�JK�Par","88.�%C5%BDunna%20Normunds�JK�Par"];
-var voteFullListByResult=["&nbsp;�<b>PAR:&nbsp;&nbsp;79</b>�&nbsp;�&nbsp;","1.�Val%C4%93rijs%20Age%C5%A1ins�SASKA&#325;A �Par","2.�Arvils%20A%C5%A1eradens�JV�Par","3.�Krista%20Baumane�AP!�Par","4.�Dagm%C4%81ra%20Beitnere-Le%20Galla�JK�Par","5.�Iveta%20Benhena-B%C4%93kena�KPV LV�Par","6.�Raimonds%20Bergmanis�ZZS�Par","7.�Dace%20Blu%C4%B7e�AP!�Par","8.�Aldis%20Blumbergs� �Par","9.�M%C4%81rti%C5%86%C5%A1%20Bondars�AP!�Par","10.�Uldis%20Budri%C4%B7is�JK�Par","11.�J%C4%81nis%20But%C4%81ns�JK�Par","12.�J%C4%81nis%20Ciel%C4%93ns�JK�Par","13.�Boriss%20Cilevi%C4%8Ds�SASKA&#325;A �Par","14.�Anda%20%C4%8Cak%C5%A1a� �Par","15.�Gundars%20Daudze�ZZS�Par","16.�J%C4%81nis%20Dombrava�NA�Par","17.�Raivis%20Dzintars�NA�Par","18.�Ilm%C4%81rs%20D%C5%ABr%C4%ABtis�AP!�Par","19.�Gatis%20Egl%C4%ABtis�JK�Par","20.�Kri%C5%A1j%C4%81nis%20Feldmans�JK�Par","21.�Aivars%20Geid%C4%81ns�KPV LV�Par","22.�Inga%20Goldberga�SASKA&#325;A �Par","23.�Marija%20Golubeva�AP!�Par","24.�Kaspars%20%C4%A2ir%C4%A3ens�KPV LV�Par","25.�J%C4%81nis%20Iesalnieks�NA�Par","26.�Inese%20Ikstena�AP!�Par","27.�Ilze%20Indriksone�NA�Par","28.�Jan%C4%ABna%20Jalinska�ZZS�Par","29.�Ritvars%20Jansons�NA�Par","30.�Andrejs%20Judins�JV�Par","31.�Juris%20Jura%C5%A1s�JK�Par","32.�Nikolajs%20Kabanovs�SASKA&#325;A �Par","33.�Artuss%20Kaimi%C5%86%C5%A1� �Par","34.�Andris%20Kazinovskis� �Par","35.�Aleksandrs%20Kir%C5%A1teins�NA�Par","36.�Andrejs%20Klementjevs�SASKA&#325;A �Par","37.�Rihards%20Kols�NA�Par","38.�Rihards%20Kozlovskis�JV�Par","39.�Ieva%20Krap%C4%81ne�KPV LV�Par","40.�J%C4%81nis%20Kri%C5%A1%C4%81ns�SASKA&#325;A �Par","41.�Edgars%20Kucins�SASKA&#325;A �Par","42.�Jan%C4%ABna%20Kurs%C4%ABte-Pakule�NA�Par","43.�Jan%C4%ABna%20Kurs%C4%ABte�KPV LV�Par","44.�Ainars%20Latkovskis�JV�Par","45.�Atis%20Leji%C5%86%C5%A1�JV�Par","46.�Reg%C4%ABna%20Lo%C4%8Dmele-Lu%C5%86ova�SASKA&#325;A �Par","47.�Eva%20M%C4%81rtu%C5%BEa�JK�Par","48.�Anita%20Mui%C5%BEniece�JK�Par","49.�In%C4%81ra%20M%C5%ABrniece�NA�Par","50.�Rom%C4%81ns%20Naudi%C5%86%C5%A1�NA�Par","51.�Vladimirs%20Nikonovs�SASKA&#325;A �Par","52.�Vit%C4%81lijs%20Orlovs�SASKA&#325;A �Par","53.�Linda%20Ozola�JK�Par","54.�Daniels%20Pav%C4%BCuts�AP!�Par","55.�Igors%20Pimenovs�SASKA&#325;A �Par","56.�Art%C5%ABrs%20Toms%20Ple%C5%A1s�AP!�Par","57.�%C4%92riks%20Pucens�KPV LV�Par","58.�Ivars%20Puga�KPV LV�Par","59.�Juris%20Ranc%C4%81ns�JK�Par","60.�Ivans%20Ribakovs�SASKA&#325;A �Par","61.�Sandis%20Rieksti%C5%86%C5%A1�JK�Par","62.�Dace%20Ruk%C5%A1%C4%81ne-%C5%A0%C4%8Dip%C4%8Dinska�AP!�Par","63.�Inguna%20R%C4%ABbena� �Par","64.�Andris%20Skride�AP!�Par","65.�Didzis%20%C5%A0mits� �Par","66.�Edv%C4%ABns%20%C5%A0nore�NA�Par","67.�M%C4%81rti%C5%86%C5%A1%20%C5%A0teins�AP!�Par","68.�%C4%BBubova%20%C5%A0vecova� �Par","69.�Edmunds%20Teirumnieks�NA�Par","70.�Vita%20Anda%20T%C4%93rauda�AP!�Par","71.�J%C4%81nis%20Tutins�SASKA&#325;A �Par","72.�J%C4%81nis%20Urbanovi%C4%8Ds�SASKA&#325;A �Par","73.�Viktors%20Valainis�ZZS�Par","74.�Inese%20Voika�AP!�Par","75.�J%C4%81nis%20Vuc%C4%81ns�ZZS�Par","76.�Ivars%20Zari%C5%86%C5%A1�SASKA&#325;A �Par","77.�Evita%20Z%C4%81l%C4%ABte-Grosa�JK�Par","78.�Reinis%20Znoti%C5%86%C5%A1�JK�Par","79.�Normunds%20%C5%BDunna�JK�Par","&nbsp;�<b>NEBALSO:&nbsp;&nbsp;9</b>�&nbsp;�&nbsp;","1.�Uldis%20Augulis�ZZS�Nebalsoja","2.�Sergejs%20Dolgopolovs�SASKA&#325;A �Nebalsoja","3.�Aldis%20Gobzems� �Nebalsoja","4.�Ivans%20Klementjevs�SASKA&#325;A �Nebalsoja","5.�Linda%20Liepi%C5%86a� �Nebalsoja","6.�Inese%20L%C4%ABbi%C5%86a-Egnere�JV�Nebalsoja","7.�Evija%20Papule�SASKA&#325;A �Nebalsoja","8.�Karina%20Spr%C5%ABde� �Nebalsoja","9.�J%C5%ABlija%20Stepa%C5%86enko� �Nebalsoja"];
-var voteShortListByNames=[""];
-var dbPathLp=opener?opener.dbPathLp:"";
-var dbPathLm=opener?opener.dbPathLm:"";
-var IsActual="" ;
-var hideSend2Com=[];
-hideSend2Com['Noraid&#299;ts']=true;
-hideSend2Com['Atsaukts']=true;	//hideSend2Com
-</script>
-<div id="pb" class="printButton" >
-<a onclick="javascript:window.print()"><IMG SRC="/LIVS13/SaeimaLIVS2_DK.nsf//web_bigPrint.jpg" BORDER="0"><span style="vertical-align:top;height:18px;"> &nbsp;Druk&#257;t</span></a>
- &nbsp; 
-<a onclick="javascript:window.close()"><IMG SRC="/LIVS13/SaeimaLIVS2_DK.nsf//web_bigClose.jpg" BORDER="0"><span style="vertical-align:top;height:18px;"> &nbsp;Aizv&#275;rt</span></a>
-</div>
-<div class="mainHolder">
-<table  class="mainVoteTable" border="0" cellspacing="0" cellpadding="0" width=100%><tr><td >
-<div class="formHead1"><span >Balso&#353;anas rezult&#257;ti </span> <span style="color:red;font-weight:normal;"></span></div>
-<div class="formHead3" id="totalResultRow">par 79, pret 0, atturas 0 &nbsp; </div><br>
-<div class="formHead2"><span style="width:120px;">Datums: </span><b>24.09.2020 14:29:55 </b></div>
-<div class="formHead2"><span style="width:120px;">Balso&#353;anas mot&#299;vs: </span><b>Groz&#299;jumi Covid-19 infekcijas izplat&#299;bas p&#257;rvald&#299;bas likum&#257; (783/Lp13), 1.las&#299;jums</b></div>
-<div id="showFullInfo" style="display:none">
-<div class="scrOnly" style="margin-top:5px;font-size:9pt;"><span class="formHead2">Grup&#275;t: </span>
-<input type=radio name="displayType" CHECKED  onclick="redrawMainTable(voteFullListByResult)">p&#275;c balsojuma rezult&#257;ta
-<input type=radio name="displayType" onclick="redrawMainTable(voteFullListByNames)">alfab&#275;tisk&#257; k&#257;rt&#299;b&#257;
-</div>
-<div id="mainContentHolder"></div>
-</div>
-</td></tr></table>
-<script language="javascript">
-redrawMainTable(voteFullListByResult)
-</script>
-<div style='font-style:italic;'></div>
-</div></form>
-</body>
-</html>
-

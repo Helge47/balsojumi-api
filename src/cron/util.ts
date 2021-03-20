@@ -65,7 +65,7 @@ export const fixLatvianString = (s: string) => {
         s = s.replace(regex, symbols[i].replacement);
     }
 
-    return s;
+    return decodeURIComponent(s);
 };
 
 //converts date from dd.mm.yyyy format to Date object

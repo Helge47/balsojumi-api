@@ -1,19 +1,19 @@
-import request from 'request';
-import fs from 'fs';
+
 import { Sitting, SittingType } from '../entities';
 import { createConnection } from 'typeorm';
+import axios from 'axios';
 
 const regex = /dCC\("(\d*)","(\d{4})","(\d{1,2})","(\d{1,2})","(\d{1,2})","(\d{1,2})","(.*)"\)/gm;
 
-request('https://titania.saeima.lv/LIVS13/SaeimaLIVS2_DK.nsf/DK?ReadForm&calendar=1', async (error, response, body) => {
-    const page = body;
+const checkSittingsPage = async () => {
+    const response = await axios.get('https://titania.saeima.lv/LIVS13/SaeimaLIVS2_DK.nsf/DK?ReadForm&calendar=1');
+    const page = response.data;
+    
+    const uids: string[] = (await Sitting.find()).map(s => s.saeimaUid);
+    let match;
+    const sittings: Sitting[] = [];
 
-    await createConnection();
-    const allSittings = await Sitting.find();
-    const uids: string[] = allSittings.map(s => s.saeimaUid);
-    let match = regex.exec(page);
-
-    while (match !== null) {
+    while (match = regex.exec(page)) {
         const uid = match[7];
 
         if (!uids.some(u => u === uid)) {
@@ -44,12 +44,27 @@ request('https://titania.saeima.lv/LIVS13/SaeimaLIVS2_DK.nsf/DK?ReadForm&calenda
             sitting.saeimaUid = uid;
             sitting.type = type;
 
-            await sitting.save();
+            sittings.push(sitting);
         }
 
-        match = regex.exec(page);
     }
+    regex.lastIndex = 0;
 
+    sittings.sort((a, b) => a.date.getTime() - b.date.getTime());
+
+    for (const i in sittings) {
+        await sittings[i].save();
+        console.log('sitting saved', sittings[i]);
+    }
+    
     console.log('All sittings updated');
     process.exit();
-});
+};
+
+const main = async () => {
+    await createConnection();
+    await checkSittingsPage();
+    process.exit();
+};
+
+main();
