@@ -5,10 +5,9 @@
   "main": "dist/app.js",
   "scripts": {
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
-    "watch:ts": "tsc -w",
     "build": "tsc",
     "start": "node .",
-    "dev": "nodemon .",
+    "dev": "concurrently -n tsc,node \"tsc -w\" \"nodemon .\"",
     "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
   },
   "repository": {
@@ -20,8 +19,7 @@
     "saeima"
   ],
   "author": "Olegs Kurovs",
-  "license": "ISC",
-  "homepage": "https://bitbucket.org/okurovs/task-api#readme",
+  "license": "GNU GPLv3",
   "dependencies": {
     "@types/body-parser": "^1.19.0",
     "apollo-server": "^2.21.1",
@@ -30,6 +28,7 @@
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "helmet": "^4.1.1",
+    "lodash": "^4.17.21",
     "method-override": "^3.0.0",
     "mysql": "^2.18.1",
     "reflect-metadata": "^0.1.13",
