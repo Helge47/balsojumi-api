@@ -28,11 +28,11 @@ class Mandate extends BaseEntity {
 
     @Column({ type: 'date' })
     @Field()
-    date: Date;
+    date: string;
 
     @Column({ type: 'date', nullable: true })
     @Field({ nullable: true })
-    laidDownDate: Date;
+    laidDownDate: string;
 
     @ManyToOne(() => Deputy, (deputy) => deputy.mandates)
     deputy: Deputy;

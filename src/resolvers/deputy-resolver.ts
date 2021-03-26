@@ -1,8 +1,9 @@
-import { Deputy, Mandate } from "../entities";
-import { Arg, FieldResolver, Int, Query, Resolver, Root } from "type-graphql";
+import { Deputy } from "../entities";
+import { Arg, Int, Query, Resolver } from "type-graphql";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Repository } from "typeorm";
 import { Service } from "typedi";
+import { inspect } from "util";
 
 @Resolver(of => Deputy)
 @Service()
@@ -16,6 +17,10 @@ export class DeputyResolver {
 
     @Query(returns => [Deputy])
     deputies(): Promise<Deputy[]> {
-        return this.deputyRepository.find({ relations: ['mandates'] });
+        const deputies = this.deputyRepository.find({ relations: ['mandates'] }).then(d => {
+            console.log(inspect(d.map(d => d.mandates)));
+            return d;
+        });
+        return deputies;
     }
 }

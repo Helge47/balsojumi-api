@@ -1,7 +1,6 @@
 import axios from "axios";
 import { Reading, Motion } from "../entities";
 import { createConnection } from "typeorm";
-import { convertDate } from "./util";
 
 const billRegex = /dvRow_LPView\("(?<lastStatus>.*)","(?<title>.*)","(?<number>.*)","(?<uid>.*)","(.*)"\);/gm;
 const billRowRegex = /<tr class=".+?">(\n.*)+?\n<\/tr>/gm;
@@ -110,7 +109,7 @@ const checkAllBillsPage = async () => {
         motion.referent = details.referent;
         motion.submitters = details.submitters;
         motion.commission = details.commissionName;
-        motion.submissionDate = convertDate(details.entries.find(x => x.status === 'Iesniegts').date);
+        motion.submissionDate = details.entries.find(x => x.status === 'Iesniegts').date;
         motion.docs = details.entries.find(x => x.status.includes('Nod')).docs;
 
         motion.readings = details.entries.filter(x => x.status.includes('lasījums') || x.status === 'Izsludināts' || x.status.includes('Nod'))
@@ -121,7 +120,7 @@ const checkAllBillsPage = async () => {
                 reading.outcome = r.status === 'Izsludināts' ? r.status : r.result;
                 reading.title = r.status;
                 reading.docs = r.docs;
-                reading.date = convertDate(r.date);
+                reading.date = r.date;
 
                 return reading;
             });

@@ -22,7 +22,7 @@ const checkSittingsPage = async () => {
             const year = parseInt(match[2]);
             const month = parseInt(match[3]);
             const day = parseInt(match[4]);
-            const date = new Date(year, month - 1, day);
+            const date = year + '.' + month + '.' + day;
 
             const modifier = parseInt(match[5]);
             let type = SittingType.DEFAULT;
@@ -50,7 +50,7 @@ const checkSittingsPage = async () => {
     }
     regex.lastIndex = 0;
 
-    sittings.sort((a, b) => a.date.getTime() - b.date.getTime());
+    sittings.sort((a, b) => a.date.localeCompare(b.date));
 
     for (const i in sittings) {
         await sittings[i].save();

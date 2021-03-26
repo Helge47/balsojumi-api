@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { Deputy, DeputyRecord, Mandate } from '../entities';
-import { createConnection } from 'typeorm';
+import { createConnection, IsNull } from 'typeorm';
 
 const archiveLinkRegex = /(Saeima.*.nsf)\/depArch/gm;
-const currentParliamentNumberRegex = /currentParlamentIndex="(\.+)"/m;
+const currentParliamentNumberRegex = /currentParlamentIndex="(.+)"/m;
 const archiveRecordRegex = [
     /depArchRec\({sname:"(?<surname>.+)",name:"(?<name>.+)",pk:"\(.+\)",unid:"(?<uid>.+)",sortid:".+",sid:"(?<sid>.+)",db:".+",langs:".+",pth:"(?<path>.*)"}\);/gm,
     /depArchRec\({sname:"(?<surname>.+)",name:"(?<name>.+)",pk:".+",sortid:".+",sid:"(?<sid>.+)",langs:".+",unid:"(?<uid>.+)",db:".+",sid:".+",sortid:".+",pth:"(?<path>.*)"}\);/gm
@@ -12,6 +12,7 @@ const archiveRecordRegex = [
 const scrapeArchive = async (url: string) => {
     const response = await axios.get(url);
     const body: string = response.data;
+    console.log(body);
     const numberMatch = body.match(currentParliamentNumberRegex);
     const parliamentNumber = numberMatch[1];
 
@@ -40,23 +41,20 @@ const scrapeArchive = async (url: string) => {
     }
 };
 
-const checkAllDeputies = () => {
-    axios.get('https://titania.saeima.lv/Personal/Deputati/Saeima13_DepWeb_Public.nsf/farchivelist?readform&type=7&lang=LV&count=1000')
-        .then(async response => {
-            await createConnection();
-            const body = response.data;
+const checkAllDeputies = async () => {
+    const response = await axios.get('https://titania.saeima.lv/Personal/Deputati/Saeima13_DepWeb_Public.nsf/farchivelist?readform&type=7&lang=LV&count=1000');
+    const body = response.data;
 
-            let match = archiveLinkRegex.exec(body);
+    let match = archiveLinkRegex.exec(body);
 
-            while (match !== null) {
-                const deputyArchiveName = match[1];
-                const archiveUrl = 'https://titania.saeima.lv/Personal/Deputati/' + deputyArchiveName + '/depArchList.js?OpenPage&count=3000&lang=LV';
-                console.log(archiveUrl);
-                await scrapeArchive(archiveUrl);
-        
-                match = archiveLinkRegex.exec(body);
-            }
-        });
+    while (match !== null) {
+        const deputyArchiveName = match[1];
+        const archiveUrl = 'https://titania.saeima.lv/Personal/Deputati/' + deputyArchiveName + '/depArchList.js?OpenPage&count=3000&lang=LV';
+        console.log(archiveUrl);
+        await scrapeArchive(archiveUrl);
+
+        match = archiveLinkRegex.exec(body);
+    }
 };
 
 const candidateListRegex = /<div><script>writeJsTrArr\("form_dep_list_vir","Ievēlēts no saraksta"\)<\/script>: (.*)<\/div>/m;
@@ -67,7 +65,7 @@ const mandateRegex = /drawMand\({sname:".*",name:".*",mfs:"(?<mfs>.*)",mfreason:
 
 /* only for the 13th parliament */
 const updateDeputyRecordDetails = async () => {
-    const records = await DeputyRecord.find({ where: { deputyId: 0, parliamentNumber: '13' }});
+    const records = await DeputyRecord.find({ where: { deputyId: IsNull(), parliamentNumber: '13' }});
     console.log(records);
     for (const i in records) {
         const record = records[i];
@@ -107,18 +105,15 @@ const updateDeputyRecordDetails = async () => {
                     mandate.isActive = true;
                     mandate.laidDownDate = null;
                 } else {
-                    const [ date, month, year ] = dtT.split('.').map(x => parseInt(x));
-                    mandate.laidDownDate = new Date(year, month - 1, date);
+                    mandate.laidDownDate = dtT;
                     mandate.isActive = false;
                 }
 
                 if (dtF === '') {
-                    const [ date, month, year ] = dtT.split('.').map(x => parseInt(x));
-                    mandate.date = new Date(year, month - 1, date);
+                    mandate.date = dtT;
                     mandate.isActive = false;
                 } else {
-                    const [ date, month, year ] = dtF.split('.').map(x => parseInt(x));
-                    mandate.date = new Date(year, month - 1, date);
+                    mandate.date = dtF;
                 }
 
                 await mandate.save();
@@ -157,6 +152,7 @@ const updateDeputiesFromRecords = async () => {
 
 const main = async() => {
     await createConnection();
+    //await checkAllDeputies();
     await updateDeputyRecordDetails();
     process.exit(1);
 }

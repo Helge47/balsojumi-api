@@ -1,4 +1,4 @@
-import { RequestHandler } from "express";
+/*import { RequestHandler } from "express";
 import { Sitting } from "../entities";
 
 const getSittingData: RequestHandler = async (req, res) => {
@@ -33,4 +33,4 @@ const getProposalsBySittingId: RequestHandler = async (req, res) => {
     return res.send({ success: true, data: proposals || 'no' });
 };
 
-export { getSittingData, getSittingDataById, getProposalsBySittingId };
+export { getSittingData, getSittingDataById, getProposalsBySittingId };*/

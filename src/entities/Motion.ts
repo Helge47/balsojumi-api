@@ -46,7 +46,7 @@ class Motion extends BaseEntity {
 
     @Column('date')
     @Field()
-    submissionDate: Date;
+    submissionDate: string;
 
     @OneToMany(() => Reading, reading => reading.motion, { cascade: true })
     readings: Reading[];

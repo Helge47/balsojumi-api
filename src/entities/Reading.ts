@@ -9,8 +9,8 @@ import Vote from './Vote';
 type ReadingObject = 'Bill' | 'Decision' | 'Request';
 
 @Entity()
-@ObjectType()
 @Index(['sitting', 'motion'], { unique: true })
+@ObjectType()
 class Reading extends BaseEntity {
 
     @PrimaryGeneratedColumn()
@@ -30,7 +30,7 @@ class Reading extends BaseEntity {
 
     @Column({ type: 'date', nullable: true })
     @Field()
-    date: Date;
+    date: string;
 
     @Column({ nullable: true })
     @Field()

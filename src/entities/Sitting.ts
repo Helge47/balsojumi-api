@@ -1,4 +1,4 @@
-import { Field, ID } from 'type-graphql';
+import { Field, ID, ObjectType } from 'type-graphql';
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import Reading from './Reading';
 
@@ -12,6 +12,7 @@ export enum SittingType {
 };
 
 @Entity()
+@ObjectType()
 class Sitting extends BaseEntity {
 
     @PrimaryGeneratedColumn()
@@ -20,7 +21,7 @@ class Sitting extends BaseEntity {
 
     @Column({ type: 'date' })
     @Field()
-    date: Date;
+    date: string;
 
     @Column()
     @Field()

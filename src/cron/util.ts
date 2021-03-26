@@ -68,19 +68,9 @@ export const fixLatvianString = (s: string) => {
     return decodeURIComponent(s);
 };
 
-//converts date from dd.mm.yyyy format to Date object
-export const convertDate = (s: string) => {
-    const [ date, month, year ] = s.split('.').map(x => parseInt(x));
-
-    if (isNaN(date) || isNaN(month) || isNaN(year)) {
-        return null;
-    }
-
-    return new Date(year, month - 1, date);
-};
-
-
 /*
+old and needs to be update if u want to use it
+
 const fixLatvianInDatabase = async () => {
     await createConnection();
     const proposals = await Proposal.find();

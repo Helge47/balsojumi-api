@@ -1,6 +1,6 @@
 import { createConnection } from "typeorm";
 import axios from "axios";
-import { convertDate, fixLatvianString } from "./util";
+import { fixLatvianString } from "./util";
 import { Motion, Reading } from "../entities";
 
 const motionRegex = /dvRow_LPView\("(?<lastStatus>.*)","(?<title>.*)","(?<number>.*)","(?<uid>.*)","(.*)"\);/gm;
@@ -78,7 +78,7 @@ const checkAllRequestsPage = async () => {
         motion.title = title;
         motion.number = number;
         motion.uid = uid;
-        motion.submissionDate = convertDate(details.submissionDate);
+        motion.submissionDate = details.submissionDate;
         motion.docs = details.readings[0].docs;
         motion.referent = details.referent;
         motion.submitters = details.submitters;
@@ -88,7 +88,7 @@ const checkAllRequestsPage = async () => {
             .map(r => {
                 const reading = new Reading();
                 reading.title = 'Saeimas sēde';
-                reading.date = convertDate(r.date);
+                reading.date = r.date;
                 reading.outcome = r.result;
                 reading.docs = r.docs;
                 reading.motion = motion;

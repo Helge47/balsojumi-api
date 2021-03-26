@@ -1,3 +1,4 @@
+/*
 import { ErrorRequestHandler, Router } from 'express';
 import { getDeputyData, getDeputyDataById } from './controllers/deputy-controller';
 import { getSittingData, getSittingDataById, getProposalsBySittingId } from './controllers/sitting-controller';
@@ -23,4 +24,4 @@ const catchErrors: ErrorRequestHandler = (err, req, res, next) => {
 
 router.use(catchErrors);
 
-export default router;
+export default router;*/

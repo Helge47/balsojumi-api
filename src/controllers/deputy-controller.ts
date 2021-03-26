@@ -1,3 +1,5 @@
+/*
+
 import { RequestHandler } from "express";
 import { Deputy } from "../entities";
 
@@ -17,4 +19,4 @@ const getDeputyDataById: RequestHandler = async (req, res) => {
     return res.send({ success: true, data: deputy });
 };
 
-export { getDeputyData, getDeputyDataById };
+export { getDeputyData, getDeputyDataById };*/
