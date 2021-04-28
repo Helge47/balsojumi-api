@@ -1,11 +1,10 @@
-import { Motion, Reading, Sitting } from '../entities';
+import { Sitting } from '../entities';
 import { createConnection } from 'typeorm';
 import axios from 'axios';
 import Deputy from '../entities/Deputy';
-import { convertDate, convertDateTime, fixLatvianString } from './util';
+import { convertDateTime, fixLatvianString } from './util';
 import AttendanceRegistration from '../entities/AttendanceRegistration';
 
-const proposalRegex = /drawDKP_Pr\((".*?",){3}"(?<motionNumber>.*?)",".*?","(?<uid>.*?)".*?\)/gm;
 const votingRegex = /addVotesLink\("(.*)","(.*)"(,".*"){3}\);/gm;
 const attendanceRegex = /drawDKP_UT\("","","Deputātu klātbūtnes reģistrācija","","","(?<uid>.*?)"/gm;
 const votesRegex = /voteFullListByNames=\["(.*)"\];/gm;
