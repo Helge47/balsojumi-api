@@ -1,28 +1,33 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn, Index } from 'typeorm';
+import { Field, ID, ObjectType } from 'type-graphql';
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn, Index, JoinColumn } from 'typeorm';
 import Deputy from './Deputy';
-import Reading from './Reading';
+import Voting from './Voting';
 
-export enum VoteType {
-    FOR = 'Par',
-    AGAINST = 'Pret',
-    NO_VOTE = 'Nebalsoja',
-};
+export type VoteType = 'Par' | 'Pret' | 'Nebalsoja' | 'Atturas';
 
 @Entity()
-@Index(['deputy', 'reading'], { unique: true })
+@Index(['deputy', 'voting'], { unique: true })
+@ObjectType()
 class Vote extends BaseEntity {
 
     @PrimaryGeneratedColumn()
+    @Field(type => ID)
     id: number;
 
     @Column()
+    @Field()
     type: VoteType;
 
+    @Column()
+    @Field()
+    deputyId: number;
+
     @ManyToOne(() => Deputy, deputy => deputy.votes)
+    @JoinColumn()
     deputy: Deputy;
 
-    @ManyToOne(() => Reading, reading => reading.votes)
-    reading: Reading;
+    @ManyToOne(() => Voting, voting => voting.votes)
+    voting: Voting;
 }
 
 export default Vote;

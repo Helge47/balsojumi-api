@@ -1,7 +1,10 @@
 const symbols = [
     { find: '%20', replacement: ' ' },
+    { find: '&nbsp;', replacement: ' ' },
     { find: '%E2%80%9C', replacement: '«' },
     { find: '%E2%80%9D', replacement: '»' },
+    { find: '&#8220;', replacement: '«' },
+    { find: '&#8221;', replacement: '»' },
 
     { find: '&#256;', replacement: 'Ā' },
     { find: '&#257;', replacement: 'ā' },
@@ -65,8 +68,24 @@ export const fixLatvianString = (s: string) => {
         s = s.replace(regex, symbols[i].replacement);
     }
 
-    return decodeURIComponent(s);
+    try {
+        s = decodeURIComponent(s);
+    } catch(e) {
+    }
+
+    return s;
 };
+
+export const convertDate = (date: string) => {
+    const [ day, month, year ] = date.split('.');
+    return year + '-' + month + '-' + day;
+};
+
+export const convertDateTime = (datetime: string) => {
+    const [ date, time ] = datetime.split(' ');
+
+    return convertDate(date) + ' ' + time;
+}
 
 /*
 old and needs to be update if u want to use it

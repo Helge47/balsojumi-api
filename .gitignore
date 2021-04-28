@@ -1,3 +1,6 @@
+static
+src/entities/migrations
+
 ormconfig.json
 
 # Logs

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Deputy, DeputyRecord, Mandate } from '../entities';
 import { createConnection, IsNull } from 'typeorm';
+import { convertDate } from './util';
 
 const archiveLinkRegex = /(Saeima.*.nsf)\/depArch/gm;
 const currentParliamentNumberRegex = /currentParlamentIndex="(.+)"/m;
@@ -105,15 +106,15 @@ const updateDeputyRecordDetails = async () => {
                     mandate.isActive = true;
                     mandate.laidDownDate = null;
                 } else {
-                    mandate.laidDownDate = dtT;
+                    mandate.laidDownDate = convertDate(dtT);
                     mandate.isActive = false;
                 }
 
                 if (dtF === '') {
-                    mandate.date = dtT;
+                    mandate.date = convertDate(dtT);
                     mandate.isActive = false;
                 } else {
-                    mandate.date = dtF;
+                    mandate.date = convertDate(dtF);
                 }
 
                 await mandate.save();

@@ -1,11 +1,11 @@
 import { createConnection } from "typeorm";
 import axios from "axios";
-import { fixLatvianString } from "./util";
+import { fixLatvianString, convertDate } from "./util";
 import { Motion, Reading } from "../entities";
 
 const motionRegex = /dvRow_LPView\("(?<lastStatus>.*)","(?<title>.*)","(?<number>.*)","(?<uid>.*)","(.*)"\);/gm;
 const inquiryRowRegex = /<tr class="infoRowCT">(\n.*)+?\n<\/tr>/gm;
-const decisionRowDataRegex = /\s*?<td.*?>(.+?)<\/td>/gm;
+const decisionRowDataRegex = /\s*?<td.*?>(.*?)<\/td>/gm;
 
 const submitterRegex = /Iesniedzēj.: <\/font>(.+?)<\/div>/;
 const referentRegex = /Adresāt.: <\/font>(.*?)</;
@@ -42,43 +42,49 @@ const getInquiryDetails = async (uid: string) => {
 };
 
 const checkAllInquiryPage = async () => {
-    const response = await axios.get('https://titania.saeima.lv/LIVS13/saeimalivs_lmp.nsf/WEB_questions?OpenView&count=2&start=30');
+    const response = await axios.get('https://titania.saeima.lv/LIVS13/saeimalivs_lmp.nsf/WEB_questions?OpenView&count=1000');
     const body = fixLatvianString(response.data);
-    const uids = (await Motion.find({ where: { type: 'Inquiry' }})).map(m => m.uid);
+    const motions = await Motion.find({ where: { type: 'Inquiry' }, relations: ['readings'] });
 
     let match;
     while (match = motionRegex.exec(body)) {
         const { lastStatus, title, number, uid } = match.groups;
 
-        if (uids.includes(uid)) {
-            console.log('skipping', number, title);
+        let motion = motions.find(m => m.uid === uid);
+        
+        if (motion && motion.isFinalized) {
+            console.log('skipping', title);
             continue;
         }
 
         const details = await getInquiryDetails(uid);
 
-        const motion = new Motion();
-        motion.type = 'Inquiry';
-        motion.title = title; 
-        motion.number = number;
-        motion.uid = uid;
-        motion.submissionDate = details.submissionDate;
-        motion.docs = details.docs;
-        motion.referent = details.referent;
-        motion.submitters = details.submitters;
+        if (motion === undefined) {
+            motion = new Motion();
+            motion.type = 'Inquiry';
+            motion.title = title; 
+            motion.number = number;
+            motion.uid = uid;
+            motion.submissionDate = convertDate(details.submissionDate);
+            motion.docs = details.docs;
+            motion.referent = details.referent;
+            motion.submitters = details.submitters;
+        }
+
+        motion.isFinalized = details.result !== '';
 
         if (details.readingDate) {
-            const reading = new Reading();
+            const reading = motion.readings === undefined ? new Reading() : motion.readings[0];
             reading.title = 'Saeimas sēde';
-            reading.date = details.readingDate;
+            reading.date = convertDate(details.readingDate);
             reading.outcome = details.result;
             reading.motion = motion;
 
             motion.readings = [reading];
         }
 
+        console.log('saving motion', motion);
         await motion.save();
-        console.log('saved motion', motion);
     }
 };
 

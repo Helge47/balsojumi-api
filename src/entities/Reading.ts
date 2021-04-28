@@ -1,12 +1,8 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Index } from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Index } from 'typeorm';
 import Motion from './Motion';
 import Sitting from './Sitting';
-import Vote from './Vote';
-
-//Reading == lasijums
-
-type ReadingObject = 'Bill' | 'Decision' | 'Request';
+import Voting from './Voting';
 
 @Entity()
 @Index(['sitting', 'motion'], { unique: true })
@@ -18,35 +14,33 @@ class Reading extends BaseEntity {
     id: number;
 
     @Column({ nullable: true })
-    @Field()
+    @Field({ nullable: true })
     title: string;
 
     @Column({ nullable: true })
-    @Field()
+    @Field({ nullable: true })
     outcome: string;
 
-    @Column({ length: 1000, nullable: true })
+    @Column({ length: 5000, nullable: true })
     docs: string;
 
     @Column({ type: 'date', nullable: true })
-    @Field()
+    @Field({ nullable: true })
     date: string;
-
-    @Column({ nullable: true })
-    @Field()
-    votingUid: string;
 
     @Column({ default: false })
     @Field()
     isVotingAnonymous: boolean;
 
-    @OneToMany(() => Vote, vote => vote.reading, { cascade: true })
-    votes: Vote[];
+    @OneToMany(() => Voting, voting => voting.reading, { cascade: true })
+    @Field(type => [Voting])
+    votings: Voting[];
 
     @ManyToOne(() => Sitting, sitting => sitting.readings, { nullable: true })
     sitting: Sitting;
 
     @ManyToOne(() => Motion, motion => motion.readings)
+    @Field()
     motion: Motion;
 }
 

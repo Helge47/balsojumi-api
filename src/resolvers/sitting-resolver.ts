@@ -1,5 +1,5 @@
 import { Sitting } from "../entities";
-import { Arg, Int, Query, Resolver } from "type-graphql";
+import { Arg, ID, Int, Query, Resolver } from "type-graphql";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Repository } from "typeorm";
 import { Service } from "typedi";
@@ -10,12 +10,12 @@ export class SittingResolver {
     constructor(@InjectRepository(Sitting) private readonly sittingRepository: Repository<Sitting>) {}
 
     @Query(returns => Sitting, { nullable: true })
-    sitting(@Arg('sittingId', type => Int) sittingId: number): Promise<Sitting> {
-        return this.sittingRepository.findOne(sittingId, { relations: ['readings'] });
+    sitting(@Arg('sittingId', type => ID) sittingId: string): Promise<Sitting> {
+        return this.sittingRepository.findOne(parseInt(sittingId), { relations: [ 'readings', 'readings.motion', 'readings.votings', 'readings.votings.votes' ] });
     }
 
     @Query(returns => [Sitting])
     sittings(): Promise<Sitting[]> {
-        return this.sittingRepository.find({ relations: ['readings'] });
+        return this.sittingRepository.find();
     }
 }

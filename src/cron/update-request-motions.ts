@@ -1,6 +1,6 @@
 import { createConnection } from "typeorm";
 import axios from "axios";
-import { fixLatvianString } from "./util";
+import { convertDate, fixLatvianString } from "./util";
 import { Motion, Reading } from "../entities";
 
 const motionRegex = /dvRow_LPView\("(?<lastStatus>.*)","(?<title>.*)","(?<number>.*)","(?<uid>.*)","(.*)"\);/gm;
@@ -58,46 +58,59 @@ const getInquiryDetails = async (uid: string) => {
 };
 
 const checkAllRequestsPage = async () => {
-    const response = await axios.get('https://titania.saeima.lv/LIVS13/saeimalivs_lmp.nsf/WEB_requests?OpenView&count=2&start=32');
+    const response = await axios.get('https://titania.saeima.lv/LIVS13/saeimalivs_lmp.nsf/WEB_requests?OpenView&count=1000');
     const body = fixLatvianString(response.data);
-    const uids = (await Motion.find({ where: { type: 'Request' }})).map(m => m.uid);
+    const motions = await Motion.find({ where: { type: 'Request' }, relations: ['readings'] });
 
     let match;
     while (match = motionRegex.exec(body)) {
         const { lastStatus, title, number, uid } = match.groups;
 
-        if (uids.includes(uid)) {
-            console.log('skipping', number, title);
+        let motion = motions.find(m => m.uid === uid);
+        
+        if (motion && motion.isFinalized) {
+            console.log('skipping', title);
             continue;
         }
 
         const details = await getInquiryDetails(uid);
 
-        const motion = new Motion();
-        motion.type = 'Request';
-        motion.title = title;
-        motion.number = number;
-        motion.uid = uid;
-        motion.submissionDate = details.submissionDate;
-        motion.docs = details.readings[0].docs;
-        motion.referent = details.referent;
-        motion.submitters = details.submitters;
-        motion.commission = details.comissionName;
-        motion.readings = details.readings
-            .filter(r => r.date)
-            .map(r => {
-                const reading = new Reading();
-                reading.title = 'Saeimas sēde';
-                reading.date = r.date;
-                reading.outcome = r.result;
-                reading.docs = r.docs;
-                reading.motion = motion;
+        if (motion === undefined) {
+            motion = new Motion();
+            motion.type = 'Request';
+            motion.title = title;
+            motion.number = number;
+            motion.uid = uid;
+            motion.submissionDate = convertDate(details.submissionDate);
+            motion.docs = details.readings[0].docs;
+            motion.referent = details.referent;
+            motion.submitters = details.submitters;
+            motion.commission = details.comissionName;
+        }
 
-                return reading;
-            });
+        motion.isFinalized = details.readings.length > 1 && details.readings[1].result !== '';
 
+        if (motion.readings === undefined) {
+            motion.readings = [];
+        }
+
+        for (const i in details.readings) {
+            const r = details.readings[i];
+
+            if (motion.readings[i] === undefined) {
+                motion.readings.push(new Reading());
+            }
+
+            const reading = motion.readings[i];
+            reading.title = 'Saeimas sēde';
+            reading.date = r.date === '' ? null : convertDate(r.date);
+            reading.outcome = r.result;
+            reading.docs = r.docs;
+            reading.motion = motion;
+        }
+
+        console.log('saving motion', motion);
         await motion.save();
-        console.log('saved motion', motion);
     }
 };
 

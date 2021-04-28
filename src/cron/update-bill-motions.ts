@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Reading, Motion } from "../entities";
 import { createConnection } from "typeorm";
+import { convertDate } from "./util";
 
 const billRegex = /dvRow_LPView\("(?<lastStatus>.*)","(?<title>.*)","(?<number>.*)","(?<uid>.*)","(.*)"\);/gm;
 const billRowRegex = /<tr class=".+?">(\n.*)+?\n<\/tr>/gm;
@@ -31,7 +32,6 @@ const parseRow = (row: string) => {
     while (match = billRowDataRegex.exec(row)) {
         data.push(match[1].replace(/&nbsp;/g, ' ').trim());
     }
-
     billRowDataRegex.lastIndex = 0;
 
     return data;
@@ -85,49 +85,62 @@ const getBillDetails = async (uid: string) => {
 };
 
 const checkAllBillsPage = async () => {
-    const response = await axios.get('https://titania.saeima.lv/LIVS13/saeimalivs13.nsf/webAll?OpenView&count=50&start=1');
+    const response = await axios.get('https://titania.saeima.lv/LIVS13/saeimalivs13.nsf/webAll?OpenView&count=1500&start=1');
     const body = response.data;
-    const uids = (await Motion.find({ where: { type: 'Bill' }})).map(m => m.uid);
+    const motions = await Motion.find({ where: { type: 'Bill' }, relations: ['readings'] });
 
     let match;
     while (match = billRegex.exec(body)) {
         const { lastStatus, title, number, uid } = match.groups;
-
-        if (uids.includes(uid)) {
-            console.log('skipping ', title);
+        let motion = motions.find(m => m.uid === uid);
+        
+        if (motion && motion.isFinalized) {
+            console.log('skipping', title);
             continue;
         }
 
         const details = await getBillDetails(uid);
-        //const commissionDetails = await getCommissionDetails(details.commissionName, number);
 
-        const motion = new Motion();
-        motion.type = 'Bill';
-        motion.title = title;
-        motion.number = number;
-        motion.uid = uid;
-        motion.referent = details.referent;
-        motion.submitters = details.submitters;
-        motion.commission = details.commissionName;
-        motion.submissionDate = details.entries.find(x => x.status === 'Iesniegts').date;
-        motion.docs = details.entries.find(x => x.status.includes('Nod')).docs;
+        if (motion === undefined) {
+            motion = new Motion();
+            motion.type = 'Bill';
+            motion.title = title;
+            motion.number = number;
+            motion.uid = uid;
+            motion.referent = details.referent;
+            motion.submitters = details.submitters;
+            motion.commission = details.commissionName;
+            motion.submissionDate = convertDate(details.entries.find(x => x.status === 'Iesniegts').date);
+            motion.docs = details.entries.find(x => x.status.includes('Nod')).docs;
+        }
 
-        motion.readings = details.entries.filter(x => x.status.includes('lasījums') || x.status === 'Izsludināts' || x.status.includes('Nod'))
-            .map(r => {
-                const reading = new Reading();
+        const finalStatuses = [ 'Izsludināts', 'Noraidīts', 'Atsaukts' ];
 
-                reading.motion = motion;
-                reading.outcome = r.status === 'Izsludināts' ? r.status : r.result;
-                reading.title = r.status;
-                reading.docs = r.docs;
-                reading.date = r.date;
+        motion.isFinalized = details.entries.find(x => x.status === 'Izsludināts' || finalStatuses.includes(x.result)) !== undefined;
+        if (motion.readings === undefined) {
+            motion.readings = [];
+        }
 
-                return reading;
-            });
+        const readingEntries = details.entries.filter(x => x.status.includes('lasījums') || x.status === 'Izsludināts' || x.status.includes('Nod'));
+
+        for (const i in readingEntries) {
+            const r = readingEntries[i];
+
+            if (motion.readings[i] === undefined) {
+                motion.readings.push(new Reading());
+            }
+
+            const reading = motion.readings[i];
+            reading.motion = motion;
+            reading.outcome = r.status === 'Izsludināts' ? r.status : r.result;
+            reading.title = r.status;
+            reading.docs = r.docs;
+            reading.date = r.date === '' ? null : convertDate(r.date);
+        }
 
         try {
+            console.log('saving motion', motion);
             await motion.save();
-            console.log('saved motion', motion);
         } catch (e) {
             console.error(e);
         }

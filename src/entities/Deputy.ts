@@ -1,8 +1,10 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import DeputyRecord from './DeputyRecord';
 import Mandate from './Mandate';
+import Sitting from './Sitting';
 import Vote from './Vote';
+import AttendanceRegistration from './AttendanceRegistration';
 
 @Entity()
 @ObjectType()
@@ -45,6 +47,12 @@ class Deputy extends BaseEntity {
 
     @OneToMany(() => DeputyRecord, record => record.deputy)
     records: DeputyRecord[];
+
+    @ManyToMany(() => AttendanceRegistration, registration => registration.attendees)
+    attendedRegistrations: AttendanceRegistration[];
+
+    @ManyToMany(() => AttendanceRegistration, registration => registration.absentees)
+    missedRegistrations: AttendanceRegistration[];
 }
 
 export default Deputy;

@@ -29,24 +29,27 @@ class Motion extends BaseEntity {
     number: string;
 
     @Column('varchar', { length: 1000, nullable: true })
-    @Field()
+    @Field({ nullable: true })
     commission: string;
 
     @Column('varchar', { length: 500, nullable: true })
-    @Field()
+    @Field({ nullable: true })
     referent: string;
 
     @Column('varchar', { length: 2000, nullable: true })
-    @Field()
+    @Field({ nullable: true })
     submitters: string;
 
-    @Column('varchar', { length: 2000, nullable: true })
-    @Field()
+    @Column('varchar', { length: 5000, nullable: true })
+    @Field({ nullable: true })
     docs: string;
 
     @Column('date')
     @Field()
     submissionDate: string;
+
+    @Column()
+    isFinalized: boolean;
 
     @OneToMany(() => Reading, reading => reading.motion, { cascade: true })
     readings: Reading[];

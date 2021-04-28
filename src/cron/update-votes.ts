@@ -1,46 +1,49 @@
 import axios from 'axios';
 import { createConnection } from 'typeorm';
-import { Deputy, Vote, VoteType, Reading } from '../entities';
+import { Deputy, Vote, VoteType, Voting } from '../entities';
 import { fixLatvianString } from './util';
 
 const regex = /voteFullListByNames=\["(.*)"\];/gm;
 const separator = '�';
 
-const processReading = async (reading: Reading) => {
-    if (reading.votes.length > 0) {
-        console.log('already has votes, skipping', reading.id);
+const processVoting = async (voting: Voting) => {
+    if (voting.votes.length > 0) {
+        console.log('already has votes, skipping', voting.id);
         return;
     }
 
-    if (!reading.votingUid) {
-        console.log('No voting on this reading, skipping', reading.id);
-        return;
-    }
-
-    const url = 'https://titania.saeima.lv/LIVS13/SaeimaLIVS2_DK.nsf/0/' + reading.votingUid;
+    const url = 'https://titania.saeima.lv/LIVS13/SaeimaLIVS2_DK.nsf/0/' + voting.uid;
     const response = await axios.get(url);
     const page = response.data;
+    console.log(page);
 
     const deputies: Deputy[] = await Deputy.find();
-    const match = page.match(regex);
+    const match = regex.exec(page);
+    regex.lastIndex = 0;
+    console.log(match);
 
     if (match === null || match[1] === '') {
         console.log('The voting was anonymous, skipping');
+        return;
     }
 
     const voteData = match[1].split('","');
-    reading.votes = [];
+    voting.votes = [];
 
     for (const i in voteData) {
         const [ orderNumber, name, partyName, voteType ] = voteData[i].split(separator);
         const fixedName = fixLatvianString(name);
         const fixedFaction = fixLatvianString(partyName);
 
-        let deputy = deputies.find(d => d.surname + ' ' + d.name === fixedName);
+        const deputy = deputies.find(d => {
+            return fixedName.includes(d.surname) && fixedName.includes(d.name);
+            return d.surname + ' ' + d.name === fixedName || 
+                d.surname.split('-')[0] + ' ' + d.name === fixedName;
+        });
 
         if (deputy === undefined) {
-            console.warn('Deputy not found: ' + fixedName);
-            continue;
+            console.error('Deputy not found: ' + fixedName);
+            process.exit();
         }
 
         if (deputy.currentFaction !== fixedFaction) {
@@ -50,31 +53,29 @@ const processReading = async (reading: Reading) => {
         }
 
         const vote = new Vote();
-        vote.reading = reading;
+        vote.voting = voting;;
         vote.deputy = deputy;
         vote.type = voteType as VoteType;
 
-        reading.votes.push(vote);
+        voting.votes.push(vote);
     }
 
-    await reading.save();
-
-    console.log('reading votes saved', reading);
+    await voting.save();
+    console.log('votes saved', voting);
 };
 
 const processAll = async () => {
     await createConnection();
-    const readings = await Reading.find({ relations: [ 'votes' ], take: 10 });
+    const votings = await Voting.find({ where: { method: 'default' }, relations: [ 'votes' ] });
 
-    for (const i in readings) {
-        const reading = readings[i];
-        console.log('Processing reading ' + reading.id);
+    for (const i in votings) {
+        const voting = votings[i];
+        console.log('Processing voting ' + voting.id);
 
-        await processReading(reading);
+        await processVoting(voting);
     }
 
-    console.log('All readings processed');
-
+    console.log('All votings processed');
     process.exit();
 };
 

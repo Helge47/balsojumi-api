@@ -22,21 +22,21 @@ const checkSittingsPage = async () => {
             const year = parseInt(match[2]);
             const month = parseInt(match[3]);
             const day = parseInt(match[4]);
-            const date = year + '.' + month + '.' + day;
+            const date = year + '-' + month + '-' + day;
 
             const modifier = parseInt(match[5]);
-            let type = SittingType.DEFAULT;
+            let type: SittingType = 'default';
 
             if (modifier === 2) {
-                type = SittingType.EMERGENCY;
+                type = 'emergency';
             } else if (modifier === 3) {
-                type = SittingType.FORMAL;
+                type = 'formal';
             } else if (modifier === 4) {
-                type = SittingType.CLOSED;
+                type = 'closed';
             } else if (modifier === 5) {
-                type = SittingType.QA;
+                type = 'qa';
             } else if (modifier === 6) {
-                type = SittingType.EMERGENCY_SESSION;
+                type = 'emergencySession';
             }
 
             const sitting = new Sitting();

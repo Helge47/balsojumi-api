@@ -5,5 +5,6 @@ import Vote, { VoteType } from './Vote';
 import Mandate from './Mandate';
 import Reading from './Reading';
 import Motion from './Motion';
+import Voting from './Voting';
 
-export { Sitting, SittingType, Deputy, Vote, VoteType, DeputyRecord, Mandate, Reading, Motion };
+export { Sitting, SittingType, Deputy, Vote, VoteType, DeputyRecord, Mandate, Reading, Motion, Voting };
