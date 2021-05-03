@@ -108,7 +108,7 @@ const checkAllBillsPage = async () => {
             motion.number = number;
             motion.uid = uid;
             motion.referent = details.referent;
-            motion.submitters = details.submitters;
+            motion.submittersText = details.submitters;
             motion.commission = details.commissionName;
             motion.submissionDate = convertDate(details.entries.find(x => x.status === 'Iesniegts').date);
             motion.docs = details.entries.find(x => x.status.includes('Nod')).docs;

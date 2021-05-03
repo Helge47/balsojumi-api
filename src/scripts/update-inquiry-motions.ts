@@ -68,7 +68,7 @@ const checkAllInquiryPage = async () => {
             motion.submissionDate = convertDate(details.submissionDate);
             motion.docs = details.docs;
             motion.referent = details.referent;
-            motion.submitters = details.submitters;
+            motion.submittersText = details.submitters;
         }
 
         motion.isFinalized = details.result !== '';

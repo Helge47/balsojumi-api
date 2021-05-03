@@ -84,7 +84,7 @@ const checkAllRequestsPage = async () => {
             motion.submissionDate = convertDate(details.submissionDate);
             motion.docs = details.readings[0].docs;
             motion.referent = details.referent;
-            motion.submitters = details.submitters;
+            motion.submittersText = details.submitters;
             motion.commission = details.comissionName;
         }
 

@@ -8,16 +8,16 @@ const main = async () => {
     for (const i in motions) {
         const m = motions[i];
 
-        if (m.submitters === '') {
+        if (m.submittersText === '') {
             if (m.title.includes('pilsoņu kolektīvā')) {
                 console.log('DA POEPLE');
             } else {
                 console.log('no submitters specified', m.number);
             }
-        } else if (m.submitters.includes('komisija')) {
-            console.log('commission', m.submitters);
+        } else if (m.submittersText.includes('komisija')) {
+            console.log('commission', m.submittersText);
         } else {
-            console.log('deputies', m.submitters.replace('Deputāti ', '').split(', '));
+            console.log('deputies', m.submittersText.replace('Deputāti ', '').split(', '));
         }
     }
 };
