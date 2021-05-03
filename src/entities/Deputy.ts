@@ -5,6 +5,7 @@ import Mandate from './Mandate';
 import Sitting from './Sitting';
 import Vote from './Vote';
 import AttendanceRegistration from './AttendanceRegistration';
+import Motion from './Motion';
 
 @Entity()
 @ObjectType()
@@ -53,6 +54,9 @@ class Deputy extends BaseEntity {
 
     @ManyToMany(() => AttendanceRegistration, registration => registration.absentees)
     missedRegistrations: AttendanceRegistration[];
+
+    @ManyToMany(() => Motion, motion => motion.submitters)
+    submittedMotions: Motion[];
 }
 
 export default Deputy;

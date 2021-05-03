@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import Deputy from './Deputy';
 import Reading from './Reading';
 
 type MotionType = 'Bill' | 'Decision' | 'Request' | 'Inquiry';
@@ -38,7 +39,7 @@ class Motion extends BaseEntity {
 
     @Column('varchar', { length: 2000, nullable: true })
     @Field({ nullable: true })
-    submitters: string;
+    submittersText: string;
 
     @Column('varchar', { length: 5000, nullable: true })
     @Field({ nullable: true })
@@ -53,6 +54,10 @@ class Motion extends BaseEntity {
 
     @OneToMany(() => Reading, reading => reading.motion, { cascade: true })
     readings: Reading[];
+
+    @ManyToMany(() => Deputy, deputy => deputy.submittedMotions)
+    @JoinTable({ name: 'motion_submitters'})
+    submitters: Deputy[];
 }
 
 export default Motion;

@@ -61,7 +61,7 @@ const processRegistration = async (url: string) => {
     votingDateRegex.lastIndex = 0;
 
     const r = new AttendanceRegistration();
-    r.date = convertDateTime(datetime);
+    r.date = new Date(convertDateTime(datetime));
     r.attendees = [];
     r.absentees = [];
 
@@ -69,7 +69,6 @@ const processRegistration = async (url: string) => {
     for (const i in voteData) {
         const [ orderNumber, name, partyName, voteType ] = voteData[i].split(separator);
         const fixedName = fixLatvianString(name);
-        const fixedFaction = fixLatvianString(partyName);
 
         const deputy = deputies.find(d => {
             return fixedName.includes(d.surname) && fixedName.includes(d.name);

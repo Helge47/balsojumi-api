@@ -13,7 +13,7 @@ class AttendanceRegistration extends BaseEntity {
 
     @Column({ type: 'datetime', nullable: true, default: null })
     @Field({ nullable: true })
-    date: string;
+    date: Date;
 
     @ManyToOne(() => Sitting, sitting => sitting.attendanceRegistrations)
     sitting: Sitting;

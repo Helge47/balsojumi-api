@@ -85,7 +85,7 @@ export const convertDateTime = (datetime: string) => {
     const [ date, time ] = datetime.split(' ');
 
     return convertDate(date) + ' ' + time;
-}
+};
 
 /*
 old and needs to be update if u want to use it
