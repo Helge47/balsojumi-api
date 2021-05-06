@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { createConnection } from 'typeorm';
 import { Deputy, Vote, VoteType, Voting } from '../entities';
-import { fixLatvianString } from './util';
+import { fixLatvianString, convertDateTime } from './util';
 
 const regex = /voteFullListByNames=\["(.*)"\];/gm;
+const votingDateRegex = /Datums: <\/span><b>(?<datetime>.*?)<\/b>/gm;
 const separator = '�';
 
 const processVoting = async (voting: Voting) => {
@@ -30,6 +31,10 @@ const processVoting = async (voting: Voting) => {
     const voteData = match[1].split('","');
     voting.votes = [];
 
+    const { datetime } = votingDateRegex.exec(page).groups;
+    votingDateRegex.lastIndex = 0;
+    voting.date = new Date(convertDateTime(datetime));
+
     for (const i in voteData) {
         const [ orderNumber, name, partyName, voteType ] = voteData[i].split(separator);
         const fixedName = fixLatvianString(name);
@@ -55,6 +60,7 @@ const processVoting = async (voting: Voting) => {
         const vote = new Vote();
         vote.voting = voting;;
         vote.deputy = deputy;
+        vote.currentDeputyFaction = fixedFaction;
         vote.type = voteType as VoteType;
 
         voting.votes.push(vote);

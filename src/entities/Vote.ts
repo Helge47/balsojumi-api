@@ -20,6 +20,10 @@ class Vote extends BaseEntity {
 
     @Column()
     @Field()
+    currentDeputyFaction: string;
+
+    @Column()
+    @Field()
     deputyId: number;
 
     @ManyToOne(() => Deputy, deputy => deputy.votes)

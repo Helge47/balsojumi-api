@@ -27,7 +27,7 @@ class Voting extends BaseEntity {
 
     @Column({ type: 'datetime', nullable: true, default: null })
     @Field({ nullable: true })
-    date: string;
+    date: Date;
 
     @OneToMany(() => Vote, vote => vote.voting, { cascade: true })
     @Field(type => [Vote])
