@@ -10,7 +10,7 @@ const main = async () => {
 
         if (m.submittersText === '') {
             if (m.title.includes('pilsoņu kolektīvā')) {
-                console.log('DA POEPLE');
+                console.log('the people!!!');
             } else {
                 console.log('no submitters specified', m.number);
             }
