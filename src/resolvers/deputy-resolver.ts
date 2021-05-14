@@ -1,5 +1,5 @@
-import { Deputy } from "../entities";
-import { Arg, Int, Query, Resolver } from "type-graphql";
+import { Deputy, DeputyToDeputyStats, DeputyToFactionStats } from "../entities";
+import { Arg, FieldResolver, Int, Query, Resolver, Root } from "type-graphql";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Repository } from "typeorm";
 import { Service } from "typedi";
@@ -7,7 +7,11 @@ import { Service } from "typedi";
 @Resolver(of => Deputy)
 @Service()
 export class DeputyResolver {
-    constructor(@InjectRepository(Deputy) private readonly deputyRepository: Repository<Deputy>) {}
+    constructor(
+        @InjectRepository(Deputy) private readonly deputyRepository: Repository<Deputy>,
+        @InjectRepository(DeputyToDeputyStats) private readonly deputyStatsRepository: Repository<DeputyToDeputyStats>,
+        @InjectRepository(DeputyToFactionStats) private readonly factionStatsRepository: Repository<DeputyToFactionStats>
+    ) {}
 
     @Query(returns => Deputy, { nullable: true })
     deputy(@Arg('deputyId', type => Int) deputyId: number): Promise<Deputy> {
@@ -19,4 +23,14 @@ export class DeputyResolver {
         const deputies = this.deputyRepository.find({ relations: ['mandates'] });
         return deputies;
     }
-}
+
+    @FieldResolver()
+    deputyStats(@Root() deputy: Deputy): Promise<DeputyToDeputyStats[]> {
+        return this.deputyStatsRepository.find({ where: { owner: { id: deputy.id } }})
+    }
+
+    @FieldResolver()
+    factionStats(@Root() deputy: Deputy): Promise<DeputyToFactionStats[]> {
+        return this.factionStatsRepository.find({ where: { deputy: { id: deputy.id } }})
+    }
+} 

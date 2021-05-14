@@ -49,7 +49,7 @@ class Deputy extends BaseEntity {
     @Field()
     attendedSittingNumber: number;
 
-    @OneToMany(() => Mandate, mandate => mandate.deputy)
+    @OneToMany(() => Mandate, mandate => mandate.deputy, { cascade: true })
     @Field(type => [Mandate])
     mandates: Mandate[];
 
@@ -59,13 +59,15 @@ class Deputy extends BaseEntity {
     @OneToMany(() => DeputyRecord, record => record.deputy)
     records: DeputyRecord[];
 
-    @OneToMany(() => DeputyPersonalStats, stats => stats.owner, { cascade: true })
+    @OneToMany(() => DeputyToDeputyStats, stats => stats.owner, { cascade: true })
+    @Field(type => [DeputyToDeputyStats])
     deputyStats: DeputyToDeputyStats[];
 
-    @OneToMany(() => DeputyPersonalStats, stats => stats.comparedTo)
+    @OneToMany(() => DeputyToDeputyStats, stats => stats.comparedTo)
     deputyComparisons: DeputyToDeputyStats[];
 
     @OneToMany(() => DeputyToFactionStats, stats => stats.deputy, { cascade: true })
+    @Field(type => [DeputyToFactionStats])
     factionStats: DeputyToFactionStats[];
 
     @ManyToMany(() => AttendanceRegistration, registration => registration.attendees)
@@ -75,6 +77,7 @@ class Deputy extends BaseEntity {
     missedRegistrations: AttendanceRegistration[];
 
     @ManyToMany(() => Motion, motion => motion.submitters)
+    @Field(type => [Motion])
     submittedMotions: Motion[];
 }
 

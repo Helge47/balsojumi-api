@@ -19,12 +19,14 @@ class Faction extends BaseEntity {
     @Field()
     shortName: string;
 
+    @Field(type => [FactionToFactionStats])
     @OneToMany(() => FactionToFactionStats, stats => stats.owner, { cascade: true })
     factionStats: FactionToFactionStats[];
 
     @OneToMany(() => FactionToFactionStats, stats => stats.comparedTo)
     factionComparisons: FactionToFactionStats[];
 
+    @Field(type => [DeputyToFactionStats])
     @OneToMany(() => DeputyToFactionStats, stats => stats.faction)
     deputyStats: DeputyToFactionStats;
 }

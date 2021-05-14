@@ -19,7 +19,7 @@ class DeputyRecord extends BaseEntity {
     @Column()
     path: string;
 
-    @Column()
+    @Column({ unique: true })
     uid: string;
 
     @Column({ nullable: true })

@@ -5,6 +5,8 @@ import { Container } from 'typedi';
 import { ApolloServer } from 'apollo-server';
 import { DeputyResolver } from './resolvers/deputy-resolver';
 import { SittingResolver } from './resolvers/sitting-resolver';
+import { MotionResolver } from './resolvers/motion-resolver';
+import { FactionResolver } from './resolvers/faction-resolver';
 
 const port = 3001;
 TypeORM.useContainer(Container);
@@ -14,7 +16,7 @@ async function bootstrap() {
         await TypeORM.createConnection();
 
         const schema = await TypeGraphQL.buildSchema({
-            resolvers: [ DeputyResolver, SittingResolver ],
+            resolvers: [ DeputyResolver, FactionResolver, SittingResolver, MotionResolver ],
             container: Container,
         });
 

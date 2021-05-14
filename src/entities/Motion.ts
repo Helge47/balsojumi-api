@@ -53,10 +53,12 @@ class Motion extends BaseEntity {
     isFinalized: boolean;
 
     @OneToMany(() => Reading, reading => reading.motion, { cascade: true })
+    @Field(type => [Reading])
     readings: Reading[];
 
     @ManyToMany(() => Deputy, deputy => deputy.submittedMotions)
     @JoinTable({ name: 'motion_submitters'})
+    @Field(type => [Deputy])
     submitters: Deputy[];
 }
 
