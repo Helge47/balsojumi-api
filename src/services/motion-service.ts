@@ -24,10 +24,12 @@ export class MotionService {
     ) {}
 
     async updateMotions() {
+        this.logger.log('running MotionService');
         await this.updateBills();
         await this.updateDecisions();
         await this.updateInquires();
         await this.updateRequests();
+        this.logger.log('MotionService finished working');
     }
 
     async updateBills() {
@@ -41,7 +43,7 @@ export class MotionService {
             let motion = motions.find(m => m.uid === uid);
             
             if (motion && motion.isFinalized) {
-                console.log('skipping', title);
+                this.logger.log('skipping', title);
                 continue;
             }
     
@@ -86,10 +88,10 @@ export class MotionService {
             }
     
             try {
-                console.log('saving motion', motion);
+                this.logger.log('saving motion', motion);
                 await this.motionRepository.save(motion);
             } catch (e) {
-                console.error(e);
+                this.logger.error(e);
             }
         }
         this.motionRegex.lastIndex = 0;
@@ -108,7 +110,7 @@ export class MotionService {
             let motion = motions.find(m => m.uid === uid);
             
             if (motion && motion.isFinalized) {
-                console.log('skipping', title);
+                this.logger.log('skipping', title);
                 continue;
             }
     
@@ -139,7 +141,7 @@ export class MotionService {
                 motion.readings = [reading];
             }
     
-            console.log('saving motion', motion);
+            this.logger.log('saving motion', motion);
             await this.motionRepository.save(motion);
         }
     }
@@ -156,7 +158,7 @@ export class MotionService {
             let motion = motions.find(m => m.uid === uid);
             
             if (motion && motion.isFinalized) {
-                console.log('skipping', title);
+                this.logger.log('skipping', title);
                 continue;
             }
     
@@ -197,7 +199,7 @@ export class MotionService {
                 reading.motion = motion;
             }
     
-            console.log('saving motion', motion);
+            this.logger.log('saving motion', motion);
             await this.motionRepository.save(motion);
         }
     }
@@ -213,7 +215,7 @@ export class MotionService {
             let motion = motions.find(m => m.uid === uid);
     
             if (motion && motion.isFinalized) {
-                console.log('skipping', title);
+                this.logger.log('skipping', title);
                 continue;
             }
     
@@ -253,7 +255,7 @@ export class MotionService {
     
             motion.isFinalized = details.publication !== '';
     
-            console.log('saving', motion);
+            this.logger.log('saving', motion);
             await motion.save();
         }
     }

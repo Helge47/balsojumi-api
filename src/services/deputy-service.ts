@@ -53,7 +53,6 @@ export class DeputyService {
             const record = records[i];
     
             const url = 'https://titania.saeima.lv/Personal/Deputati/Saeima13_DepWeb_Public.nsf//0/' + record.uid + '?OpenDocument&lang=LV';
-            const pictureUrl = 'https://titania.saeima.lv/Personal/Deputati/Saeima13_DepWeb_Public.nsf/0/' + record.uid + '/Foto/0.84?OpenElement&amp;FieldElemFormat=jpg';
             const response = await axios.get(url);
             const body = response.data;
     
@@ -136,7 +135,7 @@ export class DeputyService {
             const response = await axios.get(url, { responseType: 'stream' });
             const writeStream = fs.createWriteStream(path.resolve(basePath, d.id.toString() + '.jpg'));
             response.data.pipe(writeStream);
-            writeStream.on('finish', () => console.log('downloaded', d.surname));
+            writeStream.on('finish', () => this.logger.log('downloaded', d.surname));
         }
     }
 
@@ -156,7 +155,7 @@ export class DeputyService {
             match = regex.exec(body); 
         }
     
-        while (match !== null) {
+        while (match = regex.exec(body)) {
             const { name, surname, uid, sid, path } = match.groups;
             const record = this.deputyRecordRepository.create({
                 name: name,
@@ -172,8 +171,6 @@ export class DeputyService {
             } catch (e) {
                 this.logger.error(e);
             }
-        
-            match = regex.exec(body);
         }
 
         regex.lastIndex = 0;

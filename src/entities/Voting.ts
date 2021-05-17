@@ -13,7 +13,7 @@ class Voting extends BaseEntity {
     @Field(type => ID)
     id: number;
 
-    @Column()
+    @Column({ unique: true })
     @Field()
     uid: string;
 

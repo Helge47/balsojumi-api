@@ -33,32 +33,7 @@ export class StatisticsService {
         this.logger.log('saved', deputies)
     }
 
-    private getFactionStatsForSingleVoting = (voting: Voting) => {
-        return mapValues(
-            groupBy(voting.votes, v => v.currentDeputyFaction),
-            votes => {
-                const votesByType = groupBy(votes, v => v.type);
-
-                let mostPopularVote;
-                for (const type in votesByType) {
-                    if (mostPopularVote === undefined || votesByType[type].length > votesByType[mostPopularVote].length) {
-                        mostPopularVote = type;
-                    }
-                }
-    
-                return {
-                    popularVote: mostPopularVote as VoteType,
-                    popularVotePercentage: votesByType[mostPopularVote].length / voting.votes.filter(v => v.type !== 'Nebalsoja').length,
-                    Par: votesByType['Par'] || [],
-                    Pret: votesByType['Pret'] || [],
-                    Atturas: votesByType['Atturas'] || [],
-                    Nebalsoja: votesByType['Nebalsoja'] || [],
-                };
-            }
-        )
-    }
-
-    private async calculateVotingStats() {
+    async calculateVotingStats() {
         const deputies = await this.deputyRepository.find({ relations: ['deputyStats', 'deputyStats.comparedTo', 'factionStats'] });
         const factions = await this.factionRepository.find({ relations: ['votingStats', 'votingStats.comparedTo'] });
         const votings = await this.votingRepository.find({ take: 20, relations: [
@@ -67,9 +42,7 @@ export class StatisticsService {
             'reading.motion',
             'reading.motion.submitters',
         ]});
-    
-        const factionToFactionStats: FactionToFactionStats[] = [];
-    
+        
         for (const i in votings) {
             const voting = votings[i];
             this.logger.log('processing voting', voting.id);
@@ -83,8 +56,8 @@ export class StatisticsService {
     
                     let entryToUpdate = faction.factionStats.find(s => s.comparedTo.id === otherFaction.id);
                     if (entryToUpdate === undefined) {
-                        entryToUpdate = FactionToFactionStats.make(faction, otherFaction);
-                        factionToFactionStats.push(entryToUpdate);
+                        entryToUpdate = this.factionToFactionStatsRepository.create({ owner: faction, comparedTo: otherFaction });
+                        faction.factionStats.push(entryToUpdate);
                     }
     
                     if (votingStatsByFaction[factionName].popularVote === votingStatsByFaction[otherFactionName].popularVote) {
@@ -167,6 +140,30 @@ export class StatisticsService {
         await this.deputyRepository.save(deputies, { chunk: 10 });
         this.logger.log('saving', factions);
         await this.factionRepository.save(factions, { chunk: 10 });
-
     };
+
+    private getFactionStatsForSingleVoting = (voting: Voting) => {
+        return mapValues(
+            groupBy(voting.votes, v => v.currentDeputyFaction),
+            votes => {
+                const votesByType = groupBy(votes, v => v.type);
+
+                let mostPopularVote;
+                for (const type in votesByType) {
+                    if (mostPopularVote === undefined || votesByType[type].length > votesByType[mostPopularVote].length) {
+                        mostPopularVote = type;
+                    }
+                }
+    
+                return {
+                    popularVote: mostPopularVote as VoteType,
+                    popularVotePercentage: votesByType[mostPopularVote].length / voting.votes.filter(v => v.type !== 'Nebalsoja').length,
+                    Par: votesByType['Par'] || [],
+                    Pret: votesByType['Pret'] || [],
+                    Atturas: votesByType['Atturas'] || [],
+                    Nebalsoja: votesByType['Nebalsoja'] || [],
+                };
+            }
+        )
+    }
 }

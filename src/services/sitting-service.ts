@@ -23,6 +23,13 @@ export class SittingService {
         private readonly logger: LoggingService,
     ) {}
 
+    async run() {
+        this.logger.log('Running SittingService!');
+        await this.updateSittings();
+        await this.updateSittingDetails();
+        this.logger.log('SittingService Finished work!');
+    }
+
     async updateSittings() {
         const response = await axios.get('https://titania.saeima.lv/LIVS13/SaeimaLIVS2_DK.nsf/DK?ReadForm&calendar=1');
         const page = response.data;
@@ -65,17 +72,30 @@ export class SittingService {
     
                 sittings.push(sitting);
             }
-    
         }
 
         this.sittingRegex.lastIndex = 0;
         sittings.sort((a, b) => a.date.localeCompare(b.date));
 
         try {
-            await this.sittingRepository.save(sittings);
             this.logger.log(sittings);
+            return this.sittingRepository.save(sittings);
         } catch (e) {
             this.logger.error(e);
+        }
+    }
+
+    async updateSittingDetails() {
+        const sittings = await this.sittingRepository.find({ order: { id: 'ASC' }, relations: [
+            'readings',
+            'readings.motion',
+            'readings.votings',
+        ]});
+
+        for (const i in sittings) {
+            const s = sittings[i];
+            this.logger.log('processing sitting', s.id)
+            await this.processSitting(s);
         }
     }
 
@@ -111,24 +131,25 @@ export class SittingService {
                 throw 'Motion ' + motionNumber + ' not found in the database. Make sure you run all motion update scripts first.';
             }
     
-            if (sitting.readings.some(r => {
-                this.logger.log(r.motion, r.id);
-                return r.motion.uid === motion.uid;
-            })) {
-                this.logger.log('Sitting already has reading for this motion');
-                continue;
-            }
-    
-            const reading = motion.readings.find(m => m.date === sitting.date);
+            let reading = sitting.readings.find(r => r.motion.uid === motion.uid);
             if (reading === undefined) {
-                this.logger.error('no such reading for this motion ' + sitting.date + ' ' + motion.id);
-                continue;
+                reading = motion.readings.find(m => m.date === sitting.date);
+                if (reading === undefined) {
+                    this.logger.error('no such reading for this motion ' + sitting.date + ' ' + motion.id);
+                    continue;
+                }
+
+                reading.sitting = sitting;
+            } else {
+                this.logger.log('Sitting already has reading for this motion, updating it');
             }
-    
-            reading.sitting = sitting;
-            reading.votings = [];
+
+            if (reading.votings === null) {
+                reading.votings = [];
+            }
+
             const votingUid = votingUids.find(v => v.motionUid === uid);
-            if (votingUid !== undefined) {
+            if (votingUid !== undefined && reading.votings.every(v => v.uid !== votingUid.uid)) {
                 const voting = this.votingRepository.create({
                     uid: votingUid.uid,
                     method: 'default',
@@ -146,12 +167,18 @@ export class SittingService {
         }
         this.readingRegex.lastIndex = 0;
 
-        sitting.attendanceRegistrations = [];
+        if (sitting.attendanceRegistrations === null) {
+            sitting.attendanceRegistrations = [];
+        }
 
         while (match = this.attendanceRegex.exec(page)) {
-            //todo: check duplicates!!!!
             const { uid } = match.groups;
             const votingUid = votingUids.find(v => v.motionUid === uid).uid;
+
+            if (sitting.attendanceRegistrations.some(r => r.uid === uid)) {
+                this.logger.log('this attendance registration is already saved', uid);
+            }
+
             const registration = this.attendanceRepository.create({
                 sitting: sitting,
                 uid: uid,

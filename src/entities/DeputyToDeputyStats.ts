@@ -1,9 +1,10 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, Index, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import Deputy from './Deputy';
 
 @Entity()
 @ObjectType()
+@Index(['owner', 'comparedTo'], { unique: true })
 class DeputyToDeputyStats extends BaseEntity {
 
     @PrimaryGeneratedColumn()
