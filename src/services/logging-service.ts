@@ -9,4 +9,8 @@ export class LoggingService {
     error(...args: any[]) {
         console.error(args);
     }
+
+    warn(...args: any[]) {
+        console.warn(args);
+    }
 }

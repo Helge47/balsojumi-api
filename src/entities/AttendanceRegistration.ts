@@ -15,6 +15,12 @@ class AttendanceRegistration extends BaseEntity {
     @Field({ nullable: true })
     date: Date;
 
+    @Column()
+    uid: string;
+
+    @Column()
+    votingUid: string;
+
     @ManyToOne(() => Sitting, sitting => sitting.attendanceRegistrations)
     sitting: Sitting;
 

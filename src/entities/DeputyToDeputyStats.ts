@@ -6,19 +6,6 @@ import Deputy from './Deputy';
 @ObjectType()
 class DeputyToDeputyStats extends BaseEntity {
 
-    static make(owner: Deputy, comparedTo: Deputy) {
-        const s = new DeputyToDeputyStats();
-        s.owner = owner;
-        s.comparedTo = comparedTo;
-        s.sameVotes = 0;
-        s.differentVotes = 0;
-        s.supportedMotions = 0;
-        s.abstainedMotions = 0;
-        s.opposedMotions = 0;
-
-        return s;
-    }
-
     @PrimaryGeneratedColumn()
     @Field(type => ID)
     id: number;
@@ -29,23 +16,23 @@ class DeputyToDeputyStats extends BaseEntity {
     @ManyToOne(() => Deputy, deputy => deputy.deputyComparisons)
     comparedTo: Deputy;
 
-    @Column('int')
+    @Column('int', { default: 0 })
     @Field()
     sameVotes: number;
 
-    @Column('int')
+    @Column('int', { default: 0 })
     @Field()
     differentVotes: number;
     
-    @Column('int')
+    @Column('int', { default: 0 })
     @Field()
     supportedMotions: number;
 
-    @Column('int')
+    @Column('int', { default: 0 })
     @Field()
     abstainedMotions: number;
 
-    @Column('int')
+    @Column('int', { default: 0 })
     @Field()
     opposedMotions: number;
 }

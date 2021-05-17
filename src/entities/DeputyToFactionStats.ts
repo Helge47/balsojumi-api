@@ -8,16 +8,6 @@ import Faction from './Faction';
 @ObjectType()
 class DeputyToFactionStats extends BaseEntity {
 
-    static make(deputy: Deputy, faction: Faction) {
-        const deputyFactionEntry = new DeputyToFactionStats();
-        deputyFactionEntry.deputy = deputy;
-        deputyFactionEntry.faction = faction;
-        deputyFactionEntry.popularVotes = 0;
-        deputyFactionEntry.unpopularVotes = 0;
-
-        return deputyFactionEntry;
-    }
-
     @PrimaryGeneratedColumn()
     @Field(type => ID)
     id: number;
@@ -28,11 +18,11 @@ class DeputyToFactionStats extends BaseEntity {
     @ManyToOne(() => Faction, faction => faction.deputyStats)
     faction: Faction;
 
-    @Column()
+    @Column({ default: 0 })
     @Field()
     popularVotes: number;
 
-    @Column()
+    @Column({ default: 0 })
     @Field()
     unpopularVotes: number;
 }
