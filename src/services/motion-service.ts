@@ -51,7 +51,7 @@ export class MotionService {
             const exceptions = [
                 'Ministru kabinets',
                 'Valsts prezidents',
-                'Deputāti', //formal thing for new parliament,
+                'Deputāti', // for formal motions when a new parliament is elected
                 'Ministru prezidenta amata kandidāts Arturs Krišjānis Kariņš',
                 'Latvijas Republikas tiesībsargs',
                 'Ministru prezidents Arturs Krišjānis Kariņš',

@@ -1,5 +1,5 @@
-import { AttendanceRegistration, Motion, Reading, Sitting } from "../entities";
-import { Arg, Field, FieldResolver, ID, Int, Query, Resolver, Root } from "type-graphql";
+import { AttendanceRegistration, Motion, Reading } from "../entities";
+import { Arg, FieldResolver, ID, Query, Resolver, Root } from "type-graphql";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Repository } from "typeorm";
 import { Service } from "typedi";

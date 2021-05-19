@@ -43,7 +43,7 @@ export class StatisticsService {
     async calculateVotingStats() {
         const deputies = await this.deputyRepository.find({ relations: ['deputyStats', 'deputyStats.comparedTo', 'factionStats'] });
         const factions = await this.factionRepository.find({ relations: ['votingStats', 'votingStats.comparedTo'] });
-        const votings = await this.votingRepository.find({ take: 20, relations: [
+        const votings = await this.votingRepository.find({ where: { isProcessed: false }, take: 20, relations: [
             'votes',
             'reading',
             'reading.motion',
@@ -141,6 +141,10 @@ export class StatisticsService {
                     }
                 }
             }
+
+            this.logger.log('voting processed', voting.id);
+            voting.isProcessed = true;
+            await this.votingRepository.save(voting);
         }
     
         this.logger.log('saving', deputies);

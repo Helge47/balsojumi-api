@@ -1,4 +1,4 @@
-import { AttendanceRegistration, Motion, Reading, Sitting, SittingType, Voting } from "../entities";
+import { AttendanceRegistration, Motion, Sitting, SittingType, Voting } from "../entities";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { MoreThan, Repository } from "typeorm";
@@ -16,7 +16,6 @@ export class SittingService {
     
     constructor(
         @InjectRepository(Sitting) private readonly sittingRepository: Repository<Sitting>,
-        @InjectRepository(Reading) private readonly readingRepository: Repository<Reading>,
         @InjectRepository(AttendanceRegistration) private readonly attendanceRepository: Repository<AttendanceRegistration>,
         @InjectRepository(Motion) private readonly motionRepository: Repository<Motion>,
         @InjectRepository(Voting) private readonly votingRepository: Repository<Voting>,
@@ -89,7 +88,7 @@ export class SittingService {
         const monthBefore = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
         const monthBeforeDate = convertDate(monthBefore.toLocaleDateString());
         const sittings = await this.sittingRepository.find({
-            where: { date: MoreThan(monthBeforeDate) },
+            //where: { date: MoreThan(monthBeforeDate) },
             order: { id: 'ASC' },
             relations: [
                 'readings',
@@ -168,7 +167,6 @@ export class SittingService {
             //TODO: Parse secondary votings
     
             sitting.readings.push(reading);
-    
             this.logger.log('reading updated', reading);
         }
         this.readingRegex.lastIndex = 0;

@@ -1,4 +1,4 @@
-import { Deputy, DeputyRecord, Faction, Mandate } from "../entities";
+import { Deputy, DeputyRecord, Mandate } from "../entities";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Repository, IsNull } from "typeorm";

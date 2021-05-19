@@ -25,6 +25,10 @@ class Voting extends BaseEntity {
     @Field()
     method: VotingMethod;
 
+    @Column({ default: false })
+    @Field()
+    isProcessed: boolean;
+
     @Column({ type: 'datetime', nullable: true, default: null })
     @Field({ nullable: true })
     date: Date;

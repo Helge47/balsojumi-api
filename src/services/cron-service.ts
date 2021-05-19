@@ -7,7 +7,7 @@ import { VoteService } from "./vote-service";
 import { StatisticsService } from "./statistics-service";
 import { LoggingService } from "./logging-service";
 
-const EVERY_MORNING = '* * 10 * * * *';
+const EVERY_MORNING = '* * 8 * * * *';
 const EVERY_NIGHT = '* * 2 * * * *';
 const EVERY_HOUR  = '* 0 * * * * *';
 
@@ -28,11 +28,12 @@ export class CronService {
         cron.schedule(EVERY_MORNING, async () => {
             this.logger.log('Running daily morning tasks');
             await this.deputyService.run();
+            this.logger.log('Morning tasks done!');
         });
 
         cron.schedule(EVERY_NIGHT, async () => {
             this.logger.log('Running daily night tasks');
-            await this.deputyService.run();
+            this.logger.log('Night tasks done!');
         });
 
         cron.schedule(EVERY_HOUR, async () => {
@@ -41,8 +42,9 @@ export class CronService {
             await this.sittingService.run();
             await this.voteService.run();
             await this.statisticsService.run();
+            this.logger.log('Hourly tasks done!');
         });
 
-        this.logger.log('Finished cron task setup');
+        this.logger.log('Finished cron task setup!');
     }
 };

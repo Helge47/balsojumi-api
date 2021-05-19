@@ -1,9 +1,7 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { BaseEntity, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import AttendanceRegistration from './AttendanceRegistration';
-import Deputy from './Deputy';
 import Reading from './Reading';
-import Voting from './Voting';
 
 export type SittingType = 'default' | 'closed' | 'emergency' | 'emergencySession' | 'qa' | 'formal';
 
