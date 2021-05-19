@@ -13,12 +13,12 @@ export class MotionResolver {
         @InjectRepository(AttendanceRegistration) private readonly attendanceRepository: Repository<AttendanceRegistration>
     ) {}
 
-    @Query(returns => Motion, { nullable: true })
+    @Query(() => Motion, { nullable: true })
     motion(@Arg('motionId', type => ID) motionId: string): Promise<Motion> {
         return this.motionRepository.findOne(parseInt(motionId));
     }
 
-    @Query(returns => [Motion])
+    @Query(() => [Motion])
     motions(): Promise<Motion[]> {
         return this.motionRepository.find();
     }
@@ -29,10 +29,5 @@ export class MotionResolver {
             where: { motion: { id: motion.id } },
             relations: [ 'votings', 'voting.votes' ]
         });
-    }
-
-    @FieldResolver()
-    attendanceRegistrations(@Root() sitting: Sitting): Promise<AttendanceRegistration[]> {
-        return this.attendanceRepository.find({ where: { sitting: { id: sitting.id }}, loadRelationIds: true });
     }
 } 

@@ -1,13 +1,13 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, JoinColumn, PrimaryGeneratedColumn } from 'typeorm';
 import DeputyRecord from './DeputyRecord';
 import Mandate from './Mandate';
 import Vote from './Vote';
 import AttendanceRegistration from './AttendanceRegistration';
 import Motion from './Motion';
-import DeputyPersonalStats from './DeputyToDeputyStats';
 import DeputyToFactionStats from './DeputyToFactionStats';
 import DeputyToDeputyStats from './DeputyToDeputyStats';
+import Faction from './Faction';
 
 @Entity()
 @ObjectType()
@@ -27,10 +27,6 @@ class Deputy extends BaseEntity {
 
     @Column()
     @Field()
-    currentFaction: string;
-
-    @Column()
-    @Field()
     birthYear: string;
 
     @Column()
@@ -41,13 +37,21 @@ class Deputy extends BaseEntity {
     @Field()
     residence: string;
 
-    @Column('int')
+    @Column('int', { default: 0 })
     @Field()
     missedSittingNumber: number;
     
-    @Column('int')
+    @Column('int', { default: 0 })
     @Field()
     attendedSittingNumber: number;
+
+    @Column({ nullable: true, default: null })
+    @Field()
+    currentFactionId: number;
+
+    @ManyToOne(() => Faction, faction => faction.currentMembers)
+    @JoinColumn()
+    currentFaction: Faction;
 
     @OneToMany(() => Mandate, mandate => mandate.deputy, { cascade: true })
     @Field(type => [Mandate])

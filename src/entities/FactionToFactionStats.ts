@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import Faction from './Faction';
 
 @Entity()
@@ -23,7 +23,7 @@ class FactionToFactionStats extends BaseEntity {
     owner: Faction;
 
     @ManyToOne(() => Faction, faction => faction.factionComparisons)
-    comparedTo: Faction;
+    comparedTo: Faction; 
 }
 
 export default FactionToFactionStats;

@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from 'type-graphql';
 import { BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import Deputy from './Deputy';
 import DeputyToFactionStats from './DeputyToFactionStats';
 import FactionToFactionStats from './FactionToFactionStats';
 
@@ -18,6 +19,10 @@ class Faction extends BaseEntity {
     @Column()
     @Field()
     shortName: string;
+
+    @Field(type => [Deputy])
+    @OneToMany(() => Deputy, deputy => deputy.currentFaction)
+    currentMembers: Deputy[];
 
     @Field(type => [FactionToFactionStats])
     @OneToMany(() => FactionToFactionStats, stats => stats.owner, { cascade: true })

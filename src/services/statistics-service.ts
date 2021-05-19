@@ -17,6 +17,13 @@ export class StatisticsService {
         private readonly logger: LoggingService,    
     ) {}
 
+    async run() {
+        this.logger.log('Running StatisticsService');
+        await this.calculateAttendanceStats();
+        await this.calculateVotingStats();
+        this.logger.log('StatisticsService finished working');
+    }
+
     async calculateAttendanceStats() {
         const deputies = await this.deputyRepository.find({ relations: [
             'attendedRegistrations',

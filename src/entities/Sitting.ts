@@ -12,7 +12,7 @@ export type SittingType = 'default' | 'closed' | 'emergency' | 'emergencySession
 class Sitting extends BaseEntity {
 
     @PrimaryGeneratedColumn()
-    @Field(type => ID)
+    @Field(() => ID)
     id: number;
 
     @Column({ type: 'date' })
@@ -32,7 +32,7 @@ class Sitting extends BaseEntity {
     readings: Reading[];
 
     @OneToMany(() => AttendanceRegistration, registration => registration.sitting, { cascade: true })
-    @Field(type => [AttendanceRegistration])
+    @Field(() => [AttendanceRegistration])
     attendanceRegistrations: AttendanceRegistration[];
 }
 

@@ -1,3 +1,4 @@
+
 const symbols = [
     { find: '%20', replacement: ' ' },
     { find: '&nbsp;', replacement: ' ' },
@@ -86,37 +87,3 @@ export const convertDateTime = (datetime: string) => {
 
     return convertDate(date) + ' ' + time;
 };
-
-/*
-old and needs to be update if u want to use it
-
-const fixLatvianInDatabase = async () => {
-    await createConnection();
-    const proposals = await Proposal.find();
-    const deputies = await Deputy.find();
-
-    for (const i in proposals) {
-        const p = proposals[i];
-
-        console.log(p);
-        p.title = fixLatvianString(p.title);
-        p.commission = fixLatvianString(p.commission);
-        p.outcome = fixLatvianString(p.outcome);
-        console.log(p);
-
-        await p.save();
-    }
-
-    for (const i in deputies) {
-        const d = deputies[i];
-
-        console.log(d);
-        d.name = fixLatvianString(d.name);
-        console.log(d);
-
-        await d.save();
-    }
-};
-
-fixLatvianInDatabase();
-*/

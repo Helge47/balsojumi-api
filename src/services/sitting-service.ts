@@ -1,9 +1,9 @@
-import { AttendanceRegistration, Motion, Reading, Sitting, SittingType, Vote, Voting } from "../entities";
+import { AttendanceRegistration, Motion, Reading, Sitting, SittingType, Voting } from "../entities";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
-import { Repository } from "typeorm";
+import { MoreThan, Repository } from "typeorm";
 import axios from 'axios';
-import { convertDate, convertDateTime, fixLatvianString } from "../scripts/util";
+import { convertDate } from "../util/util";
 import { LoggingService } from "./logging-service";
 
 @Service()
@@ -86,11 +86,17 @@ export class SittingService {
     }
 
     async updateSittingDetails() {
-        const sittings = await this.sittingRepository.find({ order: { id: 'ASC' }, relations: [
-            'readings',
-            'readings.motion',
-            'readings.votings',
-        ]});
+        const monthBefore = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+        const monthBeforeDate = convertDate(monthBefore.toLocaleDateString());
+        const sittings = await this.sittingRepository.find({
+            where: { date: MoreThan(monthBeforeDate) },
+            order: { id: 'ASC' },
+            relations: [
+                'readings',
+                'readings.motion',
+                'readings.votings',
+            ]
+        });
 
         for (const i in sittings) {
             const s = sittings[i];

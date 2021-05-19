@@ -1,9 +1,9 @@
-import { AttendanceRegistration, Deputy, Motion, Reading, Vote, VoteType, Voting } from "../entities";
+import { AttendanceRegistration, Deputy, Faction, Vote, VoteType, Voting } from "../entities";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Repository } from "typeorm";
 import axios from 'axios';
-import { convertDate, convertDateTime, fixLatvianString } from "../scripts/util";
+import { convertDateTime, fixLatvianString } from "../util/util";
 import { LoggingService } from "./logging-service";
 
 @Service()
@@ -17,12 +17,22 @@ export class VoteService {
         @InjectRepository(Voting) private readonly votingRepository: Repository<Voting>,
         @InjectRepository(Deputy) private readonly deputyRepository: Repository<Deputy>,
         @InjectRepository(AttendanceRegistration) private readonly attendanceRepository: Repository<AttendanceRegistration>,
+        @InjectRepository(Faction) private readonly factionRepository: Repository<Faction>,
 
         private readonly logger: LoggingService,
     ) {}
 
+    async run() {
+        this.logger.log('running VotingService');
+        await this.updateVotes();
+        this.logger.log('VotingService finished working');
+    }
+
     async updateVotes() {
-        const votings = await this.votingRepository.find({ where: { method: 'default' }, relations: [ 'votes' ] });
+        const votings = await this.votingRepository.find({
+            where: { method: 'default' },
+            relations: [ 'votes' ]
+        });
 
         for (const i in votings) {
             const voting = votings[i];
@@ -31,7 +41,10 @@ export class VoteService {
             await this.processVoting(voting);
         }
 
-        const attendanceRegistrations = await this.attendanceRepository.find({ relations: ['attendees', 'absentees']});
+        const attendanceRegistrations = await this.attendanceRepository.find({
+            order: { date: 'DESC' },
+            relations: ['attendees', 'absentees']
+        });
 
         for (const i in attendanceRegistrations) {
             const r = attendanceRegistrations[i];
@@ -53,6 +66,7 @@ export class VoteService {
         this.logger.log(page);
     
         const deputies: Deputy[] = await this.deputyRepository.find();
+        const factions: Faction[] = await this.factionRepository.find();
         const match = page.match(this.votesRegex);
         this.logger.log(match);
     
@@ -70,36 +84,44 @@ export class VoteService {
         for (const i in voteData) {
             const [ orderNumber, name, partyName, voteType ] = voteData[i].split(this.separator);
             const fixedName = fixLatvianString(name);
-            const fixedFaction = fixLatvianString(partyName);
-    
+            const fixedFactionName = fixLatvianString(partyName);
+
             const deputy = deputies.find(d => {
                 return fixedName.includes(d.surname) && fixedName.includes(d.name);
-                return d.surname + ' ' + d.name === fixedName || 
-                    d.surname.split('-')[0] + ' ' + d.name === fixedName;
             });
-    
+
             if (deputy === undefined) {
                 this.logger.error('Deputy not found: ' + fixedName);
                 throw 'Deputy not found ' + fixedName;
             }
-    
-            if (deputy.currentFaction !== fixedFaction) {
-                deputy.currentFaction = fixedFaction;
-                this.logger.log('new faction ', deputy);
+
+            let faction = factions.find(f => f.shortName === fixedFactionName);
+            if (faction === undefined) {
+                this.logger.log('new faction name detected', fixedFactionName);
+                faction = await this.factionRepository.create({
+                    shortName: fixedFactionName,
+                    name: fixedFactionName,
+                }).save();
+                factions.push(faction);
+            }
+
+            if (deputy.currentFactionId !== faction.id) {
+                deputy.currentFaction = faction;
+                this.logger.log('deputy changed faction', deputy);
                 await this.deputyRepository.save(deputy);
             }
     
             const vote = this.voteRepository.create({
                 voting: voting,
                 deputy: deputy,
-                currentDeputyFaction: fixedFaction,
+                currentDeputyFaction: fixedFactionName,
                 type: voteType as VoteType,
             });
 
             voting.votes.push(vote);
         }
     
-        this.votingRepository.save(voting);
+        await this.votingRepository.save(voting);
         this.logger.log('votes saved', voting);
     }
 
@@ -127,6 +149,7 @@ export class VoteService {
         for (const i in voteData) {
             const [ orderNumber, name, partyName, voteType ] = voteData[i].split(this.separator);
             const fixedName = fixLatvianString(name);
+            const fixedFaction = fixLatvianString(partyName);
     
             const deputy = deputies.find(d => {
                 return fixedName.includes(d.surname) && fixedName.includes(d.name);
@@ -145,6 +168,5 @@ export class VoteService {
     
         console.log('registration parsed', r);
         await this.attendanceRepository.save(r);
-        return;
     }
 }

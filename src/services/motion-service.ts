@@ -1,9 +1,9 @@
-import { Motion, Reading } from "../entities";
+import { Deputy, Motion, Reading } from "../entities";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Repository } from "typeorm";
 import axios from 'axios';
-import { convertDate, fixLatvianString } from "../scripts/util";
+import { convertDate, fixLatvianString } from "../util/util";
 import { LoggingService } from "./logging-service";
 
 @Service()
@@ -20,16 +20,79 @@ export class MotionService {
     constructor(
         @InjectRepository(Motion) private readonly motionRepository: Repository<Motion>,
         @InjectRepository(Reading) private readonly readingRepository: Repository<Reading>,
+        @InjectRepository(Deputy) private readonly deputyRepository: Repository<Deputy>,
         private readonly logger: LoggingService,
     ) {}
 
-    async updateMotions() {
+    async run() {
         this.logger.log('running MotionService');
         await this.updateBills();
         await this.updateDecisions();
         await this.updateInquires();
         await this.updateRequests();
+        this.logger.log('updated all motions, now updating submitters');
+        await this.updateSubmitters();
         this.logger.log('MotionService finished working');
+    }
+
+    async updateSubmitters() {
+        const deputies = await this.deputyRepository.find();
+        const allMotions = await this.motionRepository.find({ relations: ['submitters'] });
+
+        for (const i in allMotions) {
+            const m = allMotions[i];
+            this.logger.log('updating motion', m.id);
+
+            if (m.submitters !== null && m.submitters.length > 0) {
+                this.logger.log('motion ', m.number, 'already has submitters');
+                continue;
+            }
+
+            const exceptions = [
+                'Ministru kabinets',
+                'Valsts prezidents',
+                'Deputāti', //formal thing for new parliament,
+                'Ministru prezidenta amata kandidāts Arturs Krišjānis Kariņš',
+                'Latvijas Republikas tiesībsargs',
+                'Ministru prezidents Arturs Krišjānis Kariņš',
+            ];
+
+            if (m.submittersText === '') {
+                if (m.title.includes('pilsoņu kolektīvā')) {
+                    m.submittersText = 'Pilsoņu kolektīvais iesniegums';
+                } else {
+                    this.logger.log('no submitters specified', m.number);
+                }
+            } else if (m.submittersText.includes('komisija')) {
+                this.logger.log('commission', m.submittersText);
+            } else if (exceptions.includes(m.submittersText)) {
+                this.logger.log(m.submittersText);
+            } else {
+                const deputyNames = m.submittersText.replace('Deputāti ', '').split(', ');
+                this.logger.log('deputies', deputyNames);
+
+                if (m.submitters === null) {
+                    m.submitters = [];
+                }
+
+                for (const j in deputyNames) {
+                    const fullName = deputyNames[j];
+
+                    const deputy = deputies.find(d => {
+                        return fullName.includes(d.surname) && fullName.includes(d.name);
+                    });
+
+                    if (deputy === undefined) {
+                        throw 'deputy not found ' + fullName;
+                    }
+
+                    m.submitters.push(deputy);
+                }
+            }
+
+            this.logger.log('saving motion', m);
+            await this.motionRepository.save(m);
+        }
     }
 
     async updateBills() {
@@ -74,11 +137,11 @@ export class MotionService {
     
             for (const i in readingEntries) {
                 const r = readingEntries[i];
-    
+
                 if (motion.readings[i] === undefined) {
                     motion.readings.push(this.readingRepository.create());
                 }
-    
+
                 const reading = motion.readings[i];
                 reading.motion = motion;
                 reading.outcome = r.status === 'Izsludināts' ? r.status : r.result;
@@ -176,7 +239,7 @@ export class MotionService {
                     submittersText: details.submitters,
                     commission: details.comissionName,
                 });
-                }
+            }
     
             motion.isFinalized = details.readings.length > 1 && details.readings[1].result !== '';
     
@@ -204,10 +267,10 @@ export class MotionService {
         }
     }
 
-    private async updateDecisions() {
+    async updateDecisions() {
         const response = await axios.get('https://titania.saeima.lv/LIVS13/saeimalivs_lmp.nsf/webAll?OpenView&count=1000&start=1');
         const body = fixLatvianString(response.data);
-        const motions = await Motion.find({ where: { type: 'Decision' }, relations: ['readings'] });
+        const motions = await this.motionRepository.find({ where: { type: 'Decision' }, relations: ['readings'] });
     
         let match;
         while (match = this.motionRegex.exec(body)) {
@@ -235,7 +298,6 @@ export class MotionService {
                 
                 const reading = this.readingRepository.create({
                     title: 'Iesniegšana',
-                    motion: motion,
                     docs: null,
                     date: convertDate(details.submissionDate),
                 });
@@ -244,19 +306,18 @@ export class MotionService {
             }
 
             if (details.readingDate) {
-                const reading = motion.readings.length <= 1 ? this.readingRepository.create() : motion.readings[1];
+                const reading = motion.readings.length < 2 ? this.readingRepository.create() : motion.readings[1];
                 reading.title = 'Saeimas sēde';
                 reading.docs = details.publication;
-                reading.motion = motion;
                 reading.date = convertDate(details.readingDate);
     
-                motion.readings[1] = reading;
+                motion.readings.push(reading);
             }
     
             motion.isFinalized = details.publication !== '';
     
             this.logger.log('saving', motion);
-            await motion.save();
+            await this.motionRepository.save(motion);
         }
     }
 
@@ -313,7 +374,7 @@ export class MotionService {
         const response = await axios.get(url);
         const body = fixLatvianString(response.data);
     
-        const match = body.match(this.motionRowRegex);
+        const match = body.match(this.motionInfoRowRegex);
         const row = this.parseRow(match[0]);
     
         const submittersMatch = body.match(this.submitterRegex);

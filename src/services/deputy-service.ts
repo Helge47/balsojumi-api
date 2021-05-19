@@ -2,7 +2,7 @@ import { Deputy, DeputyRecord, Faction, Mandate } from "../entities";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Repository, IsNull } from "typeorm";
-import { convertDate } from '../scripts/util';
+import { convertDate } from '../util/util';
 import axios from 'axios';
 import path from 'path';
 import fs from 'fs';
@@ -30,13 +30,19 @@ export class DeputyService {
         private readonly logger: LoggingService,
     ) {}
 
+    async run() {
+        this.logger.log('running DeputyService');
+        await this.checkAllDeputiesPage();
+        await this.updateDeputyRecordDetails();
+        this.logger.log('DeputyService finished')
+    }
+
     async checkAllDeputiesPage() {
         const response = await axios.get('https://titania.saeima.lv/Personal/Deputati/Saeima13_DepWeb_Public.nsf/farchivelist?readform&type=7&lang=LV&count=1000');
         const body = response.data;
     
-        let match = this.archiveLinkRegex.exec(body);
-    
-        while (match !== null) {
+        let match;
+        while (match = this.archiveLinkRegex.exec(body)) {
             const deputyArchiveName = match[1];
             const archiveUrl = 'https://titania.saeima.lv/Personal/Deputati/' + deputyArchiveName + '/depArchList.js?OpenPage&count=3000&lang=LV';
             this.logger.log(archiveUrl);
@@ -44,6 +50,7 @@ export class DeputyService {
     
             match = this.archiveLinkRegex.exec(body);
         }
+        this.archiveLinkRegex.lastIndex = 0;
     }
 
     async updateDeputyRecordDetails() {
@@ -155,7 +162,7 @@ export class DeputyService {
             match = regex.exec(body); 
         }
     
-        while (match = regex.exec(body)) {
+        while (match !== null) {
             const { name, surname, uid, sid, path } = match.groups;
             const record = this.deputyRecordRepository.create({
                 name: name,
@@ -171,6 +178,8 @@ export class DeputyService {
             } catch (e) {
                 this.logger.error(e);
             }
+
+            match = regex.exec(body);
         }
 
         regex.lastIndex = 0;
