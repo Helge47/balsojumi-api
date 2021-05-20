@@ -62,12 +62,13 @@ export class VoteService {
     
         const url = 'https://titania.saeima.lv/LIVS13/SaeimaLIVS2_DK.nsf/0/' + voting.uid;
         const response = await axios.get(url);
-        const page: string = response.data;
+        const page: string = fixLatvianString(response.data);
         this.logger.log(page);
     
         const deputies: Deputy[] = await this.deputyRepository.find();
         const factions: Faction[] = await this.factionRepository.find();
-        const match = page.match(this.votesRegex);
+        const match = this.votesRegex.exec(page);
+        this.votesRegex.lastIndex = 0;
         this.logger.log(match);
     
         if (match === null || match[1] === '') {
@@ -78,7 +79,8 @@ export class VoteService {
         const voteData = match[1].split('","');
         voting.votes = [];
     
-        const { datetime } = page.match(this.votingDateRegex).groups;
+        const { datetime } = this.votingDateRegex.exec(page).groups;
+        this.votingDateRegex.lastIndex = 0;
         voting.date = new Date(convertDateTime(datetime));
     
         for (const i in voteData) {
@@ -112,7 +114,6 @@ export class VoteService {
             }
     
             const vote = this.voteRepository.create({
-                voting: voting,
                 deputy: deputy,
                 currentDeputyFaction: fixedFactionName,
                 type: voteType as VoteType,
@@ -135,12 +136,14 @@ export class VoteService {
 
         const url = 'https://titania.saeima.lv/LIVS13/SaeimaLIVS2_DK.nsf/0/' + r.votingUid;
         const response = await axios.get(url);
-        const page: string = response.data;
+        const page: string = fixLatvianString(response.data);
 
-        const { datetime } = page.match(this.votingDateRegex).groups;
+        const { datetime } = this.votingDateRegex.exec(page).groups;
+        this.votingDateRegex.lastIndex = 0;
         r.date = new Date(convertDateTime(datetime));
 
-        const match = page.match(this.votesRegex);
+        const match = this.votesRegex.exec(page);
+        this.votesRegex.lastIndex = 0;
         if (match === null || match[1] === '') {
             throw 'no registration data found';
         }

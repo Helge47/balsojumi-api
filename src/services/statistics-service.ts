@@ -24,6 +24,29 @@ export class StatisticsService {
         this.logger.log('StatisticsService finished working');
     }
 
+    async createEntities() {
+        const deputies = await this.deputyRepository.find({ relations: [
+            'deputyStats'
+        ]});
+
+        for (const i in deputies) {
+            for (const j in deputies) {
+                if (i === j) {
+                    continue;
+                }
+
+                if (deputies[i].deputyStats.some(s => s.comparedToId === deputies[j].id)) {
+                    continue;
+                }
+
+                await this.deputyStatsRepository.create({
+                    owner: deputies[i],
+                    comparedTo: deputies[j],
+                }).save();
+            }
+        }
+    }
+
     async calculateAttendanceStats() {
         const deputies = await this.deputyRepository.find({ relations: [
             'attendedRegistrations',
@@ -41,9 +64,9 @@ export class StatisticsService {
     }
 
     async calculateVotingStats() {
-        const deputies = await this.deputyRepository.find({ relations: ['deputyStats', 'deputyStats.comparedTo', 'factionStats'] });
-        const factions = await this.factionRepository.find({ relations: ['votingStats', 'votingStats.comparedTo'] });
-        const votings = await this.votingRepository.find({ where: { isProcessed: false }, take: 20, relations: [
+        const deputies = await this.deputyRepository.find({ relations: ['deputyStats', 'factionStats'] });
+        const factions = await this.factionRepository.find({ relations: ['factionStats', 'factionStats.comparedTo'] });
+        const votings = await this.votingRepository.find({ where: { isProcessed: false, method: 'default' }, take: 10, relations: [
             'votes',
             'reading',
             'reading.motion',
@@ -54,6 +77,7 @@ export class StatisticsService {
             const voting = votings[i];
             this.logger.log('processing voting', voting.id);
             const votingStatsByFaction = this.getFactionStatsForSingleVoting(voting);
+            this.logger.log(votingStatsByFaction);
     
             for (const factionName in votingStatsByFaction) {
                 const faction = factions.find(f => f.name === factionName || f.shortName === factionName);
@@ -63,7 +87,7 @@ export class StatisticsService {
     
                     let entryToUpdate = faction.factionStats.find(s => s.comparedTo.id === otherFaction.id);
                     if (entryToUpdate === undefined) {
-                        entryToUpdate = this.factionToFactionStatsRepository.create({ owner: faction, comparedTo: otherFaction });
+                        entryToUpdate = this.factionToFactionStatsRepository.create({ comparedTo: otherFaction });
                         faction.factionStats.push(entryToUpdate);
                     }
     
@@ -74,6 +98,8 @@ export class StatisticsService {
                     }
                 }
             }
+
+            this.logger.log('calculating deputy stats');
     
             for (const j in voting.votes) {
                 const vote = voting.votes[j];
@@ -85,12 +111,11 @@ export class StatisticsService {
                 let deputyFactionEntry = deputy.factionStats.find(s => s.faction.id === faction.id);
                 if (deputyFactionEntry === undefined) {
                     deputyFactionEntry = this.deputyFactionStatsRepository.create({
-                        deputy: deputy,
-                        faction: faction,
+                        faction: faction
                     });
                     deputy.factionStats.push(deputyFactionEntry);
                 }
-                
+
                 if (vote.type === votingStatsByFaction[vote.currentDeputyFaction].popularVote) {
                     deputyFactionEntry.popularVotes++;
                 } else {
@@ -99,14 +124,13 @@ export class StatisticsService {
     
                 for (const k in voting.reading.motion.submitters) {
                     const submitter = voting.reading.motion.submitters[k];
+                    if (deputy.id === submitter.id) {
+                        continue;
+                    }
     
-                    let entryToUpdate = deputy.deputyStats.find(s => s.comparedTo.id === submitter.id);
+                    let entryToUpdate = deputy.deputyStats.find(s => s.comparedToId === submitter.id);
                     if (entryToUpdate === undefined) {
-                        entryToUpdate = this.deputyStatsRepository.create({
-                            owner: deputy,
-                            comparedTo: submitter
-                        });
-                        deputy.deputyStats.push(entryToUpdate);
+                        throw 'DeputyToDeputyStats entity not found - need to run entities creation first ' + deputy.id + ' ' + submitter.id;
                     }
     
                     if (vote.type === 'Par') {
@@ -123,15 +147,10 @@ export class StatisticsService {
                     if (otherVote.deputyId === vote.deputyId) {
                         continue;
                     }
-                    const otherDeputy = deputies.find(d => d.id === otherVote.deputyId);
     
-                    let entryToUpdate = deputy.deputyStats.find(s => s.comparedTo.id === otherVote.deputyId);
+                    let entryToUpdate = deputy.deputyStats.find(s => s.comparedToId === otherVote.deputyId);
                     if (entryToUpdate === undefined) {
-                        entryToUpdate = this.deputyStatsRepository.create({
-                            owner: deputy,
-                            comparedTo: otherDeputy,
-                        });
-                        deputy.deputyStats.push(entryToUpdate);
+                        throw 'DeputyToDeputyStats entity not found - need to run entities creation first'
                     }
     
                     if (vote.type === otherVote.type) {
@@ -168,7 +187,6 @@ export class StatisticsService {
     
                 return {
                     popularVote: mostPopularVote as VoteType,
-                    popularVotePercentage: votesByType[mostPopularVote].length / voting.votes.filter(v => v.type !== 'Nebalsoja').length,
                     Par: votesByType['Par'] || [],
                     Pret: votesByType['Pret'] || [],
                     Atturas: votesByType['Atturas'] || [],

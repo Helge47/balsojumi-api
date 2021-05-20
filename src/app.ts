@@ -27,7 +27,7 @@ async function bootstrap() {
         console.log('Server started at ' + url);
 
         const cronService = Container.get(CronService);
-        cronService.setup();
+        //cronService.setup();
 
     } catch (err) {
         console.error(err);

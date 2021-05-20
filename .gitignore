@@ -2,6 +2,7 @@ static
 src/entities/migrations
 
 ormconfig.json
+ecosystem.config.js
 
 # Logs
 logs

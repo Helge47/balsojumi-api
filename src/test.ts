@@ -4,6 +4,8 @@ import { Container } from 'typedi';
 import { DeputyService } from './services/deputy-service';
 import { MotionService } from './services/motion-service';
 import { SittingService } from './services/sitting-service';
+import { VoteService } from './services/vote-service';
+import { StatisticsService } from './services/statistics-service';
 
 TypeORM.useContainer(Container);
 
@@ -11,8 +13,8 @@ async function bootstrap() {
     try {
         await TypeORM.createConnection();
 
-        const service = Container.get(SittingService);
-        await service.updateSittings();
+        const service = Container.get(VoteService);
+        await service.run();
     } catch (err) {
         console.error(err);
     }

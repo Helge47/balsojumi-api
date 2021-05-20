@@ -3,16 +3,18 @@ import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { MoreThan, Repository } from "typeorm";
 import axios from 'axios';
-import { convertDate } from "../util/util";
+import { convertDate, fixLatvianString } from "../util/util";
 import { LoggingService } from "./logging-service";
 
 @Service()
 export class SittingService {
     
     private readonly sittingRegex = /dCC\("(\d*)","(\d{4})","(\d{1,2})","(\d{1,2})","(\d{1,2})","(\d{1,2})","(.*)"\)/gm;
-    private readonly readingRegex = /drawDKP_Pr\((".*?",){3}"(?<motionNumber>.*?)",".*?","(?<uid>.*?)".*?\)/gm;
+    private readonly readingRegex = /drawDKP_Pr\((".*?",){3}"(?<motionNumber>.*?)",".*?","(?<uid>.*?)"(,".*?"){6},"(?<docs>.*?)".*?\)/gm;
     private readonly votingRegex = /addVotesLink\("(.*)","(.*)"(,".*"){3}\);/gm;
     private readonly attendanceRegex = /drawDKP_UT\("","","Deputātu klātbūtnes reģistrācija","","","(?<uid>.*?)"/gm;
+
+    private readonly errors: string[] = [];
     
     constructor(
         @InjectRepository(Sitting) private readonly sittingRepository: Repository<Sitting>,
@@ -31,7 +33,7 @@ export class SittingService {
 
     async updateSittings() {
         const response = await axios.get('https://titania.saeima.lv/LIVS13/SaeimaLIVS2_DK.nsf/DK?ReadForm&calendar=1');
-        const page = response.data;
+        const page = fixLatvianString(response.data);
         
         const uids: string[] = (await this.sittingRepository.find()).map(s => s.saeimaUid);
         let match;
@@ -88,12 +90,13 @@ export class SittingService {
         const monthBefore = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
         const monthBeforeDate = convertDate(monthBefore.toLocaleDateString());
         const sittings = await this.sittingRepository.find({
-            //where: { date: MoreThan(monthBeforeDate) },
+            where: { date: MoreThan('2021-03-01') },
             order: { id: 'ASC' },
             relations: [
                 'readings',
                 'readings.motion',
                 'readings.votings',
+                'attendanceRegistrations',
             ]
         });
 
@@ -102,12 +105,14 @@ export class SittingService {
             this.logger.log('processing sitting', s.id)
             await this.processSitting(s);
         }
+
+        this.logger.log(JSON.stringify(this.errors));
     }
 
     private async processSitting(sitting: Sitting) {
         const url = 'https://titania.saeima.lv/LIVS13/SaeimaLIVS2_DK.nsf/DK?ReadForm&nr=' + sitting.saeimaUid;
         const response = await axios.get(url);
-        const page = response.data;
+        const page = fixLatvianString(response.data);
     
         const votingUids: { motionUid: string, uid: string }[] = [];
         let match;
@@ -124,32 +129,35 @@ export class SittingService {
         this.logger.log('votings', votingUids);
     
         while (match = this.readingRegex.exec(page)) {
-            const { uid, motionNumber } = match.groups;
+            const { uid, motionNumber, docs } = match.groups;
     
             if (!motionNumber || motionNumber === '26/Lp13') {
+                this.errors.push('no motion ' + uid + ' ' + motionNumber);
                 this.logger.log('No motion');
                 continue;
             }
     
-            const motion = await this.motionRepository.findOne({ number: motionNumber }, { relations: ['readings', 'readings.motion'] });
+            const motion = await this.motionRepository.findOne(
+                { number: motionNumber },
+                { relations: ['readings', 'readings.motion', 'readings.votings'] }
+            );
             if (motion === undefined) {
                 throw 'Motion ' + motionNumber + ' not found in the database. Make sure you run all motion update scripts first.';
             }
     
             let reading = sitting.readings.find(r => r.motion.uid === motion.uid);
             if (reading === undefined) {
-                reading = motion.readings.find(m => m.date === sitting.date);
+                reading = motion.readings.find(r => docs.includes(r.docs));
                 if (reading === undefined) {
-                    this.logger.error('no such reading for this motion ' + sitting.date + ' ' + motion.id);
+                    this.logger.error('no such reading for this motion ' + docs + ' ' + motion.id);
+                    this.errors.push('no such reading for this motion ' + docs + ' ' + motion.id);
                     continue;
                 }
-
-                reading.sitting = sitting;
             } else {
                 this.logger.log('Sitting already has reading for this motion, updating it');
             }
 
-            if (reading.votings === null) {
+            if (reading.votings === undefined) {
                 reading.votings = [];
             }
 
@@ -159,7 +167,6 @@ export class SittingService {
                     uid: votingUid.uid,
                     method: 'default',
                     type: 'primary',
-                    reading: reading,    
                 });
                 reading.votings.push(voting);
             }
@@ -171,22 +178,28 @@ export class SittingService {
         }
         this.readingRegex.lastIndex = 0;
 
-        if (sitting.attendanceRegistrations === null) {
+        if (sitting.attendanceRegistrations === undefined) {
             sitting.attendanceRegistrations = [];
         }
 
         while (match = this.attendanceRegex.exec(page)) {
             const { uid } = match.groups;
-            const votingUid = votingUids.find(v => v.motionUid === uid).uid;
+            const votingUid = votingUids.find(v => v.motionUid === uid);
+
+            if (votingUid === undefined) {
+                this.errors.push('No voting found for attendance registration ' + uid)
+                continue;
+            }
 
             if (sitting.attendanceRegistrations.some(r => r.uid === uid)) {
                 this.logger.log('this attendance registration is already saved', uid);
+                continue;
             }
 
             const registration = this.attendanceRepository.create({
                 sitting: sitting,
                 uid: uid,
-                votingUid: votingUid,
+                votingUid: votingUid.uid,
             });
             sitting.attendanceRegistrations.push(registration);
             this.logger.log('new attendance registration', registration);

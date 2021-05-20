@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { BaseEntity, Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import Deputy from './Deputy';
 
 @Entity()
@@ -14,7 +14,12 @@ class DeputyToDeputyStats extends BaseEntity {
     @ManyToOne(() => Deputy, deputy => deputy.deputyStats)
     owner: Deputy;
 
+    @Field()
+    @Column()
+    comparedToId: number;
+
     @ManyToOne(() => Deputy, deputy => deputy.deputyComparisons)
+    @JoinColumn()
     comparedTo: Deputy;
 
     @Column('int', { default: 0 })

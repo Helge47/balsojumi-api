@@ -16,6 +16,7 @@ export class MotionService {
     private readonly referentRegex = /Referent.: <\/font>(.*?)&/;
     private readonly altReferentRegex = /Adresāt.: <\/font>(.*?)</;
     private readonly commissionNameRegex = /komisija:\s+<div.+?>(.*?)<\/div>/;
+    private readonly docNumberRegex = /'pielikums'>(.*?)</gm;
     
     constructor(
         @InjectRepository(Motion) private readonly motionRepository: Repository<Motion>,
@@ -55,6 +56,7 @@ export class MotionService {
                 'Ministru prezidenta amata kandidāts Arturs Krišjānis Kariņš',
                 'Latvijas Republikas tiesībsargs',
                 'Ministru prezidents Arturs Krišjānis Kariņš',
+                'Pilsoņu kolektīvais iesniegums',
             ];
 
             if (m.submittersText === '') {
@@ -71,7 +73,7 @@ export class MotionService {
                 const deputyNames = m.submittersText.replace('Deputāti ', '').split(', ');
                 this.logger.log('deputies', deputyNames);
 
-                if (m.submitters === null) {
+                if (m.submitters === undefined) {
                     m.submitters = [];
                 }
 
@@ -92,6 +94,36 @@ export class MotionService {
 
             this.logger.log('saving motion', m);
             await this.motionRepository.save(m);
+        }
+    }
+
+    async parseDocs() {
+        const allMotions = await this.motionRepository.find();
+        for (const i in allMotions) {
+            const m = allMotions[i];
+            const documentNumbers = [];
+
+            let match;
+            while (match = this.docNumberRegex.exec(m.docs)) {
+                documentNumbers.push(match[1]);
+            }
+
+            m.docs = documentNumbers.join(', ');
+            await this.motionRepository.save(m);
+        }
+
+        const allReadings = await this.readingRepository.find();
+        for (const i in allReadings) {
+            const r = allReadings[i];
+            const documentNumbers = [];
+
+            let match;
+            while (match = this.docNumberRegex.exec(r.docs)) {
+                documentNumbers.push(match[1]);
+            }
+
+            r.docs = documentNumbers.join(', ');
+            await this.readingRepository.save(r);
         }
     }
 
@@ -415,14 +447,14 @@ export class MotionService {
         match = this.motionRowRegex.exec(body);
         const thirdRow = this.parseRow(match[0]);
         this.motionRowRegex.lastIndex = 0;
-        const readings = [{ date: thirdRow[1], docs: thirdRow[2], result: thirdRow[3] }];
-        
-        //means there are 2 readings listed
-        if (firstRow.length > 2) {
+        const readings = [];
+        const numberOfReadings = firstRow.length - 1;
+
+        for (let i = 0; i < numberOfReadings; i++) {
             readings.push({
-                date: thirdRow[4],
-                docs: thirdRow[5],
-                result: thirdRow[6]
+                date: thirdRow[(i * 3) + 1],
+                docs: thirdRow[(i * 3) + 2],
+                result: thirdRow[(i * 3) + 3],
             });
         }
     
