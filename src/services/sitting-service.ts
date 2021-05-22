@@ -148,8 +148,8 @@ export class SittingService {
             if (reading === undefined) {
                 reading = motion.readings.find(r => docs.includes(r.docs));
                 if (reading === undefined) {
-                    this.logger.error('no such reading for this motion ' + docs + ' ' + motion.id);
-                    this.errors.push('no such reading for this motion ' + docs + ' ' + motion.id);
+                    this.logger.error('no such reading for this motion ' + docs + ' ' + motion.id );
+                    this.errors.push('no such reading for this motion ' + docs + ' ' + motion.id );
                     continue;
                 }
             } else {
