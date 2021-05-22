@@ -8,6 +8,9 @@ import { SittingResolver } from './resolvers/sitting-resolver';
 import { MotionResolver } from './resolvers/motion-resolver';
 import { FactionResolver } from './resolvers/faction-resolver';
 import { CronService } from './services/cron-service';
+import { DeputyService } from './services/deputy-service';
+import { SittingService } from './services/sitting-service';
+import { MotionService } from './services/motion-service';
 
 const port = 3001;
 TypeORM.useContainer(Container);
@@ -26,7 +29,8 @@ async function bootstrap() {
         const { url } = await server.listen(port);
         console.log('Server started at ' + url);
 
-        const cronService = Container.get(CronService);
+        await Container.get(DeputyService).run();
+        await Container.get(MotionService).run();
         //cronService.setup();
 
     } catch (err) {
