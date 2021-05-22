@@ -29,7 +29,8 @@ async function bootstrap() {
         const { url } = await server.listen(port);
         console.log('Server started at ' + url);
 
-        await Container.get(MotionService).parseDocs();
+        await Container.get(DeputyService).run();
+        await Container.get(MotionService).run();
         await Container.get(SittingService).run();
         //cronService.setup();
 

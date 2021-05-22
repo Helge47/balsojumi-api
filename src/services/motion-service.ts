@@ -33,7 +33,6 @@ export class MotionService {
         await this.updateRequests();
         this.logger.log('updated all motions, now updating submitters');
         await this.updateSubmitters();
-        await this.parseDocs();
         this.logger.log('MotionService finished working');
     }
 
@@ -98,34 +97,19 @@ export class MotionService {
         }
     }
 
-    async parseDocs() {
-        const allMotions = await this.motionRepository.find();
-        for (const i in allMotions) {
-            const m = allMotions[i];
-            const documentNumbers = [];
+    private parseDocNumbers(docs: string) {
+        const documentNumbers = [];
 
-            let match;
-            while (match = this.docNumberRegex.exec(m.docs)) {
-                documentNumbers.push(match[1]);
-            }
-
-            m.docs = documentNumbers.join(', ');
-            await this.motionRepository.save(m);
+        let match;
+        while (match = this.docNumberRegex.exec(docs)) {
+            documentNumbers.push(match[1]);
         }
 
-        const allReadings = await this.readingRepository.find();
-        for (const i in allReadings) {
-            const r = allReadings[i];
-            const documentNumbers = [];
-
-            let match;
-            while (match = this.docNumberRegex.exec(r.docs)) {
-                documentNumbers.push(match[1]);
-            }
-
-            r.docs = documentNumbers.join(', ');
-            await this.readingRepository.save(r);
+        if (documentNumbers.length === 0) {
+            return docs;
         }
+
+        return documentNumbers.join(', '); 
     }
 
     async updateBills() {
@@ -155,7 +139,7 @@ export class MotionService {
                     submittersText: details.submitters,
                     commission: details.commissionName,
                     submissionDate: convertDate(details.entries.find(x => x.status === 'Iesniegts').date),
-                    docs: details.entries.find(x => x.status.includes('Nod')).docs,
+                    docs: this.parseDocNumbers(details.entries.find(x => x.status.includes('Nod')).docs),
                 });
             }
     
@@ -179,7 +163,7 @@ export class MotionService {
                 reading.motion = motion;
                 reading.outcome = r.status === 'Izsludināts' ? r.status : r.result;
                 reading.title = r.status;
-                reading.docs = r.docs;
+                reading.docs = this.parseDocNumbers(r.docs);
                 reading.date = r.date === '' ? null : convertDate(r.date);
             }
     
@@ -219,7 +203,7 @@ export class MotionService {
                     number: number,
                     uid: uid,
                     submissionDate: convertDate(details.submissionDate),
-                    docs: details.docs,
+                    docs: this.parseDocNumbers(details.docs),
                     referent: details.referent,
                     submittersText: details.submitters,
                 });
@@ -267,7 +251,7 @@ export class MotionService {
                     number: number,
                     uid: uid,
                     submissionDate: convertDate(details.submissionDate),
-                    docs: details.readings[0].docs,
+                    docs: this.parseDocNumbers(details.readings[0].docs),
                     referent: details.referent,
                     submittersText: details.submitters,
                     commission: details.comissionName,
@@ -291,7 +275,7 @@ export class MotionService {
                 reading.title = 'Saeimas sēde';
                 reading.date = r.date === '' ? null : convertDate(r.date);
                 reading.outcome = r.result;
-                reading.docs = r.docs;
+                reading.docs = this.parseDocNumbers(r.docs);
                 reading.motion = motion;
             }
     
@@ -324,7 +308,7 @@ export class MotionService {
                     number: number,
                     uid: uid,
                     submissionDate: convertDate(details.submissionDate),
-                    docs: details.docs,
+                    docs: this.parseDocNumbers(details.docs),
                     referent: details.referent,
                     submittersText: details.submitters,
                 });
@@ -341,7 +325,7 @@ export class MotionService {
             if (details.readingDate) {
                 const reading = motion.readings.length < 2 ? this.readingRepository.create() : motion.readings[1];
                 reading.title = 'Saeimas sēde';
-                reading.docs = details.publication;
+                reading.docs = this.parseDocNumbers(details.publication);
                 reading.date = convertDate(details.readingDate);
     
                 motion.readings.push(reading);
