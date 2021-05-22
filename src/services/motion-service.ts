@@ -33,6 +33,7 @@ export class MotionService {
         await this.updateRequests();
         this.logger.log('updated all motions, now updating submitters');
         await this.updateSubmitters();
+        await this.parseDocs();
         this.logger.log('MotionService finished working');
     }
 
