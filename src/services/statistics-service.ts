@@ -63,31 +63,30 @@ export class StatisticsService {
         this.logger.log('saved', deputies)
     }
 
-    async calculateVotingStats() {
-        const deputies = await this.deputyRepository.find({ relations: ['deputyStats', 'factionStats'] });
+    async calculateFactionVotingStats(votings: Voting[]) {
+        this.logger.log('calculating faction stats');
+        const deputies = await this.deputyRepository.find({ relations: ['factionStats', 'factionStats.faction'] });
         const factions = await this.factionRepository.find({ relations: ['factionStats', 'factionStats.comparedTo'] });
-        const votings = await this.votingRepository.find({ where: { isProcessed: false, method: 'default' }, take: 10, relations: [
-            'votes',
-            'reading',
-            'reading.motion',
-            'reading.motion.submitters',
-        ]});
-        
+
         for (const i in votings) {
             const voting = votings[i];
             this.logger.log('processing voting', voting.id);
             const votingStatsByFaction = this.getFactionStatsForSingleVoting(voting);
             this.logger.log(votingStatsByFaction);
-    
+
             for (const factionName in votingStatsByFaction) {
                 const faction = factions.find(f => f.name === factionName || f.shortName === factionName);
     
                 for (const otherFactionName in votingStatsByFaction) {
                     const otherFaction = factions.find(f => f.name === otherFactionName || f.shortName === otherFactionName);
     
-                    let entryToUpdate = faction.factionStats.find(s => s.comparedTo.id === otherFaction.id);
+                    let entryToUpdate = faction.factionStats.find(s => s.comparedToId === otherFaction.id);
                     if (entryToUpdate === undefined) {
-                        entryToUpdate = this.factionToFactionStatsRepository.create({ comparedTo: otherFaction });
+                        entryToUpdate = this.factionToFactionStatsRepository.create({
+                            comparedTo: otherFaction,
+                            sameVotes: 0,
+                            oppositeVotes: 0,
+                        });
                         faction.factionStats.push(entryToUpdate);
                     }
     
@@ -111,7 +110,9 @@ export class StatisticsService {
                 let deputyFactionEntry = deputy.factionStats.find(s => s.faction.id === faction.id);
                 if (deputyFactionEntry === undefined) {
                     deputyFactionEntry = this.deputyFactionStatsRepository.create({
-                        faction: faction
+                        faction: faction,
+                        popularVotes: 0,
+                        unpopularVotes: 0,
                     });
                     deputy.factionStats.push(deputyFactionEntry);
                 }
@@ -121,18 +122,36 @@ export class StatisticsService {
                 } else {
                     deputyFactionEntry.unpopularVotes++;
                 }
-    
+            }
+        }
+
+        this.logger.log('saving', deputies);
+        await this.deputyRepository.save(deputies, { chunk: 10 });
+        this.logger.log('saving', factions);
+        await this.factionRepository.save(factions, { chunk: 10 });
+    }
+
+    async calculateDeputyVotingStats(votings: Voting[]) {
+        const deputies = await this.deputyRepository.find({ relations: ['deputyStats'] });
+
+        for (const i in votings) {
+            const voting = votings[i];
+
+            for (const j in voting.votes) {
+                const vote = voting.votes[j];
+                const deputy = deputies.find(d => d.id === vote.deputyId);
+
                 for (const k in voting.reading.motion.submitters) {
                     const submitter = voting.reading.motion.submitters[k];
                     if (deputy.id === submitter.id) {
                         continue;
                     }
-    
+
                     let entryToUpdate = deputy.deputyStats.find(s => s.comparedToId === submitter.id);
                     if (entryToUpdate === undefined) {
                         throw 'DeputyToDeputyStats entity not found - need to run entities creation first ' + deputy.id + ' ' + submitter.id;
                     }
-    
+
                     if (vote.type === 'Par') {
                         entryToUpdate.supportedMotions++;
                     } else if (vote.type === 'Pret') {
@@ -141,18 +160,18 @@ export class StatisticsService {
                         entryToUpdate.abstainedMotions++;
                     }
                 }
-    
+
                 for (const k in voting.votes) {
                     const otherVote = voting.votes[k];
                     if (otherVote.deputyId === vote.deputyId) {
                         continue;
                     }
-    
+
                     let entryToUpdate = deputy.deputyStats.find(s => s.comparedToId === otherVote.deputyId);
                     if (entryToUpdate === undefined) {
                         throw 'DeputyToDeputyStats entity not found - need to run entities creation first'
                     }
-    
+
                     if (vote.type === otherVote.type) {
                         entryToUpdate.sameVotes++;
                     } else {
@@ -160,16 +179,29 @@ export class StatisticsService {
                     }
                 }
             }
-
-            this.logger.log('voting processed', voting.id);
-            voting.isProcessed = true;
-            await this.votingRepository.save(voting);
         }
-    
+
         this.logger.log('saving', deputies);
         await this.deputyRepository.save(deputies, { chunk: 10 });
-        this.logger.log('saving', factions);
-        await this.factionRepository.save(factions, { chunk: 10 });
+    }
+
+    async calculateVotingStats() {
+        const votings = await this.votingRepository.find({ where: { isProcessed: false, method: 'default' }, take: 10, relations: [
+            'votes',
+            'reading',
+            'reading.motion',
+            'reading.motion.submitters',
+        ]});
+
+        await this.calculateFactionVotingStats(votings);
+        await this.calculateDeputyVotingStats(votings);
+
+        for (const i in votings) {
+            votings[i].isProcessed = true;
+        }
+
+        this.logger.log('saving votings');
+        await this.votingRepository.save(votings);
     };
 
     private getFactionStatsForSingleVoting = (voting: Voting) => {

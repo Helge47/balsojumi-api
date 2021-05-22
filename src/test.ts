@@ -13,7 +13,7 @@ async function bootstrap() {
     try {
         await TypeORM.createConnection();
 
-        const service = Container.get(VoteService);
+        const service = Container.get(StatisticsService);
         await service.run();
     } catch (err) {
         console.error(err);
