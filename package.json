@@ -25,6 +25,7 @@
     "argon2": "^0.27.0",
     "axios": "^0.21.1",
     "body-parser": "^1.19.0",
+    "class-validator": "^0.13.1",
     "express": "^4.17.1",
     "graphql": "^15.5.0",
     "helmet": "^4.1.1",
