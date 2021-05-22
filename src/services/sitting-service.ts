@@ -90,7 +90,6 @@ export class SittingService {
         const monthBefore = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
         const monthBeforeDate = convertDate(monthBefore.toLocaleDateString());
         const sittings = await this.sittingRepository.find({
-            where: { date: MoreThan('2021-03-01') },
             order: { id: 'ASC' },
             relations: [
                 'readings',
