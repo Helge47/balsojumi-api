@@ -146,15 +146,17 @@ export class SittingService {
     
             let reading = sitting.readings.find(r => r.motion.uid === motion.uid);
             if (reading === undefined) {
-                const possibleReadings = motion.readings.find(r => )
-                reading = motion.readings.find(r => {
+                const possibleReadings = motion.readings.filter(r => 
                     (r.title !== 'Iesniegšana' && r.title !== 'Izsludināts') &&
                     (docs.includes(r.docs) || docs.includes(r.motion.docs))
-                });
-                if (reading === undefined) {
+                );
+
+                if (possibleReadings.length === 0) {
                     this.logger.error('no such reading for this motion ' + docs + ' ' + motion.id );
                     this.errors.push('no such reading for this motion ' + docs + ' ' + motion.id );
                     continue;
+                } else {
+                    reading = possibleReadings[0];
                 }
             } else {
                 this.logger.log('Sitting already has reading for this motion, updating it');
