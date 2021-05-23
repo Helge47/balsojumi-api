@@ -146,8 +146,9 @@ export class SittingService {
     
             let reading = sitting.readings.find(r => r.motion.uid === motion.uid);
             if (reading === undefined) {
+                const possibleReadings = motion.readings.find(r => )
                 reading = motion.readings.find(r => {
-                    r.date === sitting.date &&
+                    (r.title !== 'Iesniegšana' && r.title !== 'Izsludināts') &&
                     (docs.includes(r.docs) || docs.includes(r.motion.docs))
                 });
                 if (reading === undefined) {
