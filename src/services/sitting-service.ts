@@ -146,7 +146,10 @@ export class SittingService {
     
             let reading = sitting.readings.find(r => r.motion.uid === motion.uid);
             if (reading === undefined) {
-                reading = motion.readings.find(r => docs.includes(r.docs));
+                reading = motion.readings.find(r => {
+                    r.date === sitting.date &&
+                    (docs.includes(r.docs) || docs.includes(r.motion.docs))
+                });
                 if (reading === undefined) {
                     this.logger.error('no such reading for this motion ' + docs + ' ' + motion.id );
                     this.errors.push('no such reading for this motion ' + docs + ' ' + motion.id );
